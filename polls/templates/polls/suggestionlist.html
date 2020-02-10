@@ -1,0 +1,16 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<table style = "width:100%">
+    <th>Name</th>
+    <th>Suggestion</th>
+{% for suggestion in suggestions.all %}
+    <tr>
+        <td>{{ suggestion.name }}</td>
+        <td>{{ suggestion.suggestion_text }}</td>
+    </tr>
+{% endfor %}    
+</table>
+    
+<a href="{% url 'polls:suggestiondetail'%}">Vote again?</a>
+{% endblock %}
