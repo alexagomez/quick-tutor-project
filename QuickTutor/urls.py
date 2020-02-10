@@ -4,12 +4,6 @@ from . import views
 
 app_name = 'QuickTutor'
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='index'),
-    path('<int:pk>/', views.DetailView.as_view(), name='detail'),
-    path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
-    path('<int:question_id>/vote/', views.vote, name='vote'),
-    path('suggestions/', views.suggestdetail, name='suggestiondetail'),
-    path('suggest/', views.suggest, name='suggest'),
-    path('suggestions/list', views.suggestionslist, name='suggestionlist'),
+    path('', views.index, name='index'),
 ]
 
