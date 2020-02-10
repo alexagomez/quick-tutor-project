@@ -1,4 +1,4 @@
-{% extends 'polls/base.html' %}
+{% extends 'QuickTutor/base.html' %}
 
 {% block content %}
 <h1>{{ question.question_text }}</h1>
@@ -9,5 +9,5 @@
 {% endfor %}    
 </ul>
 
-<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+<a href="{% url 'QuickTutor:detail' question.id %}">Vote again?</a>
 {% block content %}

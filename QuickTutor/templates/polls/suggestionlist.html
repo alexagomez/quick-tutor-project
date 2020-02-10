@@ -1,4 +1,4 @@
-{% extends 'polls/base.html' %}
+{% extends 'QuickTutor/base.html' %}
 
 {% block content %}
 <table style = "width:100%">
@@ -12,5 +12,5 @@
 {% endfor %}    
 </table>
     
-<a href="{% url 'polls:suggestiondetail'%}">Vote again?</a>
+<a href="{% url 'QuickTutor:suggestiondetail'%}">Vote again?</a>
 {% endblock %}

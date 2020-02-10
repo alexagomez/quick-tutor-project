@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('polls', '0002_suggestion_suggestionset'),
+        ('QuickTutor', '0002_suggestion_suggestionset'),
     ]
 
     operations = [

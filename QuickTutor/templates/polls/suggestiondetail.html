@@ -1,11 +1,11 @@
-{% extends 'polls/base.html' %}
+{% extends 'QuickTutor/base.html' %}
 
 {% block content %}
 <h1>{{ suggestion.suggestion_name }}</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'polls:suggest' %}" method="post">
+<form action="{% url 'QuickTutor:suggest' %}" method="post">
 {% csrf_token %}
     <div class="form-group">
         <label>Suggestion Name:</label>
