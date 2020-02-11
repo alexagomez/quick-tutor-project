@@ -3,3 +3,4 @@ gunicorn
 django-heroku
 social-auth-app-django
 requests
+django-google-api
