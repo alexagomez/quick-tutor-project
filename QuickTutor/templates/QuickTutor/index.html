@@ -2,9 +2,34 @@
 
 {% block content %}
 {% load static %}
-<!-- <link rel="stylesheet" type="text/css" href="{% static 'QuickTutor/style.css' %}"> -->
-<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
 
-<b>QuickTutor</b>
+
+<div class="row" style="margin-top: 5vh;">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center" style="font-size: 2rem;">
+        <h1>Welcome to QuickTutor</h1>
+    </div>
+    <div class="col-md-3"></div>
+    
+</div>
+<div class="row" style="margin-top: 10vh; height: 45vh">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center" style="font-size: 2rem;">
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}</p>
+            <p>{{ user.email }}</p>
+            <!-- <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a> -->
+            <a class="btn btn-primary" href="{% url 'QuickTutor:student' %}">Student</a>
+            <a class="btn btn-primary" href="{% url 'QuickTutor:tutor' %}">Tutor</a>
+        {% else %}
+            <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}" style="width: 10vh;">
+                Login
+            </a>
+        {% endif %}
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+
 
 {% endblock %}

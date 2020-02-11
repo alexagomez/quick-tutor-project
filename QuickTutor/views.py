@@ -1,8 +1,86 @@
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import csrf_exempt
+from QuickTutor.models import Student, Tutor
+
 
 def index(request):
     return render(request, "QuickTutor/index.html", {})
 
+@login_required
+def student(request):
+    currentUser = request.user
+    email = currentUser.email
+    try:
+        # Returning students hit this branch
+        checkDB = Student.objects.get(email=email)
+
+        return render(request, 
+        "QuickTutor/student.html", 
+        {
+            'email':email,
+        
+        })
+    except ObjectDoesNotExist:
+        # First time students hit this branch
+
+
+        # Block non-uva students
+        if email.split('@')[1] != "virginia.edu":
+            return render(request, "QuickTutor/error.html", {})
+
+        # redirect to a form to fill out name, major, etc.
+        return render(request, "QuickTutor/signupStudent.html", {'email': email})
+
+
+@login_required
+def tutor(request):
+    currentUser = request.user
+    email = currentUser.email
+    try:
+        # Returning students hit this branch
+        checkDB = Tutor.objects.get(email=email)
+
+        return render(request, "QuickTutor/tutor.html", {})
+    except ObjectDoesNotExist:
+        # First time students hit this branch
+
+        # Block non-uva students
+        if email.split('@')[1] != "virginia.edu":
+            return render(request, "QuickTutor/error.html", {})
+
+        # redirect to a form to fill out name, major, etc.
+        return render(request, "QuickTutor/signupTutor.html", {'email': email})
+
+@csrf_exempt
+@login_required
+def update_student(request):
+    if request.method == "POST":
+        firstName = request.POST['firstName']
+        lastName = request.POST['lastName']
+        major = request.POST['major']
+        year = request.POST['year']
+        email = request.POST['email']
+
+        Student.objects.update_or_create(email=email, firstName=firstName, lastName=lastName, major=major, year=year)
+
+    return HttpResponseRedirect(reverse('QuickTutor:student'))
+
+@csrf_exempt
+@login_required
+def update_tutor(request):
+    if request.method == "POST":
+        firstName = request.POST['firstName']
+        lastName = request.POST['lastName']
+        major = request.POST['major']
+        year = request.POST['year']
+        email = request.POST['email']
+
+        Tutor.objects.update_or_create(email=email, firstName=firstName, lastName=lastName, major=major, year=year)
+
+
+    return HttpResponseRedirect(reverse('QuickTutor:tutor'))

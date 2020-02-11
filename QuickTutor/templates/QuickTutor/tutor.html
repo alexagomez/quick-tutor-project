@@ -1,0 +1,29 @@
+{% extends 'QuickTutor/base.html' %}
+
+{% block content %}
+{% load static %}
+
+
+<div class="row" style="margin-top: 5vh;">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center" style="font-size: 2rem;">
+        <h1>Welcome Tutor</h1>
+    </div>
+    <div class="col-md-3"></div>
+    
+</div>
+{% if user.is_authenticated %}
+<div class="row" style="margin-top: 10vh;">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center" style="font-size: 2rem;">
+        <p>Logged in as {{ user.username }}</p>
+
+    </div>
+    <div class="col-md-3"></div>
+</div>
+{% else %}
+
+
+{% endif %}
+
+{% endblock %}
