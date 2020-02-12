@@ -89,4 +89,12 @@ def update_tutor(request):
 @csrf_exempt
 @login_required
 def make_request(request):
+    if request.method == "POST":
+        courseNumber = request.POST['courseNumber']
+        subject = request.POST['subject']
+        description = request.POST['description']
+        location = request.POST['location']
+        confusion = request.POST['confusion']
+
+
     return render(request, "QuickTutor/studentRequest.html", {})
