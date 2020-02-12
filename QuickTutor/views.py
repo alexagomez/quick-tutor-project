@@ -17,12 +17,12 @@ def student(request):
     email = currentUser.email
     try:
         # Returning students hit this branch
-        checkDB = Student.objects.get(email=email)
+        currentStudent = Student.objects.get(email=email)
 
         return render(request, 
         "QuickTutor/student.html", 
         {
-            'email':email,
+            'student':currentStudent,
         
         })
     except ObjectDoesNotExist:
@@ -43,9 +43,9 @@ def tutor(request):
     email = currentUser.email
     try:
         # Returning students hit this branch
-        checkDB = Tutor.objects.get(email=email)
+        currentTutor = Tutor.objects.get(email=email)
 
-        return render(request, "QuickTutor/tutor.html", {})
+        return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor})
     except ObjectDoesNotExist:
         # First time students hit this branch
 
@@ -84,3 +84,9 @@ def update_tutor(request):
 
 
     return HttpResponseRedirect(reverse('QuickTutor:tutor'))
+
+
+@csrf_exempt
+@login_required
+def make_request(request):
+    return render(request, "QuickTutor/studentRequest.html", {})
