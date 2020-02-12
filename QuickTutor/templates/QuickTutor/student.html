@@ -13,6 +13,8 @@
     
 </div>
 
+{% if student.status == 0 %}
+<!-- Default (cancelled/make request) -->
 <div class="row" style="margin-top: 10vh;">
     <div class="col-md-3"></div>
     <div class="col-md-6 text-center" style="font-size: 2rem;">
@@ -21,5 +23,23 @@
     <div class="col-md-3"></div>
 </div>
 
+{% elif student.status == 1 %} 
+<!-- waiting for tutors state/list view -->
+<div class="row" style="margin-top: 10vh;">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center" style="font-size: 2rem;">
+        <h3>List of Tutors</h3>
+        <ul class="list-group">
+            <li class="list-group-item">Bob</li>
+            <li class="list-group-item">Joe</li>
+            <li class="list-group-item">Billy</li>
+            <li class="list-group-item">idk</li>
+            <li class="list-group-item">cool</li>
+        </ul>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+{% endif %}
 
 {% endblock %}

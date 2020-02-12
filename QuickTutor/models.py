@@ -40,9 +40,15 @@ class Tutor(models.Model):
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
 
 class studentRequest(models.Model):
-     courseNumber = models.CharField(max_length=100, default='')
+     # form information
+     courseName = models.CharField(max_length=100, default='')
      subject = models.CharField(max_length=100, default='')
      description = models.CharField(max_length=100, default='')
      subject = models.CharField(max_length=100, default='')
      location = models.CharField(max_length=100, default='')
      confusionMeter = models.IntegerField(default=0)
+
+     # student ID
+     studentID = models.UUIDField(default=0, editable=True)
+     tutorID = models.UUIDField(default=0, editable=True)
+

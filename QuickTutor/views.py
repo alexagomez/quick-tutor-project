@@ -5,7 +5,7 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
-from QuickTutor.models import Student, Tutor
+from QuickTutor.models import Student, Tutor, studentRequest
 
 
 def index(request):
@@ -19,12 +19,7 @@ def student(request):
         # Returning students hit this branch
         currentStudent = Student.objects.get(email=email)
 
-        return render(request, 
-        "QuickTutor/student.html", 
-        {
-            'student':currentStudent,
-        
-        })
+        return render(request, "QuickTutor/student.html",  {'student':currentStudent,})
     except ObjectDoesNotExist:
         # First time students hit this branch
 
@@ -90,11 +85,27 @@ def update_tutor(request):
 @login_required
 def make_request(request):
     if request.method == "POST":
-        courseNumber = request.POST['courseNumber']
+        # get student object of person requesting
+        currentUser = request.user
+        email = currentUser.email
+        currentStudent = Student.objects.get(email=email)
+
+        # update student table to be WAITING
+        Student.objects.filter(email=email).update(status=1)
+
+        # create a new row in studentRequests table
+        courseName = request.POST['courseName']
         subject = request.POST['subject']
         description = request.POST['description']
         location = request.POST['location']
         confusion = request.POST['confusion']
+
+        studentRequest.objects.update_or_create(courseName=courseName, 
+        subject=subject, description=description, location=location, 
+        confusionMeter=confusion, studentID=currentStudent.id)
+        
+        
+        return HttpResponseRedirect(reverse('QuickTutor:student'))
 
 
     return render(request, "QuickTutor/studentRequest.html", {})
