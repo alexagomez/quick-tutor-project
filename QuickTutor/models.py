@@ -48,4 +48,3 @@ class studentRequest(models.Model):
      # student ID
      studentID = models.IntegerField(default=0)
      tutorID = models.IntegerField(default=0)
-
