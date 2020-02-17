@@ -17,7 +17,7 @@ class Student(models.Model):
 
     rating = models.IntegerField(default=0)
 
-    matchedID = models.UUIDField(default=0, editable=True)
+    matchedID = models.UUIDField(default=uuid.uuid4, editable=True)
     status = models.IntegerField(default=0)     # 0=canceled/off        1=waiting           2=accepted
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
 
@@ -35,7 +35,7 @@ class Tutor(models.Model):
 
     rating = models.IntegerField(default=0)
     
-    matchedID = models.UUIDField(default=0, editable=True)
+    matchedID = models.UUIDField(default=uuid.uuid4, editable=True)
     status = models.IntegerField(default=0)     # 0=canceled/off        1=waiting           2=accepted
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
 
@@ -49,6 +49,6 @@ class studentRequest(models.Model):
      confusionMeter = models.IntegerField(default=0)
 
      # student ID
-     studentID = models.UUIDField(default=0, editable=True)
-     tutorID = models.UUIDField(default=0, editable=True)
+     studentID = models.UUIDField(default=uuid.uuid4, editable=True)
+     tutorID = models.UUIDField(default=uuid.uuid4, editable=True)
 
