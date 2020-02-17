@@ -5,7 +5,7 @@ from django.db import models
 
 class Student(models.Model):
     USER_ID = models.UUIDField( 
-         primary_key = True, 
+         primary_key = False, 
          default = uuid.uuid4, 
          editable = False)
 
@@ -23,7 +23,7 @@ class Student(models.Model):
 
 class Tutor(models.Model):
     USER_ID = models.UUIDField( 
-         primary_key = True, 
+         primary_key = False, 
          default = uuid.uuid4, 
          editable = False) 
 
