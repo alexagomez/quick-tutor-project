@@ -102,7 +102,7 @@ def make_request(request):
 
         studentRequest.objects.update_or_create(courseName=courseName, 
         subject=subject, description=description, location=location, 
-        confusionMeter=confusion, studentID=currentStudent.USER_ID)
+        confusionMeter=confusion, studentID=currentStudent.ID)
         
         
         return HttpResponseRedirect(reverse('QuickTutor:student'))
