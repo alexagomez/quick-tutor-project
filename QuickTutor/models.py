@@ -22,7 +22,7 @@ class Student(models.Model):
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
 
 class Tutor(models.Model):
-    ID = models.IntegerField(default=genUUID(), primary_key=True) 
+    USER_ID = models.IntegerField(default=genUUID(), primary_key=True) 
 
     firstName = models.CharField(max_length=100, default='')
     lastName = models.CharField(max_length=100, default='')
