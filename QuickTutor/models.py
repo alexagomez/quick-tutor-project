@@ -4,8 +4,8 @@ from django.db import models
 
 
 class Student(models.Model):
-    USER_ID = models.UUIDField( 
-         primary_key = False, 
+    ID = models.UUIDField( 
+         primary_key = True, 
          default = uuid.uuid4, 
          editable = False)
 
@@ -17,13 +17,13 @@ class Student(models.Model):
 
     rating = models.IntegerField(default=0)
 
-    matchedID = models.UUIDField(default=uuid.uuid4, editable=True)
+#     matchedID = models.UUIDField(default=0, editable=True)
     status = models.IntegerField(default=0)     # 0=canceled/off        1=waiting           2=accepted
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
 
 class Tutor(models.Model):
-    USER_ID = models.UUIDField( 
-         primary_key = False, 
+    ID = models.UUIDField( 
+         primary_key = True, 
          default = uuid.uuid4, 
          editable = False) 
 
@@ -35,7 +35,7 @@ class Tutor(models.Model):
 
     rating = models.IntegerField(default=0)
     
-    matchedID = models.UUIDField(default=uuid.uuid4, editable=True)
+#     matchedID = models.UUIDField(default=0, editable=True)
     status = models.IntegerField(default=0)     # 0=canceled/off        1=waiting           2=accepted
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
 
