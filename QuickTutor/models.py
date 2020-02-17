@@ -7,7 +7,7 @@ def genUUID():
      return random.randint(1000000, 10000000)
 
 class Student(models.Model):
-    ID = models.IntegerField(primary_key=True, default=genUUID()) 
+    ID = models.IntegerField(default=genUUID(), primary_key=True) 
 
     firstName = models.CharField(max_length=100, default='')
     lastName = models.CharField(max_length=100, default='')
@@ -22,7 +22,7 @@ class Student(models.Model):
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
 
 class Tutor(models.Model):
-    ID = models.IntegerField(primary_key=True, default=genUUID()) 
+    ID = models.IntegerField(default=genUUID(), primary_key=True) 
 
     firstName = models.CharField(max_length=100, default='')
     lastName = models.CharField(max_length=100, default='')
