@@ -41,6 +41,7 @@ class studentRequest(models.Model):
      courseName = models.CharField(max_length=100, default='')
      subject = models.CharField(max_length=100, default='')
      description = models.CharField(max_length=100, default='')
+     # why does subject appear twice
      subject = models.CharField(max_length=100, default='')
      location = models.CharField(max_length=100, default='')
      confusionMeter = models.IntegerField(default=0)  
