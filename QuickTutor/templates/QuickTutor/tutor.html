@@ -17,6 +17,11 @@
     <div class="col-md-3"></div>
     <div class="col-md-6 text-center" style="font-size: 2rem;">
         <p>Logged in as {{ user.username }}</p>
+        <!-- lists the course name -->
+        <h2>List of Students</h2>
+        {% for request in studentRequestList %}
+            <dt>{{request.courseName}}</dt>
+        {% endfor %}
 
     </div>
     <div class="col-md-3"></div>

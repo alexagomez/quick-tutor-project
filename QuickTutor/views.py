@@ -40,7 +40,10 @@ def tutor(request):
         # Returning students hit this branch
         currentTutor = Tutor.objects.get(email=email)
 
-        return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor})
+        # list of all student requests
+        studentRequestList = studentRequest.objects.all()
+
+        return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList})
     except ObjectDoesNotExist:
         # First time students hit this branch
 

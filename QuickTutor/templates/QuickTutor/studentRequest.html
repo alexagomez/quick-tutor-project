@@ -13,7 +13,8 @@
                 {% csrf_token %}
                 <form action="" method="POST">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Course Name</label>
+                        <label for="exampleInputEmail1">Course Mnemonic and Number</label>
+                        <p><font size = "3"><i>For example: CS3240</i></font></p>
                         <input class="form-control" type="text" name="courseName" id="courseName">
                     </div>
                     <div class="form-group">
@@ -29,8 +30,9 @@
                         <input class="form-control" type="text" name="location" id="location">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Confusion Meter</label>
-                        <input class="form-control" type="text" name="confusion" id="confusion">
+                        <label for="exampleInputEmail1">Confusion Level (0-10)</label>
+                        <p><font size = "3"><i>With 0 being not confused and 10 being completely lost</i></font></p>
+                        <input class="form-control" type="number" name="confusion" id="confusion" min="0" max="10">
                     </div>
 
                     <button type="submit" class="btn btn-primary">Submit</button>

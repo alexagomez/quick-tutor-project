@@ -43,7 +43,7 @@ class studentRequest(models.Model):
      description = models.CharField(max_length=100, default='')
      subject = models.CharField(max_length=100, default='')
      location = models.CharField(max_length=100, default='')
-     confusionMeter = models.IntegerField(default=0)
+     confusionMeter = models.IntegerField(default=0)  
 
      # student ID
      studentID = models.IntegerField(default=0)
