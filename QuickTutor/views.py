@@ -19,7 +19,10 @@ def student(request):
         # Returning students hit this branch
         currentStudent = Student.objects.get(email=email)
 
-        return render(request, "QuickTutor/student.html",  {'student':currentStudent,})
+        # display the current requests the student has
+        specificStudentRequestList = studentRequest.objects.filter(studentID=currentStudent.USER_ID)
+
+        return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList})
     except ObjectDoesNotExist:
         # First time students hit this branch
 
