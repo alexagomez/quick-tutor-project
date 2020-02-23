@@ -17,12 +17,23 @@ def student(request):
     email = currentUser.email
     try:
         # Returning students hit this branch
-        currentStudent = Student.objects.get(email=email)
+        if Student.objects.filter(email=email):
+            currentStudent = Student.objects.get(email=email)
 
-        # display the current requests the student has
-        specificStudentRequestList = StudentRequest.objects.filter(studentEmail=email)
+            # display the current requests the student has
+            specificStudentRequestList = StudentRequest.objects.filter(studentEmail=email)
 
-        return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList})
+            return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList})
+        else:
+            # First time students hit this branch
+
+            # Block non-uva students
+            if email.split('@')[1] != "virginia.edu":
+                return render(request, "QuickTutor/error.html", {})
+
+            # redirect to a form to fill out name, major, etc.
+            return render(request, "QuickTutor/signupStudent.html", {'email': email})
+    
     except ObjectDoesNotExist:
         # First time students hit this branch
 
@@ -40,12 +51,21 @@ def tutor(request):
     email = currentUser.email
     try:
         # Returning students hit this branch
-        currentTutor = Tutor.objects.get(email=email)
+        if Tutor.objects.filter(email=email):
+            currentTutor = Tutor.objects.get(email=email)
 
-        # list of all student requests
-        studentRequestList = StudentRequest.objects.all()
+            # list of all student requests
+            studentRequestList = StudentRequest.objects.all()
 
-        return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList})
+            return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList})
+        else:
+            # Block non-uva students
+            if email.split('@')[1] != "virginia.edu":
+                return render(request, "QuickTutor/error.html", {})
+
+            # redirect to a form to fill out name, major, etc.
+            return render(request, "QuickTutor/signupTutor.html", {'email': email})
+
     except ObjectDoesNotExist:
         # First time students hit this branch
 
