@@ -3,33 +3,104 @@
 {% block content %}
 {% load static %}
 
+<style>
+    .bg_img_init {
+        background: url("{% static 'QuickTutor/images/background.jpg' %}") no-repeat center;
+        background-size: cover;
+        width: 100%;
+    }
 
-<div class="row" style="margin-top: 5vh;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        <h1>Welcome to QuickTutor</h1>
+    .bg_img_student {
+        background: url("{% static 'QuickTutor/images/student.jpg' %}") no-repeat center;
+        background-size: cover;
+        width: 100%;
+        height: 100%;
+    }
+
+    .bg_img_tutor {
+        background: url("{% static 'QuickTutor/images/tutor.jpg' %}") no-repeat center;
+        background-size: cover;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+
+{% if user.is_authenticated %}
+<!-- code for logged in user (tutor | student split page) -->
+<div style="overflow: hidden; height: 100vh; margin-top: -6vh;">
+
+    <div class="row" style=" height: 45vh">
+        <!-- TUTOR -->
+        <div class="col-md-6 bg_img_tutor text-center" style="height:105vh; border-right: 1px solid white;">
+            <div class="blur_img_split" id="blurTutor"></div>
+            <div class="row" style="margin-top:10vh">
+                <div class="col-md-12 welcome-banner" onmouseover="document.getElementById('blurTutor').classList.toggle('blur_img_split_btn')"
+                onmouseout="document.getElementById('blurTutor').classList.toggle('blur_img_split_btn')">
+                    <h1>Tutor</h1>
+                    <p style="margin: 1vh 15vh 5vh 15vh;">
+                        Go to the tutor portal, where you can find a real time list of student
+                        requests and be on your way to earn money
+                    </p>
+                    <a class="login_button" href="{% url 'QuickTutor:tutor' %}" style="margin-top: 3vh;">Tutor</a>
+                </div>
+                
+            </div>
+        </div>
+        <!-- STUDENT -->
+        <div class="col-md-6 bg_img_student text-center" style="height:105vh;">
+            <div class="blur_img_split" id="blurStudent"></div>
+            <div class="row" style="margin-top:10vh">
+                <div class="col-md-12 welcome-banner" onmouseover="document.getElementById('blurStudent').classList.toggle('blur_img_split_btn')"
+                onmouseout="document.getElementById('blurStudent').classList.toggle('blur_img_split_btn')">
+                    <h1>Student</h1>
+                    <p style="margin: 1vh 15vh 5vh 15vh;">
+                        Go to the student portal, where you can make tutor requests and 
+                        explore your past transactions
+                    </p>
+                    <a class="login_button" href="{% url 'QuickTutor:student' %}" style="margin-top: 3vh;">Student</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-3"></div>
     
+   
 </div>
-<div class="row" style="margin-top: 10vh; height: 45vh">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        {% if user.is_authenticated %}
-            <p>Welcome, {{ user.username }}</p>
-            <p>{{ user.email }}</p>
-            <!-- <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a> -->
-            <a class="btn btn-primary" href="{% url 'QuickTutor:student' %}">Student</a>
-            <a class="btn btn-primary" href="{% url 'QuickTutor:tutor' %}">Tutor</a>
-        {% else %}
-            <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}" style="width: 10vh;">
+
+{% else %}
+<!-- code for initial page, not logged in yet -->
+<body class="bg_img_init" style="overflow: hidden;">
+    <div class="blur_img"></div>
+    
+    <div class="row" style="margin-top: 5vh;">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-center welcome-banner">
+            <h2>Welcome to</h2>
+            <h1>QuickTutor</h1>
+            <p>
+                Find help on grounds from students who have mastered the subject or
+                offer help to those who need it and earn a few dollars
+            </p>
+        </div>
+        <div class="col-md-4"></div>
+
+    </div>
+    <div class="row" style="margin-top: 10vh; height: 45vh">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-center" style="font-size: 2rem;">
+
+            <a class="login_button" href="{% url 'social:begin' 'google-oauth2' %}">
                 Login
             </a>
-        {% endif %}
-    </div>
-    <div class="col-md-3"></div>
-</div>
 
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+</body>
+
+
+{% endif %}
 
 
 {% endblock %}

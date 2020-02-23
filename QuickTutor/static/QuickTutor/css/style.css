@@ -1,3 +1,12 @@
+body {
+    background-color: #74519c;
+    color: white;
+}
+
+.list-group-item {
+    background-color: #74519c;
+}
+
 .footer {
     background-color: #292f31;
      left:0; 
@@ -6,4 +15,70 @@
      margin-top: 15vh;
      min-width: 100%;
      max-width: 100%;
+}
+
+.blur_img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(3px);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.blur_img_split {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(0px);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.blur_img_split:hover {
+    backdrop-filter: blur(6px);
+}
+.blur_img_split_btn {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.login_button {
+    color: #fff !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #ffffff00;
+    width: 40vh;
+    padding: 20px;
+    border: 4px solid #fff !important;
+    display: inline-block;
+}
+
+.login_button:hover {
+    color: #8f58a8 !important;
+    background: #ffffff;
+    text-decoration: none;
+}
+
+.welcome-banner {
+    color: white;
+}
+
+.welcome-banner h1 {
+    font-size: 8rem;
+}
+.welcome-banner h2 {
+    font-size: 5rem;
+}
+.welcome-banner p {
+    color: rgb(216, 216, 216);
 }
