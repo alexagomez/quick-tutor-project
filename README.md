@@ -9,6 +9,7 @@
     3. git commit -m "sentence about changes you made"
     4. git pull origin master
        1. Fix all merge conflicts on your local after doing this
+       2. Don't forget to make migrations and migrate!
     5. git push origin your_branch_name
 
 
