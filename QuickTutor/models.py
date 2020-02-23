@@ -5,14 +5,13 @@ import random
 
 
 class Student(models.Model):
-    USER_ID = models.IntegerField(default=random.randint(1000000, 10000000), primary_key=True) 
+    email = models.CharField(max_length=100, default='', primary_key=True)
 
     firstName = models.CharField(max_length=100, default='')
     lastName = models.CharField(max_length=100, default='')
     major = models.CharField(max_length=100, default='')
     year = models.CharField(max_length=100, default='')
-    email = models.CharField(max_length=100, default='')
-
+    
     rating = models.IntegerField(default=0)
 
 #     matchedID = models.UUIDField(default=0, editable=True)
@@ -20,13 +19,12 @@ class Student(models.Model):
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
 
 class Tutor(models.Model):
-    USER_ID = models.IntegerField(default=random.randint(100000, 1000000), primary_key=True) 
+    email = models.CharField(max_length=100, default='', primary_key=True)
 
     firstName = models.CharField(max_length=100, default='')
     lastName = models.CharField(max_length=100, default='')
     major = models.CharField(max_length=100, default='')
     year = models.CharField(max_length=100, default='')
-    email = models.CharField(max_length=100, default='')
     
     rating = models.IntegerField(default=0)
 #     matchedID = models.UUIDField(default=0, editable=True)
@@ -49,8 +47,8 @@ class StudentRequest(models.Model):
      confusionMeter = models.IntegerField(default=0)  
 
      # student ID
-     studentID = models.IntegerField(default=0)
-     tutorID = models.IntegerField(default=0)
+     studentEmail = models.CharField(max_length=100, default='')
+     tutorEmail = models.CharField(max_length=100, default='')
 
 class RequestCourse(models.Model):
     request = models.OneToOneField(StudentRequest, on_delete=models.CASCADE, related_name='request')

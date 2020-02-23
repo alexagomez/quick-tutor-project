@@ -20,12 +20,11 @@ def student(request):
         currentStudent = Student.objects.get(email=email)
 
         # display the current requests the student has
-        specificStudentRequestList = StudentRequest.objects.filter(studentID=currentStudent.USER_ID)
+        specificStudentRequestList = StudentRequest.objects.filter(studentEmail=email)
 
         return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList})
     except ObjectDoesNotExist:
         # First time students hit this branch
-
 
         # Block non-uva students
         if email.split('@')[1] != "virginia.edu":
@@ -116,7 +115,7 @@ def make_request(request):
         confusion = request.POST['confusion']
 
         obj, created = StudentRequest.objects.update_or_create(description=description, location=location, 
-        confusionMeter=confusion, studentID=currentStudent.USER_ID)
+        confusionMeter=confusion, studentEmail=currentStudent.email)
         RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
         return HttpResponseRedirect(reverse('QuickTutor:student'))
