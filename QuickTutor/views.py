@@ -5,7 +5,7 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
-from QuickTutor.models import Student, Tutor, studentRequest
+from QuickTutor.models import Student, Tutor, StudentRequest, RequestCourse, TutorCourse
 
 
 def index(request):
@@ -20,7 +20,7 @@ def student(request):
         currentStudent = Student.objects.get(email=email)
 
         # display the current requests the student has
-        specificStudentRequestList = studentRequest.objects.filter(studentID=currentStudent.USER_ID)
+        specificStudentRequestList = StudentRequest.objects.filter(studentID=currentStudent.USER_ID)
 
         return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList})
     except ObjectDoesNotExist:
@@ -44,7 +44,7 @@ def tutor(request):
         currentTutor = Tutor.objects.get(email=email)
 
         # list of all student requests
-        studentRequestList = studentRequest.objects.all()
+        studentRequestList = StudentRequest.objects.all()
 
         return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList})
     except ObjectDoesNotExist:
@@ -80,10 +80,18 @@ def update_tutor(request):
         major = request.POST['major']
         year = request.POST['year']
         email = request.POST['email']
-
-        Tutor.objects.update_or_create(email=email, firstName=firstName, lastName=lastName, major=major, year=year)
-
-
+        
+        obj, created = Tutor.objects.update_or_create(email=email, firstName=firstName, lastName=lastName, major=major, year=year)
+        
+        myStr = "course" 
+        x = 1
+        temp = myStr + str(x)
+        while temp in request.POST.keys():
+            TutorCourse.objects.get_or_create(tutor=obj,course=request.POST[temp])
+            x+=1
+            temp = myStr + str(x)
+       
+       
     return HttpResponseRedirect(reverse('QuickTutor:tutor'))
 
 
@@ -101,15 +109,15 @@ def make_request(request):
 
         # create a new row in studentRequests table
         courseName = request.POST['courseName']
-        subject = request.POST['subject']
+        #subject = request.POST['subject']
+
         description = request.POST['description']
         location = request.POST['location']
         confusion = request.POST['confusion']
 
-        studentRequest.objects.update_or_create(courseName=courseName, 
-        subject=subject, description=description, location=location, 
+        obj, created = StudentRequest.objects.update_or_create(description=description, location=location, 
         confusionMeter=confusion, studentID=currentStudent.USER_ID)
-        
+        RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
         return HttpResponseRedirect(reverse('QuickTutor:student'))
 
