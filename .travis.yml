@@ -1,0 +1,14 @@
+language: python
+python:
+- '3.8'
+install:
+- pip install -r requirements-travis.txt
+script:
+- python manage.py test
+deploy:
+  provider: heroku
+  api_key:
+    secure: I4ufSWkqyuqWDjPCHwCrZah4In5fQ04xTEoyEZXLMcD9WeyANOLpnpimQ4gxO07hRPKVt2FSkCY+xVnmkif+lWThoZyOo0rcXOxfWxRUEocx6LF5aT+ROiwtrA/CynqqjZErL0vGUyHjg3O8X3EhpeBIHwF3aTnxx+JzeGs9mLHdMAaXsT9agSgzmCIE08inBfKzqpFqnxA0AedgUATe+Msh0qDY50jxeTbdcEsJbShSjaZkVnLyBQLRUHL+banP1VqB4I2Grn5c8yWDdWed+oezlbsPK826mC//9/wWRdsL+NEJ9KzlZBdFDhk+frcre+7+8tUYq0NqEYgLo2Aw7JD58bq4oevgGT+hXCLUaOdfeuwq/CdliT8YYKqqgzVY47m7t2reFdUcFUDTVMzyuQSfxdVICibJIJFpuNsiTdOmjLMkL46q4/m7X7Lx5H2KEiRGZ3ajU0OELjJsHpD7K/PNCb374Y/iJKrOF8/m/HK4LTpM2WS7JKR8wGUzknALTP3R66lCKXZ+LqsL99NCUIe6HZ/iUl+YpVdjenPJJtT8i8Bn7vchBe60PQH/OwWSuILHuBV2hljgNP0Z0sbhFjpy5D0NwiDMK7OAXVTbVtUKlpfdbTeLxgpAQV86YHFtcCZrtBDFXNBhDcOi2n8Q3RAUp39F0W5tE0EiB+VNU0A=
+  app: project-scrumpy-cat
+  on:
+    repo: uva-cs3240-s20/project-scrumpy-cat
