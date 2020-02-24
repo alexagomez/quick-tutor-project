@@ -39,10 +39,10 @@ class TutorCourse(models.Model):
 class StudentRequest(models.Model):
      # form information
      #courseName = models.OneToOneField(Course, on_delete=models.CASCADE)
-     subject = models.CharField(max_length=100, default='')
+     header = models.CharField(max_length=100, default='')
      description = models.CharField(max_length=100, default='')
      # why does subject appear twice
-     subject = models.CharField(max_length=100, default='')
+     courseName = models.CharField(max_length=100, default='')
      location = models.CharField(max_length=100, default='')
      confusionMeter = models.IntegerField(default=0)  
 
