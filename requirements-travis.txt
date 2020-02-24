@@ -1,2 +1,5 @@
 Django
 gunicorn
+social-auth-app-django
+requests
+django-google-api
