@@ -6,8 +6,8 @@ from QuickTutor.models import Student, Tutor
 # Test Case ID: T2_1.1, T2_2.3
 class TutorModelTest(TestCase):
     def setUp(self):
-        Tutor.objects.create(email="tu10r@virginia.edu", firstName="TutorOne")
-        Tutor.objects.create(email="bob@virginia.edu", firstName="Bob")
+        Tutor.objects.update_or_create(email="tu10r@virginia.edu", firstName="TutorOne", major="Art", year="First")
+        Tutor.objects.update_or_create(email="bob@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
 
     def test_student_model(self):
         self.assertTrue(Tutor.objects.filter(email='tu10r@virginia.edu', firstName='TutorOne').exists())
@@ -29,3 +29,5 @@ class StudentModelTest(TestCase):
         self.assertTrue(Student.objects.filter(email="abc345@virginia.edu").exists())
         self.assertFalse(Student.objects.filter(email="hello@virginia.edu").exists())
         self.assertTrue(Student.objects.filter(firstName="Alex").exists())
+
+
