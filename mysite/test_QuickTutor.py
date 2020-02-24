@@ -1,14 +1,5 @@
 from django.test import TestCase
-<<<<<<< HEAD
 from QuickTutor.models import Student, Tutor
-
-class StudentTestCase(TestCase):
-    def setUp(self):
-        Student.objects.create(email="abc1ef@virginia.edu", firstName="Alex")
-
-    def test_student_template(self):
-        self.assertEqual(3, 3)
-        self.assertEqual(2, 2)
 
 
 # Written By: Soukarya
@@ -24,9 +15,6 @@ class TutorModelTest(TestCase):
         self.assertFalse(Tutor.objects.filter(email='dne@virginia.edu', firstName='NotReal').exists())
 
 
-=======
-from QuickTutor.models import Student, Tutor, TutorCourse
-
 #Brandie
 class StudentModelTest(TestCase):
    # def setUp(self):
@@ -41,4 +29,3 @@ class StudentModelTest(TestCase):
         self.assertTrue(Student.objects.filter(email="abc345@virginia.edu").exists())
         self.assertFalse(Student.objects.filter(email="hello@virginia.edu").exists())
         self.assertTrue(Student.objects.filter(firstName="Alex").exists())
->>>>>>> 47441e33e15f304a9047bddcf9914386236db84b
