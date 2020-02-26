@@ -57,3 +57,16 @@ class LandingPageTest(TestCase):
         # Use this syntax for class-based views.
         self.assertEqual(response.status_code, 200)
 
+#Alexa
+class TutorRequestTest(TestCase):
+    def test_request_model(self):
+        req1, created1 = StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu", tutorEmail ="lmn1op@virginia.edu")
+        req2, created2 = StudentRequest.objects.update_or_create(header ="normal distribution", description ="webwork problem set", courseName="APMA3100", location ="Clark", confusionMeter=7, studentEmail="fgh2ijk@virginia.edu", tutorEmail ="qrs4tu@virginia.edu")
+        self.assertNotEquals(req1.studentEmail, req1.tutorEmail)
+        self.assertNotEquals(req2.studentEmail, req2.tutorEmail)
+        self.assertTrue(created1)
+        self.assertTrue(created2)
+        self.assertTrue(StudentRequest.objects.filter(header ="django practice").exists())
+        self.assertTrue(StudentRequest.objects.filter(header ="normal distribution").exists())
+        self.assertFalse(StudentRequest.objects.filter(header ="calc 3").exists())
+        self.assertTrue(StudentRequest.objects.filter(description ="making the first web app",).exists())
