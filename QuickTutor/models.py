@@ -41,7 +41,6 @@ class StudentRequest(models.Model):
      #courseName = models.OneToOneField(Course, on_delete=models.CASCADE)
      header = models.CharField(max_length=100, default='')
      description = models.CharField(max_length=100, default='')
-     # why does subject appear twice
      courseName = models.CharField(max_length=100, default='')
      location = models.CharField(max_length=100, default='')
      confusionMeter = models.IntegerField(default=0)  
