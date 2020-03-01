@@ -9,5 +9,6 @@ urlpatterns = [
     path('update_student', views.update_student, name='update_student'),
     path('update_tutor', views.update_tutor, name='update_tutor'),
     path('make_request', views.make_request, name='make_request'),
+    path('match/<email>/', views.accept, name='accept'),
 ]
 

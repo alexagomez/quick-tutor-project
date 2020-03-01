@@ -142,3 +142,8 @@ def make_request(request):
 
 
     return render(request, "QuickTutor/studentRequest.html", {})
+
+@login_required
+def accept(request, email):
+    user = get_object_or_404(Tutor, email=email)
+    return render(request, "QuickTutor/match.html", {})
