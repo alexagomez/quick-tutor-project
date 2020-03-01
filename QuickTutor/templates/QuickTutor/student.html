@@ -3,54 +3,100 @@
 {% block content %}
 {% load static %}
 
+<style>
+    .coverPhoto {
+        background-image: linear-gradient(rgba(79, 94, 99, 0.486), rgba(79, 94, 99, 0.486)),url('https://c.pxhere.com/images/7e/c2/eb1cf79acd8192961a1a81522950-1422243.jpg!d'); 
+        background-repeat: no-repeat; 
+        background-size: cover; 
+        background-position: center;
+        position: fixed;
+        width: 100%;
+        height: 40vh;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+</style>
 
-<div class="row" style="margin-top: 5vh;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        <h1>Welcome {{ student.firstName }} </h1>
+{% if student.status == 1 %}
+<!-- Default (make request) -->
+    <div class="row">
+        
+        <div class="col-md-8" style="margin: 8vh 0 0 15vh">
+            <div class="coverPhoto"></div>
+            <div class="row">
+                <img src="https://media-exp1.licdn.com/dms/image/C4E03AQEGZqvadqgnXQ/profile-displayphoto-shrink_200_200/0?e=1588809600&v=beta&t=biPxV7R-yu6rdVWASvTx6jZ9R6ZbauNvPbcHU54CdlE" style="border-radius: 50%;" alt="Avatar" width="150px">
+                <div style="margin-left: 1vh;">
+                    <a>
+                        <h1>{{student.firstName}} {{student.lastName}}</h1>
+                        <h5 style="color:rgb(206, 206, 206)">{{student.major}}</h5>
+                        <h5 style="color:rgb(206, 206, 206)">{{student.year}} Year</h5>
+                        <h6 style="color:rgb(206, 206, 206)">{{user.username}}@virgnia.edu</h6>
+                    </a>
+                </div>
+                
+            </div>
+            <div class="row text-center" style="margin-top: 2vh">
+                <div class="col-3">
+                    <h1>29</h1>
+                    Sessions
+                </div>
+                <div class="col-3">
+                    <h1>154</h1>
+                    Requests
+                </div>
+                <div class="col-3">
+                    <h1>101</h1>
+                    Tutors Online
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2"></div>
+        
     </div>
-    <div class="col-md-3"></div>
-    
-</div>
 
-{% if student.status == 0 %}
-<!-- Default (cancelled/make request) -->
-<div class="row" style="margin-top: 10vh;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        <a class="btn btn-primary" href="{% url 'QuickTutor:make_request' %}">Make Request</a>
+    <div class="row" style="margin-top: 10vh;">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-center" style="font-size: 2rem;">
+            <a class="btn btn-primary" href="{% url 'QuickTutor:make_request' %}">Make Request</a>
+        </div>
+        <div class="col-md-3"></div>
     </div>
-    <div class="col-md-3"></div>
-</div>
+
+    <div class="row">
+        
+    </div>
 
 {% elif student.status == 1 %} 
 <!-- waiting for tutors state/list view -->
-<div class="row" style="margin-top: 10vh;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        <h3>Current Requests</h3>
-        <ul class="list-group"></ul>
-        {% for request in specificStudentRequestList %}
-            <li = class="list-group-item"><font size = "4">
-                Course Name: <font color = "blue">{{request.courseName}}</font> 
-                <br>Subject: <font color = "blue">{{request.header}}</font> 
-                <br>Description: <font color = "blue">{{request.description}}</font> 
-                <br>Location: <font color = "blue">{{request.location}}</font> 
-                <br>Confusion Meter: <font color = "blue">{{request.confusionMeter}}</font> 
-                <br><button type="submit" class="btn btn-primary">Cancel Request</button> </font></li>
-        {% endfor %}
-        </ul>
-        <h4>List of Tutors</h4>
-        <ul class="list-group">
-            <li class="list-group-item">Bob</li>
-            <li class="list-group-item">Joe</li>
-            <li class="list-group-item">Billy</li>
-            <li class="list-group-item">idk</li>
-            <li class="list-group-item">cool</li>
-        </ul>
+    <div class="row" style="margin-top: 10vh;">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-center" style="font-size: 2rem;">
+            <h3>Current Requests</h3>
+            <ul class="list-group"></ul>
+            {% for request in specificStudentRequestList %}
+                <li = class="list-group-item"><font size = "4">
+                    Course Name: <font color = "blue">{{request.courseName}}</font> 
+                    <br>Subject: <font color = "blue">{{request.header}}</font> 
+                    <br>Description: <font color = "blue">{{request.description}}</font> 
+                    <br>Location: <font color = "blue">{{request.location}}</font> 
+                    <br>Confusion Meter: <font color = "blue">{{request.confusionMeter}}</font> 
+                    <br><button type="submit" class="btn btn-primary">Cancel Request</button> </font></li>
+            {% endfor %}
+            </ul>
+            <h4>List of Tutors</h4>
+            <ul class="list-group">
+                <li class="list-group-item">Bob</li>
+                <li class="list-group-item">Joe</li>
+                <li class="list-group-item">Billy</li>
+                <li class="list-group-item">idk</li>
+                <li class="list-group-item">cool</li>
+            </ul>
+        </div>
+        <div class="col-md-3"></div>
     </div>
-    <div class="col-md-3"></div>
-</div>
 
 {% endif %}
 
