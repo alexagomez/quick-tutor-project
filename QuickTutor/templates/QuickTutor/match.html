@@ -19,6 +19,12 @@
             <p>Welcome, {{ user.email }}</p>
             <p>Please wait while we match you with your student</p>
             <!-- <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a> -->
+            <ul class="list-group"></ul>
+                <li = class="list-group-item"><font size = "4">
+                    Student Name: <font color = "blue">{{student.firstName}}</font> 
+                    <br>StudentStatus <font color = "blue">{{student.status}}</font> 
+                    </li>
+            </ul>
         {% else %}
             <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}" style="width: 10vh;">
                 Login

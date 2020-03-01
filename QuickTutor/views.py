@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
@@ -44,6 +44,7 @@ def tutor(request):
 
         # list of all student requests
         studentRequestList = StudentRequest.objects.all()
+        #studentUsernames = StudentRequest.objects.get('studentUsername')
 
         return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList})
     except ObjectDoesNotExist:
@@ -66,7 +67,7 @@ def update_student(request):
         year = request.POST['year']
         email = request.POST['email']
 
-        Student.objects.update_or_create(email=email, firstName=firstName, lastName=lastName, major=major, year=year)
+        Student.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
 
     return HttpResponseRedirect(reverse('QuickTutor:student'))
 
@@ -80,7 +81,7 @@ def update_tutor(request):
         year = request.POST['year']
         email = request.POST['email']
         
-        obj, created = Tutor.objects.update_or_create(email=email, firstName=firstName, lastName=lastName, major=major, year=year)
+        obj, created = Tutor.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
         
         myStr = "course" 
         x = 1
@@ -124,6 +125,17 @@ def make_request(request):
     return render(request, "QuickTutor/studentRequest.html", {})
 
 @login_required
-def accept(request, email):
-    user = get_object_or_404(Tutor, email=email)
-    return render(request, "QuickTutor/match.html", {})
+def accept(request, username):
+    student = get_object_or_404(Student, username=username)
+    currentUser = request.user
+    currentUser.status = 2
+    student.accepted = 1
+    student.status = 1
+    stReq = StudentRequest.objects.get(studentEmail=student.email)
+    stReq.tutorEmail = currentUser.email
+    stReq.tutorUsername = currentUser.username
+    student.save(update_fields=['status', 'accepted'])
+    stReq.save(update_fields=['tutorEmail', 'tutorUsername'])
+    #sRequest = get_object_or_404(StudentRequest, studentUsername=username)
+    return render(request, "QuickTutor/match.html", {'student': student, 'user': currentUser})
+    #return HttpResponseRedirect(reverse('QuickTutor:accept', args=(user.username)))

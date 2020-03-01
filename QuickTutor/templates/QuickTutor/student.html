@@ -40,6 +40,13 @@
                 <br><button type="submit" class="btn btn-primary">Cancel Request</button> </font></li>
         {% endfor %}
         </ul>
+        {% if student.accepted == 1 %}
+            <p> Hello </p>
+            {% for request in specificStudentRequestList %}
+                <li = class="list-group-item"><font size = "4">
+                    Tutor Name: <font color = "red">{{request.tutorUsername}}</font>
+            {% endfor %}
+        {% elif student.accepted == 0 %}
         <h4>List of Tutors</h4>
         <ul class="list-group">
             <li class="list-group-item">Bob</li>
@@ -48,6 +55,7 @@
             <li class="list-group-item">idk</li>
             <li class="list-group-item">cool</li>
         </ul>
+        {% endif %}
     </div>
     <div class="col-md-3"></div>
 </div>
