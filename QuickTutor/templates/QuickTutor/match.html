@@ -1,0 +1,33 @@
+{% extends 'QuickTutor/base.html' %}
+
+{% block content %}
+{% load static %}
+
+
+<div class="row" style="margin-top: 5vh;">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center" style="font-size: 2rem;">
+        <h1>Match Page</h1>
+    </div>
+    <div class="col-md-3"></div>
+    
+</div>
+<div class="row" style="margin-top: 10vh; height: 45vh">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center" style="font-size: 2rem;">
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.email }}</p>
+            <p>Please wait while we match you with your student</p>
+            <!-- <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a> -->
+        {% else %}
+            <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}" style="width: 10vh;">
+                Login
+            </a>
+        {% endif %}
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+
+
+{% endblock %}
