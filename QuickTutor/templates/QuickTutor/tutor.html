@@ -48,7 +48,7 @@
                                     <br> <b>Location:</b> {{request.location}}
                                     <br> <b>Confusion Meter:</b> {{request.confusionMeter}} 
                                     </p>
-                                <a href="#" class="btn btn-primary">Accept</a>
+                                <a onclick=transfer("{{request.studentUsername}}") class="btn btn-primary">Accept</a>
                                 </div>
                             </div>
                         </div>
@@ -64,6 +64,12 @@
         <div class="col-md-4"></div>
     </div>
 </div>
+
+<script>
+    function transfer(user_id){
+        window.location.replace("match/" + user_id);
+    }
+</script>
 {% else %}
 
 
