@@ -127,7 +127,8 @@ def make_request(request):
 @login_required
 def accept(request, username):
     student = get_object_or_404(Student, username=username)
-    currentUser = request.user
+    # currentUser = request.user
+    currentUser = Tutor.objects.get(email=request.user.email)
     currentUser.status = 2
     student.accepted = 1
     student.status = 1

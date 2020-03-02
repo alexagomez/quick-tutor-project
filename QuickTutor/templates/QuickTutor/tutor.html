@@ -47,9 +47,8 @@
                                     <br> <b>Description:</b> {{request.description}}
                                     <br> <b>Location:</b> {{request.location}}
                                     <br> <b>Confusion Meter:</b> {{request.confusionMeter}} 
-                                    <br><a href="/match/es6xs/">Accept</button> 
                                     </p>
-                                <a href="#" class="btn btn-primary">Accept</a>
+                                <a onclick=transfer("{{request.studentUsername}}") class="btn btn-primary">Accept</a>
                                 </div>
                             </div>
                         </div>
@@ -65,6 +64,12 @@
         <div class="col-md-4"></div>
     </div>
 </div>
+
+<script>
+    function transfer(user_id){
+        window.location.replace("match/" + user_id);
+    }
+</script>
 {% else %}
 
 
