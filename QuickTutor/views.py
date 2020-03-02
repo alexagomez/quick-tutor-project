@@ -116,7 +116,7 @@ def make_request(request):
         confusion = request.POST['confusion']
 
         obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location, 
-        confusionMeter=confusion, studentEmail=currentStudent.email)
+        confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
         # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
         return HttpResponseRedirect(reverse('QuickTutor:student'))
@@ -138,5 +138,5 @@ def accept(request, username):
     student.save(update_fields=['status', 'accepted'])
     stReq.save(update_fields=['tutorEmail', 'tutorUsername'])
     #sRequest = get_object_or_404(StudentRequest, studentUsername=username)
-    return render(request, "QuickTutor/match.html", {'student': student, 'user': currentUser, 'studentRequest': stReq})
+    return render(request, "QuickTutor/match.html", {'student': student, 'currentUser': currentUser, 'studentRequest': stReq})
     #return HttpResponseRedirect(reverse('QuickTutor:accept', args=(user.username)))
