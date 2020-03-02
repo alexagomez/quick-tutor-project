@@ -3,36 +3,67 @@
 {% block content %}
 {% load static %}
 
-
-<div class="row" style="margin-top: 5vh;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        <h1>Welcome Tutor</h1>
+<div class="container"></div>
+    <div class="row" style="margin-top: 5vh;">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-center" style="font-size: 2rem;">
+            <h1>Welcome Tutor</h1>
+        </div>
+        <div class="col-md-3"></div>
+        
     </div>
-    <div class="col-md-3"></div>
-    
-</div>
 {% if user.is_authenticated %}
-<div class="row" style="margin-top: 10vh;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        <p>Logged in as {{ user.username }}</p>
-        <!-- lists the course name -->
-        <h2>List of Student Requests</h2>
-        <ul class="list-group"></ul>
-        {% for request in studentRequestList %}
-            <li = class="list-group-item"><font size = "4">
-                Course Name: <font color = "blue">{{request.courseName}}</font> 
-                <br>Subject: <font color = "blue">{{request.header}}</font> 
-                <br>Description: <font color = "blue">{{request.description}}</font> 
-                <br>Location: <font color = "blue">{{request.location}}</font> 
-                <br>Confusion Meter: <font color = "blue">{{request.confusionMeter}}</font> 
-                <br><a href="/match/es6xs/">Accept</button> 
+    <!-- <div class="row" style="margin-top: 10vh;"> -->
+    <div class="row" style="margin-top: 5vh;">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-center" style="font-size: 2rem;">
+            <p>Logged in as {{ user.username }}</p>
+            <!-- lists the course name -->
+            <h2>List of Student Requests</h2>
+            
+            <ul class="list-group">
+            {% for request in studentRequestList %}
+            <!--
+                <li = class="list-group-item"><font size = "4">
+                    Course Name: <font color = "blue">{{request.courseName}}</font> 
+                    <br>Subject: <font color = "blue">{{request.header}}</font> 
+                    <br>Description: <font color = "blue">{{request.description}}</font> 
+                    <br>Location: <font color = "blue">{{request.location}}</font> 
+                    <br>Confusion Meter: <font color = "blue">{{request.confusionMeter}}</font> 
+                    <br><button type="submit" class="btn btn-primary">Accept</button> </font>
                 </li>
-        {% endfor %}
-        </ul>
+            -->
+            <li = class="list-group-item text-dark"><font size = "4">
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <!-- <div class="col-md-auto"></div> -->
+                        <div class="col-md-10">
+                            <div class="card text-center" style="width: 100%; margin: auto;">
+                                <div class="card-body">
+                                <h5 class="card-title text-primary">{{request.courseName}} Request</h5>
+                                <p class="card-text">
+                                    <!-- Course Name: {{request.courseName}}  -->
+                                    <br> <b>Subject:</b> {{request.header}}
+                                    <br> <b>Description:</b> {{request.description}}
+                                    <br> <b>Location:</b> {{request.location}}
+                                    <br> <b>Confusion Meter:</b> {{request.confusionMeter}} 
+                                    <br><a href="/match/(?P<request.studentUsername>\w+)/">Accept</button> 
+                                    </p>
+                                <a href="#" class="btn btn-primary">Accept</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-auto"></div> -->
+                    </div>
+                    </font>
+                </div>    
+            </li>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-4"></div>
     </div>
-    <div class="col-md-3"></div>
 </div>
 {% else %}
 

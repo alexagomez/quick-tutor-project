@@ -137,5 +137,5 @@ def accept(request, username):
     student.save(update_fields=['status', 'accepted'])
     stReq.save(update_fields=['tutorEmail', 'tutorUsername'])
     #sRequest = get_object_or_404(StudentRequest, studentUsername=username)
-    return render(request, "QuickTutor/match.html", {'student': student, 'user': currentUser})
+    return render(request, "QuickTutor/match.html", {'student': student, 'user': currentUser, 'studentRequest': stReq})
     #return HttpResponseRedirect(reverse('QuickTutor:accept', args=(user.username)))
