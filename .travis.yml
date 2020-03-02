@@ -7,6 +7,9 @@ script:
 - python manage.py test
 notifications:
   slack: scrumpycat:ssrBGACkIqgYex7GrBwMQtEa
+branches:
+  only:
+  - master
 deploy:
   provider: heroku
   api_key:
