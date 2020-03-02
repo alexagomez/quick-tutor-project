@@ -6,6 +6,7 @@ import random
 
 class Student(models.Model):
     email = models.CharField(max_length=100, default='', primary_key=True)
+    username = models.CharField(max_length=10, default='')
 
     firstName = models.CharField(max_length=100, default='')
     lastName = models.CharField(max_length=100, default='')
@@ -17,9 +18,11 @@ class Student(models.Model):
 #     matchedID = models.UUIDField(default=0, editable=True)
     status = models.IntegerField(default=0)     # 0=canceled/off        1=waiting           2=accepted
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
+    accepted = models.IntegerField(default=0)
 
 class Tutor(models.Model):
     email = models.CharField(max_length=100, default='', primary_key=True)
+    username = models.CharField(max_length=10, default='')
 
     firstName = models.CharField(max_length=100, default='')
     lastName = models.CharField(max_length=100, default='')
@@ -47,7 +50,9 @@ class StudentRequest(models.Model):
 
      # student ID
      studentEmail = models.CharField(max_length=100, default='')
+     studentUsername = models.CharField(max_length=10, default='')
      tutorEmail = models.CharField(max_length=100, default='')
+     tutorUsername = models.CharField(max_length=10, default='')
 
 class RequestCourse(models.Model):
     request = models.OneToOneField(StudentRequest, on_delete=models.CASCADE, related_name='request')
