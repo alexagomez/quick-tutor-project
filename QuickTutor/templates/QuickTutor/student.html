@@ -71,31 +71,37 @@
 
 {% elif student.status == 1 %} 
 <!-- waiting for tutors state/list view -->
-    <div class="row" style="margin-top: 10vh;">
-        <div class="col-md-3"></div>
-        <div class="col-md-6 text-center" style="font-size: 2rem;">
-            <h3>Current Requests</h3>
-            <ul class="list-group"></ul>
+<div class="row" style="margin-top: 10vh;">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center" style="font-size: 2rem;">
+        <h3>Current Requests</h3>
+        <ul class="list-group"></ul>
+        {% for request in specificStudentRequestList %}
+            <li = class="list-group-item"><font size = "4">
+                Course Name: <font color = "blue">{{request.courseName}}</font> 
+                <br>Subject: <font color = "blue">{{request.header}}</font> 
+                <br>Description: <font color = "blue">{{request.description}}</font> 
+                <br>Location: <font color = "blue">{{request.location}}</font> 
+                <br>Confusion Meter: <font color = "blue">{{request.confusionMeter}}</font> 
+                <br><button type="submit" class="btn btn-primary">Cancel Request</button> </font></li>
+        {% endfor %}
+        </ul>
+        {% if student.accepted == 1 %}
+            <p> Hello </p>
             {% for request in specificStudentRequestList %}
                 <li = class="list-group-item"><font size = "4">
-                    Course Name: <font color = "blue">{{request.courseName}}</font> 
-                    <br>Subject: <font color = "blue">{{request.header}}</font> 
-                    <br>Description: <font color = "blue">{{request.description}}</font> 
-                    <br>Location: <font color = "blue">{{request.location}}</font> 
-                    <br>Confusion Meter: <font color = "blue">{{request.confusionMeter}}</font> 
-                    <br><button type="submit" class="btn btn-primary">Cancel Request</button> </font></li>
+                    Tutor Name: <font color = "red">{{request.tutorUsername}}</font>
             {% endfor %}
-            </ul>
-            <h4>List of Tutors</h4>
-            <ul class="list-group">
-                <li class="list-group-item">Bob</li>
-                <li class="list-group-item">Joe</li>
-                <li class="list-group-item">Billy</li>
-                <li class="list-group-item">idk</li>
-                <li class="list-group-item">cool</li>
-            </ul>
-        </div>
-        <div class="col-md-3"></div>
+        {% elif student.accepted == 0 %}
+        <h4>List of Tutors</h4>
+        <ul class="list-group">
+            <li class="list-group-item">Bob</li>
+            <li class="list-group-item">Joe</li>
+            <li class="list-group-item">Billy</li>
+            <li class="list-group-item">idk</li>
+            <li class="list-group-item">cool</li>
+        </ul>
+        {% endif %}
     </div>
 
 {% endif %}
