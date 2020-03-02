@@ -127,7 +127,6 @@ def make_request(request):
 @login_required
 def accept(request, username):
     student = get_object_or_404(Student, username=username)
-    # currentUser = request.user
     currentUser = Tutor.objects.get(email=request.user.email)
     currentUser.status = 2
     student.accepted = 1
@@ -140,3 +139,27 @@ def accept(request, username):
     #sRequest = get_object_or_404(StudentRequest, studentUsername=username)
     return render(request, "QuickTutor/match.html", {'student': student, 'currentUser': currentUser, 'studentRequest': stReq})
     #return HttpResponseRedirect(reverse('QuickTutor:accept', args=(user.username)))
+
+
+@login_required
+def cancel(request, studentUsername):
+    if(request.user.username == studentUsername):
+        studentRequest = StudentRequest.objects.get(studentUsername=studentUsername)
+
+        student = Student.objects.get(email=studentRequest.studentEmail)
+        student.status = 0
+        student.save(update_fields=['status'])
+
+        if studentRequest.tutorEmail != "":
+            tutor = Student.objects.get(email=studentRequest.tutorEmail)
+            tutor.status = 0
+            tutor.save(update_fields=['status'])
+
+        studentRequest.delete()
+
+    return HttpResponseRedirect(reverse('QuickTutor:student'))
+
+
+
+
+    
