@@ -83,11 +83,10 @@
                 <br>Description: <font color = "blue">{{request.description}}</font> 
                 <br>Location: <font color = "blue">{{request.location}}</font> 
                 <br>Confusion Meter: <font color = "blue">{{request.confusionMeter}}</font> 
-                <br><button type="submit" class="btn btn-primary">Cancel Request</button> </font></li>
+                <br><a type="submit" class="btn btn-primary" onclick=cancel("{{request.studentUsername}}")>Cancel Request</a> </font></li>
         {% endfor %}
         </ul>
         {% if student.accepted == 1 %}
-            <p> Hello </p>
             {% for request in specificStudentRequestList %}
                 <li = class="list-group-item"><font size = "4">
                     Tutor Name: <font color = "red">{{request.tutorUsername}}</font>
@@ -104,6 +103,13 @@
         {% endif %}
     </div>
 
+    <script>
+        function cancel(user_id){
+            window.location.replace("cancel/" + user_id);
+        }
+    </script>
+
 {% endif %}
 
 {% endblock %}
+
