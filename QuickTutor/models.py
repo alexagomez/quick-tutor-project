@@ -46,7 +46,7 @@ class StudentRequest(models.Model):
      description = models.CharField(max_length=100, default='')
      courseName = models.CharField(max_length=100, default='')
      location = models.CharField(max_length=100, default='')
-     meetingDetails = models.IntegerField(default=0)  
+     meetingDetails = models.CharField(max_length=100, default='')
      confusionMeter = models.IntegerField(default=0)  
 
 
