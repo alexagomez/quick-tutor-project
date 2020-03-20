@@ -92,14 +92,7 @@
                     Tutor Name: <font color = "red">{{request.tutorUsername}}</font>
             {% endfor %}
         {% elif student.accepted == 0 %}
-        <h4>List of Tutors</h4>
-        <ul class="list-group">
-            <li class="list-group-item">Bob</li>
-            <li class="list-group-item">Joe</li>
-            <li class="list-group-item">Billy</li>
-            <li class="list-group-item">idk</li>
-            <li class="list-group-item">cool</li>
-        </ul>
+            <h4>Waiting for Tutors to Accept...</h4>
         {% endif %}
     </div>
 
