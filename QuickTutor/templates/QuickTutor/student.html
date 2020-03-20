@@ -84,27 +84,26 @@
                 <br>Location: <font color = "blue">{{request.location}}</font> 
                 <br>Meeting Details: <font color = "blue">{{request.meetingDetails}}</font> 
                 <br>Confusion Meter: <font color = "blue">{{request.confusionMeter}}</font> 
-                <br><button type="submit" class="btn btn-primary">Cancel Request</button> </font></li>
+                <br><a type="submit" class="btn btn-primary" onclick=cancel("{{request.studentUsername}}")>Cancel Request</a> </font></li>
         {% endfor %}
         </ul>
         {% if student.accepted == 1 %}
-            <p> Hello </p>
             {% for request in specificStudentRequestList %}
                 <li = class="list-group-item"><font size = "4">
                     Tutor Name: <font color = "red">{{request.tutorUsername}}</font>
             {% endfor %}
         {% elif student.accepted == 0 %}
-        <h4>List of Tutors</h4>
-        <ul class="list-group">
-            <li class="list-group-item">Bob</li>
-            <li class="list-group-item">Joe</li>
-            <li class="list-group-item">Billy</li>
-            <li class="list-group-item">idk</li>
-            <li class="list-group-item">cool</li>
-        </ul>
+            <h4>Waiting for Tutors to Accept...</h4>
         {% endif %}
     </div>
+
+    <script>
+        function cancel(user_id){
+            window.location.replace("cancel/" + user_id);
+        }
+    </script>
 
 {% endif %}
 
 {% endblock %}
+
