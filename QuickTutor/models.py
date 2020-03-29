@@ -43,10 +43,10 @@ class StudentRequest(models.Model):
      # form information
      #courseName = models.OneToOneField(Course, on_delete=models.CASCADE)
      header = models.CharField(max_length=100, default='')
-     description = models.CharField(max_length=100, default='')
+     description = models.CharField(max_length=1000, default='')
      courseName = models.CharField(max_length=100, default='')
      location = models.CharField(max_length=100, default='')
-     meetingDetails = models.CharField(max_length=100, default='')
+     meetingDetails = models.CharField(max_length=1000, default='')
      confusionMeter = models.IntegerField(default=0)  
 
      # student ID
