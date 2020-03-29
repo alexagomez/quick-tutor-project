@@ -49,7 +49,6 @@ class StudentRequest(models.Model):
      meetingDetails = models.CharField(max_length=100, default='')
      confusionMeter = models.IntegerField(default=0)  
 
-
      # student ID
      studentEmail = models.CharField(max_length=100, default='')
      studentUsername = models.CharField(max_length=10, default='')
