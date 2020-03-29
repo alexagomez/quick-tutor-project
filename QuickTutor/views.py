@@ -114,9 +114,10 @@ def make_request(request):
         description = request.POST['description']
         location = request.POST['location']
         confusion = request.POST['confusion']
+        meetingDetails = request.POST['meetingDetails']
 
-        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location, 
-        confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
+        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location,
+        meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
         # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
         return HttpResponseRedirect(reverse('QuickTutor:student'))

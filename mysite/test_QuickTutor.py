@@ -16,7 +16,8 @@ class TutorModelTest(TestCase):
         self.assertTrue(Tutor.objects.filter(email='bob@virginia.edu', firstName='Bob').exists())
         self.assertFalse(Tutor.objects.filter(email='dne@virginia.edu', firstName='NotReal').exists())
 
-#Brandie
+#Written By: Brandie
+#Test Case ID: T2_2.2, T2_1.2
 class StudentModelTest(TestCase):
    # def setUp(self):
         
@@ -32,7 +33,8 @@ class StudentModelTest(TestCase):
         self.assertTrue(Student.objects.filter(firstName="Alex").exists())
 
 
-#Brandie
+#Written By: Brandie
+#Test Case Id: T2_1.1
 class LandingPageTest(TestCase):
     def setUp(self):
         # Every test needs access to the request factory.
@@ -57,7 +59,8 @@ class LandingPageTest(TestCase):
         # Use this syntax for class-based views.
         self.assertEqual(response.status_code, 200)
 
-#Alexa
+#Written By: Alexa
+#Test Case ID: T2_3.1
 class TutorRequestTest(TestCase):
     def setUp(self):
         StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu", tutorEmail ="lmn1op@virginia.edu")
