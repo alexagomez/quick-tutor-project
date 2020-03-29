@@ -3,11 +3,12 @@
 {% block content %}
 {% load static %}
 
+
 <style>
     .coverPhoto {
-        background-image: linear-gradient(rgba(79, 94, 99, 0.486), rgba(79, 94, 99, 0.486)),url('https://c.pxhere.com/images/7e/c2/eb1cf79acd8192961a1a81522950-1422243.jpg!d'); 
-        background-repeat: no-repeat; 
-        background-size: cover; 
+        background-image: linear-gradient(rgba(79, 94, 99, 0.486), rgba(79, 94, 99, 0.486)), url('https://c.pxhere.com/images/7e/c2/eb1cf79acd8192961a1a81522950-1422243.jpg!d');
+        background-repeat: no-repeat;
+        background-size: cover;
         background-position: center;
         position: fixed;
         width: 100%;
@@ -18,44 +19,46 @@
     }
 </style>
 
+<div class="row">
+
+    <div class="col-md-8" style="margin: 8vh 0 0 15vh">
+        <div class="coverPhoto"></div>
+        <div class="row">
+            <img src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
+                style="border-radius: 50%;" alt="Avatar" width="150px">
+            <div style="margin-left: 1vh;">
+                <a>
+                    <h1 style="color:white">{{student.firstName}} {{student.lastName}}</h1>
+                    <h5 style="color:rgb(206, 206, 206)">{{student.major}}</h5>
+                    <h5 style="color:rgb(206, 206, 206)">{{student.year}} Year</h5>
+                    <h6 style="color:rgb(206, 206, 206)">{{user.username}}@virgnia.edu</h6>
+                </a>
+            </div>
+
+        </div>
+        <div class="row text-center" style="margin-top: 2vh; color:rgb(206, 206, 206)">
+            <div class="col-3">
+                <h1>29</h1>
+                Sessions
+            </div>
+            <div class="col-3">
+                <h1>154</h1>
+                Requests
+            </div>
+            <div class="col-3">
+                <h1>101</h1>
+                Tutors Online
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-2"></div>
+
+</div>
+
 {% if student.status == 0 %}
 <!-- Default (make request) -->
-    <div class="row">
-        
-        <div class="col-md-8" style="margin: 8vh 0 0 15vh">
-            <div class="coverPhoto"></div>
-            <div class="row">
-                <img src="https://media-exp1.licdn.com/dms/image/C4E03AQEGZqvadqgnXQ/profile-displayphoto-shrink_200_200/0?e=1588809600&v=beta&t=biPxV7R-yu6rdVWASvTx6jZ9R6ZbauNvPbcHU54CdlE" style="border-radius: 50%;" alt="Avatar" width="150px">
-                <div style="margin-left: 1vh;">
-                    <a>
-                        <h1>{{student.firstName}} {{student.lastName}}</h1>
-                        <h5 style="color:rgb(206, 206, 206)">{{student.major}}</h5>
-                        <h5 style="color:rgb(206, 206, 206)">{{student.year}} Year</h5>
-                        <h6 style="color:rgb(206, 206, 206)">{{user.username}}@virgnia.edu</h6>
-                    </a>
-                </div>
-                
-            </div>
-            <div class="row text-center" style="margin-top: 2vh">
-                <div class="col-3">
-                    <h1>29</h1>
-                    Sessions
-                </div>
-                <div class="col-3">
-                    <h1>154</h1>
-                    Requests
-                </div>
-                <div class="col-3">
-                    <h1>101</h1>
-                    Tutors Online
-                </div>
-            </div>
-            
-        </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-2"></div>
-        
-    </div>
 
     <div class="row" style="margin-top: 10vh;">
         <div class="col-md-3"></div>
@@ -66,43 +69,116 @@
     </div>
 
     <div class="row">
-        
+
     </div>
 
-{% elif student.status == 1 %} 
+{% elif student.status == 1 %}
 <!-- waiting for tutors state/list view -->
-<div class="row" style="margin-top: 10vh;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        <h3>Current Requests</h3>
-        <ul class="list-group"></ul>
-        {% for request in specificStudentRequestList %}
-            <li = class="list-group-item"><font size = "4">
-                Course Name: <font color = "blue">{{request.courseName}}</font> 
-                <br>Subject: <font color = "blue">{{request.header}}</font> 
-                <br>Description: <font color = "blue">{{request.description}}</font> 
-                <br>Location: <font color = "blue">{{request.location}}</font> 
-                <br>Confusion Meter: <font color = "blue">{{request.confusionMeter}}</font> 
-                <br><a type="submit" class="btn btn-primary" onclick=cancel("{{request.studentUsername}}")>Cancel Request</a> </font></li>
-        {% endfor %}
-        </ul>
-        {% if student.accepted == 1 %}
-            {% for request in specificStudentRequestList %}
-                <li = class="list-group-item"><font size = "4">
-                    Tutor Name: <font color = "red">{{request.tutorUsername}}</font>
-            {% endfor %}
-        {% elif student.accepted == 0 %}
-            <h4>Waiting for Tutors to Accept...</h4>
-        {% endif %}
-    </div>
+    {% for request in specificStudentRequestList %}
 
-    <script>
-        function cancel(user_id){
-            window.location.replace("cancel/" + user_id);
-        }
-    </script>
+        <div class='row' style='margin-top: 2em;'>
+            <div class='col-md-3'></div>
+            <div class="col-md-6" style='margin: 0 auto;'>
+                <div class="cardbox shadow-lg bg-white">
+        
+                    <div class="cardbox-heading">
+                        <!-- START dropdown-->
+                        <div class="dropdown float-right">
+                            <button class="btn btn-flat btn-flat-icon" type="button" data-toggle="dropdown"
+                                aria-expanded="false">
+                                <em class="fa fa-ellipsis-h"></em>
+                            </button>
+                            <div class="dropdown-menu dropdown-scale dropdown-menu-right" role="menu"
+                                style="position: absolute; transform: translate3d(-136px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <a class="dropdown-item" onclick=cancel("{{request.studentUsername}}") style="color:red; cursor: pointer;">Cancel</a>
+                            </div>
+                        </div>
+                        <!--/ dropdown -->
+                        <div class="media m-0">
+                            <div class="d-flex mr-3">
+                                <a href=""><img class="img-fluid rounded-circle"
+                                        src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
+                                        alt="User"></a>
+                            </div>
+                            <div class="media-body">
+                                <p class="m-0">{{request.studentEmail}}</p>
+                                <small><span><i class="fas fa-map-marker-alt"></i> {{request.location}}</span></small>
+                                <small><span><i class="icon ion-md-time"></i> x minutes ago</span></small>
+                            </div>
+                        </div>
+                        <!--/ media -->
+                    </div>
+                    <!--/ cardbox-heading -->
 
-{% endif %}
+                    <!-- MAIN CONTENT -->
+                    <div class="row" style="margin-left: 3em; color:black;">
+                        <div class='col-8'>
+                            <a style="font-size: 2em; color: black">{{request.header}} </a> <p>{{request.courseName}}</p>
 
-{% endblock %}
+                            <p>{{request.description}}</p>
+                        </div>
+                        <div class='col-3 text-center' style='margin: 1vh 0 0 0'>
+                            <div class="single-chart">
+                                <svg viewBox="0 0 36 36" class="circular-chart confusion">
+                                    <path class="circle-bg"
+                                    d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    />
+                                    <path id="actSVG" class="circle"
+                                    stroke-dasharray="{{request.confusionMeter}}0, 100"
+                                    d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    />
+                                    <text x="18" y="20.35" class="percentage">{{request.confusionMeter}}</text>
+                                </svg>
+                                <a style="color:red; text-align: center; font-weight: 500;">Confusion</a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!--/ MAIN CONTENT -->
+        
+                    <div class="cardbox-base">
+                        <ul>
+                            {% for request in specificStudentRequestList %}
+                                {% if request.tutorUsername != '' %}
+                                    <li><a href="#"><img
+                                        src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
+                                        class="img-fluid rounded-circle" alt="User"></a></li>
+                                    <li><a><span>{{request.tutorUsername}} Accepted</span></a></li>
+                                {% elif student.accepted == 0 %}
+                                    <li><a><span>Waiting for Tutors to accept...</span></a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            
+                        </ul>
+                    </div>
+                    <!--/ cardbox-base -->
+        
+                </div>
+                <!--/ cardbox -->
+        
+            </div>
+            <!--/ col-6 -->
+        
+            <div class='col-md-3'></div>
+        
+        </div>
+        <!--/ row -->
+    {% endfor %}
 
+    
+
+<script>
+    function cancel(user_id) {
+        window.location.replace("cancel/" + user_id);
+    }
+</script>
+
+    {% endif %}
+
+
+    {% endblock %}
