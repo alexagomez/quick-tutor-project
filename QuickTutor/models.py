@@ -40,20 +40,23 @@ class TutorCourse(models.Model):
     
     
 class StudentRequest(models.Model):
-     # form information
-     #courseName = models.OneToOneField(Course, on_delete=models.CASCADE)
-     header = models.CharField(max_length=100, default='')
-     description = models.CharField(max_length=1000, default='')
-     courseName = models.CharField(max_length=100, default='')
-     location = models.CharField(max_length=100, default='')
-     meetingDetails = models.CharField(max_length=1000, default='')
-     confusionMeter = models.IntegerField(default=0)  
+    # form information
+    #courseName = models.OneToOneField(Course, on_delete=models.CASCADE)
+    header = models.CharField(max_length=100, default='')
+    description = models.CharField(max_length=1000, default='')
+    courseName = models.CharField(max_length=100, default='')
+    location = models.CharField(max_length=100, default='')
+    meetingDetails = models.CharField(max_length=1000, default='')
+    confusionMeter = models.IntegerField(default=0)  
 
-     # student ID
-     studentEmail = models.CharField(max_length=100, default='')
-     studentUsername = models.CharField(max_length=10, default='')
-     tutorEmail = models.CharField(max_length=100, default='')
-     tutorUsername = models.CharField(max_length=10, default='')
+    # student ID
+    studentEmail = models.CharField(max_length=100, default='')
+    studentUsername = models.CharField(max_length=10, default='')
+    tutorEmail = models.CharField(max_length=100, default='')
+    tutorUsername = models.CharField(max_length=10, default='')
+
+    # session status
+    status = models.IntegerField(default=0)     # 0=not started        1=started  
 
 class RequestCourse(models.Model):
     request = models.OneToOneField(StudentRequest, on_delete=models.CASCADE, related_name='request')

@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.urls import reverse
 from django.views import generic
 from django.contrib.auth.decorators import login_required
@@ -161,6 +162,41 @@ def cancel(request, studentUsername):
     return HttpResponseRedirect(reverse('QuickTutor:student'))
 
 
+@login_required
+def tutorsession(request):
+    currentUser = request.user
+    email = currentUser.email
+    currentTutor = Tutor.objects.get(email=email)
+    studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
+    return render(request, "QuickTutor/tutorsession.html", {'StudentRequest': studentRequest})
 
+@login_required
+def studentsession(request):
+    currentUser = request.user
+    email = currentUser.email
+    currentStudent = Student.objects.get(email=email)
+    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
+    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest})
 
-    
+@login_required
+def startsession(request):
+    currentUser = request.user
+    email = currentUser.email
+    currentTutor = Tutor.objects.get(email=email)
+    studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
+    studentRequest.status = 1
+    studentRequest.save(update_fields=['status'])
+    data = [{
+    }]
+    return JsonResponse(data, safe=False)
+
+@login_required
+def checkstart(request):
+    currentUser = request.user
+    email = currentUser.email
+    currentStudent = Student.objects.get(email=email)
+    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
+    data = [{
+        'status': studentRequest.status
+    }]
+    return JsonResponse(data, safe=False)
