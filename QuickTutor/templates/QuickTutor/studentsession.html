@@ -55,6 +55,16 @@
     
 </div>
 <p></p>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-3">
+        <p style="">
+            <h1>STUDENT SESSION</h1>
+        </p>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+<p></p>
 <div class="row" >
     <div class="col-md-2"></div>
     <div class="col-3">
@@ -62,7 +72,8 @@
             Waiting for <b>{{StudentRequest.tutorUsername}}</b> to start the session<span id="dots"></span>
         </p>
         <p id="begunStatus" style="display:none;">
-            <b>{{StudentRequest.tutorUsername}}</b> has started the session!
+            <!--<b>{{StudentRequest.tutorUsername}}</b> has started the session!-->
+            <b>Session has started!</b>
         </p>
     </div>
     <div class="col-md-2"></div>
@@ -88,9 +99,12 @@
                 {
                     $("#begunStatus").show();
                     $("#waitingStatus").hide();
+                    setTimeout(checkStart, 250);
                 }
                 else
                 {
+                    $("#begunStatus").hide();
+                    $("#waitingStatus").show();
                     adjustDots();
                     setTimeout(checkStart, 250);
                 }

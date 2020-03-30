@@ -175,7 +175,8 @@ def tutorsession(request):
     currentUser = request.user
     email = currentUser.email
     currentTutor = Tutor.objects.get(email=email)
-    studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
+    #studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
+    studentRequest = currentTutor.request
     return render(request, "QuickTutor/tutorsession.html", {'StudentRequest': studentRequest})
 
 @login_required
@@ -191,8 +192,9 @@ def startsession(request):
     currentUser = request.user
     email = currentUser.email
     currentTutor = Tutor.objects.get(email=email)
-    studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
-    studentRequest.status = 1
+    #studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
+    studentRequest = currentTutor.request
+    studentRequest.status = 1 - studentRequest.status # this toggles right now, but should just be = 1 in the future
     studentRequest.save(update_fields=['status'])
     data = [{
     }]
