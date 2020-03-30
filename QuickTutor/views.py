@@ -5,7 +5,7 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
-from QuickTutor.models import Student, Tutor, StudentRequest, RequestCourse, TutorCourse
+from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse
 
 
 def index(request):
@@ -21,7 +21,6 @@ def student(request):
 
         # display the current requests the student has
         specificStudentRequestList = StudentRequest.objects.filter(studentEmail=email)
-
         return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList})
     except ObjectDoesNotExist:
         # First time students hit this branch
@@ -128,17 +127,22 @@ def make_request(request):
 @login_required
 def accept(request, username):
     student = get_object_or_404(Student, username=username)
-    currentUser = Tutor.objects.get(email=request.user.email)
-    currentUser.status = 2
     student.accepted = 1
     student.status = 1
     stReq = StudentRequest.objects.get(studentEmail=student.email)
-    stReq.tutorEmail = currentUser.email
-    stReq.tutorUsername = currentUser.username
+    currentUser = Tutor.objects.get(email=request.user.email)
+    currentUser.status = 2
+    currentUser.request = stReq
+    currentUser.save(update_fields=['request'])
+    
+   
+    
+    #stReq.tutorEmail = currentUser.email
+    #stReq.tutorUsername = currentUser.username
     student.save(update_fields=['status', 'accepted'])
-    stReq.save(update_fields=['tutorEmail', 'tutorUsername'])
+    #stReq.save(update_fields=['tutorEmail', 'tutorUsername'])
     #sRequest = get_object_or_404(StudentRequest, studentUsername=username)
-    return render(request, "QuickTutor/match.html", {'student': student, 'currentUser': currentUser, 'studentRequest': stReq})
+    return render(request, "QuickTutor/match.html", {'student': student, 'studentRequest': stReq})
     #return HttpResponseRedirect(reverse('QuickTutor:accept', args=(user.username)))
 
 
@@ -151,10 +155,14 @@ def cancel(request, studentUsername):
         student.status = 0
         student.save(update_fields=['status'])
 
-        if studentRequest.tutorEmail != "":
-            tutor = Student.objects.get(email=studentRequest.tutorEmail)
+        for tutor in studentRequest.tutor_set.all():
             tutor.status = 0
             tutor.save(update_fields=['status'])
+
+        """ if studentRequest.tutorEmail != "":
+            tutor = Student.objects.get(email=studentRequest.tutorEmail)
+            tutor.status = 0
+            tutor.save(update_fields=['status']) """
 
         studentRequest.delete()
 
