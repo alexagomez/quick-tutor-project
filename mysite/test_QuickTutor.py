@@ -63,8 +63,8 @@ class LandingPageTest(TestCase):
 #Test Case ID: T2_3.1
 class TutorRequestTest(TestCase):
     def setUp(self):
-        StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu", tutorEmail ="lmn1op@virginia.edu")
-        StudentRequest.objects.update_or_create(header ="normal distribution", description ="webwork problem set", courseName="APMA3100", location ="Clark", confusionMeter=7, studentEmail="fgh2ijk@virginia.edu", tutorEmail ="qrs4tu@virginia.edu")
+        StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu",)
+        StudentRequest.objects.update_or_create(header ="normal distribution", description ="webwork problem set", courseName="APMA3100", location ="Clark", confusionMeter=7, studentEmail="fgh2ijk@virginia.edu",)
     
     def test_request_model(self):
         self.assertTrue(StudentRequest.objects.filter(header ="django practice").exists())
