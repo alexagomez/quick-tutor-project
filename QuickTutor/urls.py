@@ -11,5 +11,9 @@ urlpatterns = [
     path('make_request', views.make_request, name='make_request'),
     path('match/<username>/', views.accept, name='accept'),
     path('cancel/<studentUsername>/', views.cancel, name='cancel'),
+    path('tutorsession', views.tutorsession, name='tutorsession'),
+    path('studentsession', views.studentsession, name='studentsession'),
+    path('startsession', views.startsession, name='startsession'),
+    path('checkstart', views.checkstart, name='checkstart')
 ]
 
