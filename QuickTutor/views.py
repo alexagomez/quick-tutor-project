@@ -132,18 +132,16 @@ def accept(request, username):
     student.status = 1
     stReq = StudentRequest.objects.get(studentEmail=student.email)
     currentUser = Tutor.objects.get(email=request.user.email)
-    currentUser.status = 2
+    # currentUser.status = 1 # Brandie: changed this status to be 1 (meaning waiting for student to pick from list of tutors)
     currentUser.request = stReq
-    currentUser.save(update_fields=['request'])
-    
-   
-    
+    currentUser.save(update_fields=['request', 'status'])
+     
     #stReq.tutorEmail = currentUser.email
     #stReq.tutorUsername = currentUser.username
     student.save(update_fields=['status', 'accepted'])
     #stReq.save(update_fields=['tutorEmail', 'tutorUsername'])
     #sRequest = get_object_or_404(StudentRequest, studentUsername=username)
-    return render(request, "QuickTutor/match.html", {'student': student, 'studentRequest': stReq})
+    return render(request, "QuickTutor/match.html", {'studentUsername': student.username, 'studentRequestHeader': stReq.header, 'currentUser': currentUser})
     #return HttpResponseRedirect(reverse('QuickTutor:accept', args=(user.username)))
 
 
@@ -170,22 +168,53 @@ def cancel(request, studentUsername):
     return HttpResponseRedirect(reverse('QuickTutor:student'))
 
 
+#code for the student to choose a tutor from the list of accepted tutors
 @login_required
-def tutorsession(request):
-    currentUser = request.user
-    email = currentUser.email
-    currentTutor = Tutor.objects.get(email=email)
-    #studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
-    studentRequest = currentTutor.request
-    return render(request, "QuickTutor/tutorsession.html", {'StudentRequest': studentRequest})
+def studentsession(request, studentRequestHeader, tutorUsername):
+    studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    studentUsername = request.user.username
+    selectedTutor = Tutor.objects.get(username=tutorUsername)
+    #set the selected tutor's status to be "accepted by student"
+    selectedTutor.status =2
+    selectedTutor.save(update_fields=['status'])
+    #set the request's fields so that Greg's session page works!
+    studentRequest.tutorEmail = selectedTutor.email
+    studentRequest.tutorUsername = tutorUsername
+    studentRequest.save(update_fields=['tutorEmail', 'tutorUsername'])
 
-@login_required
+
+    #reset all the other tutor's statuses to be 0
+    for tutor in studentRequest.tutor_set.all():
+        if(tutor.username != tutorUsername):
+            tutor.status = 0
+            tutor.save(update_fields=['status'])
+
+    #Greg's studentsession code:
+    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest})
+
+
+""" @login_required
 def studentsession(request):
     currentUser = request.user
     email = currentUser.email
     currentStudent = Student.objects.get(email=email)
     studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
-    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest})
+    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest}) """
+
+
+
+
+@login_required
+def tutorsession(request, studentRequestHeader, studentUsername):
+    # currentUser = request.user
+    # email = currentUser.email
+    # currentTutor = Tutor.objects.get(email=email)
+    # #studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
+    # studentRequest = currentTutor.request
+
+    studentRequest = StudentRequest.objects.get(header= studentRequestHeader)
+    return render(request, "QuickTutor/tutorsession.html", {'StudentRequest': studentRequest})
+
 
 @login_required
 def startsession(request):

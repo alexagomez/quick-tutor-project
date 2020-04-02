@@ -151,14 +151,9 @@
                                             src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
                                             class="img-fluid rounded-circle" alt="User"></a></li>
                                         <li><a><span>{{tutor.firstName}} Accepted <br> </span></a></li>
-                                <!-- {% if request.tutorUsername != '' %}
-                                    <li><a href="#"><img
-                                        src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
-                                        class="img-fluid rounded-circle" alt="User"></a></li>
-                                    <li><a><span>{{request.tutorUsername}} Accepted</span></a></li>
-                                {% elif student.accepted == 0 %}
-                                    <li><a><span>Waiting for Tutors to accept...</span></a></li>
-                                {% endif %} -->
+                                        <a class="btn btn-primary" onclick="studentsession('{{request.header}}','{{tutor.username}}')">
+                                            Accept
+                                        </a>
                                     {% endfor %}
                                 {% endfor %}
                             {% endif %}
@@ -188,6 +183,11 @@
     }
 </script>
 
+<script>
+    function studentsession(studentRequestHeader, tutorUsername){
+        window.location.replace("studentsession/" + studentRequestHeader + "/" + tutorUsername);
+    }
+</script>
     {% endif %}
 
 
