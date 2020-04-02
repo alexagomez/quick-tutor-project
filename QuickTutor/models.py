@@ -33,9 +33,9 @@ class StudentRequest(models.Model):
     # student ID
     studentEmail = models.CharField(max_length=100, default='')
     studentUsername = models.CharField(max_length=10, default='')
-    #commenting out the below for now
-    #tutorEmail = models.CharField(max_length=100, default='')
-    #tutorUsername = models.CharField(max_length=10, default='')
+    #note that these will be used differently, now to store only the tutor that the student chooses!
+    tutorEmail = models.CharField(max_length=100, default='')
+    tutorUsername = models.CharField(max_length=10, default='')
     
     # session status
     status = models.IntegerField(default=0)     # 0=not started        1=started  
@@ -51,7 +51,7 @@ class Tutor(models.Model):
     
     rating = models.IntegerField(default=0)
 #     matchedID = models.UUIDField(default=0, editable=True)
-    status = models.IntegerField(default=0)     # 0=canceled/off        1=waiting           2=accepted
+    status = models.IntegerField(default=0)     # 0=canceled/waiting/off       2=accepted by student
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
     request = models.ForeignKey(StudentRequest, on_delete=models.CASCADE, default='', blank=True, null=True)
 
