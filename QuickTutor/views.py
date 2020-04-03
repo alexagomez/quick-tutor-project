@@ -26,7 +26,13 @@ def student(request):
 
         # display the current requests the student has
         specificStudentRequestList = StudentRequest.objects.filter(studentEmail=email)
-        return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList})
+
+        session_num = len(StudentRequest.objects.all())
+        tutors_online = len(Tutor.objects.all())
+        
+
+        return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList, 
+                                                            'session_num': session_num, 'tutors_online': tutors_online})
     except ObjectDoesNotExist:
         # First time students hit this branch
 
@@ -48,9 +54,10 @@ def tutor(request):
 
         # list of all student requests
         studentRequestList = StudentRequest.objects.all()
-        #studentUsernames = StudentRequest.objects.get('studentUsername')
+        session_num = len(studentRequestList)
+        tutors_online = len(Tutor.objects.all())
 
-        return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList})
+        return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList, 'session_num': session_num, 'tutors_online': tutors_online})
     except ObjectDoesNotExist:
         # First time students hit this branch
 
