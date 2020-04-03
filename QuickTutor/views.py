@@ -1,13 +1,17 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
+from django.views.generic.base import TemplateView
 from django.http import JsonResponse
 from django.urls import reverse
 from django.views import generic
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse
+import stripe
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def index(request):
     return render(request, "QuickTutor/index.html", {})
@@ -27,8 +31,8 @@ def student(request):
         # First time students hit this branch
 
         # Block non-uva students
-        if email.split('@')[1] != "virginia.edu":
-            return render(request, "QuickTutor/error.html", {})
+        # if email.split('@')[1] != "virginia.edu":
+        #     return render(request, "QuickTutor/error.html", {})
 
         # redirect to a form to fill out name, major, etc.
         return render(request, "QuickTutor/signupStudent.html", {'email': email})
@@ -51,8 +55,8 @@ def tutor(request):
         # First time students hit this branch
 
         # Block non-uva students
-        if email.split('@')[1] != "virginia.edu":
-            return render(request, "QuickTutor/error.html", {})
+        # if email.split('@')[1] != "virginia.edu":
+        #     return render(request, "QuickTutor/error.html", {})
 
         # redirect to a form to fill out name, major, etc.
         return render(request, "QuickTutor/signupTutor.html", {'email': email})
@@ -116,7 +120,7 @@ def make_request(request):
         confusion = request.POST['confusion']
         meetingDetails = request.POST['meetingDetails']
 
-        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location,
+        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location, status=0,
         meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
         # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
@@ -212,7 +216,7 @@ def tutorsession(request, studentRequestHeader, studentUsername):
     # #studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
     # studentRequest = currentTutor.request
 
-    studentRequest = StudentRequest.objects.get(header= studentRequestHeader)
+    studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
     return render(request, "QuickTutor/tutorsession.html", {'StudentRequest': studentRequest})
 
 
@@ -239,3 +243,28 @@ def checkstart(request):
         'status': studentRequest.status
     }]
     return JsonResponse(data, safe=False)
+
+def payment(request):
+    return render(request, "QuickTutor/payment.html", {})
+
+def charge(request): # new
+    if request.method == 'POST':
+        amount = 500
+        charge = stripe.Charge.create(
+            amount=amount,
+            currency='usd',
+            description='Paying the Tutor',
+            source=request.POST['stripeToken']
+        )
+
+        currentUser = request.user
+        email = currentUser.email
+        req =StudentRequest.objects.get(studentEmail=email)
+
+        student_payment = Student.objects.filter(email=email)
+        tutor_payment = Tutor.objects.filter(email=req.tutorEmail)
+
+        student_payment.update(balance=student_payment[0].balance-(amount/100))
+        tutor_payment.update(balance=tutor_payment[0].balance+(amount/100))
+
+        return HttpResponseRedirect(reverse('QuickTutor:student'))

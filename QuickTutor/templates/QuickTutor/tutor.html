@@ -3,6 +3,9 @@
 {% block content %}
 {% load static %}
 
+
+{{ currentTutor }}
+
 <style>
     .coverPhoto {
         background-image: linear-gradient(rgba(79, 94, 99, 0.486), rgba(79, 94, 99, 0.486)),url('https://www.itl.cat/pngfile/big/14-140246_beautiful-nature-wallpaper-background-free-beautiful-nature-background.jpg'); 
@@ -19,7 +22,6 @@
 </style>
 
 <div class="row">
-        
     <div class="col-md-8" style="margin: 8vh 0 0 15vh">
         <div class="coverPhoto"></div>
         <div class="row">
@@ -40,12 +42,12 @@
                 Sessions
             </div>
             <div class="col-3">
-                <h1>154</h1>
-                Requests
-            </div>
-            <div class="col-3">
                 <h1>101</h1>
                 Tutors Online
+            </div>
+            <div class="col-3">
+                <h1>${{tutor.balance}}</h1>
+                Balance
             </div>
         </div>
         
