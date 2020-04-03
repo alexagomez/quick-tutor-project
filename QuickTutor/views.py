@@ -1,12 +1,17 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
+from django.views.generic.base import TemplateView
+from django.http import JsonResponse
 from django.urls import reverse
 from django.views import generic
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
-from QuickTutor.models import Student, Tutor, StudentRequest, RequestCourse, TutorCourse
+from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse
+import stripe
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def index(request):
     return render(request, "QuickTutor/index.html", {})
@@ -22,13 +27,18 @@ def student(request):
         # display the current requests the student has
         specificStudentRequestList = StudentRequest.objects.filter(studentEmail=email)
 
-        return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList})
+        session_num = len(StudentRequest.objects.all())
+        tutors_online = len(Tutor.objects.all())
+        
+
+        return render(request, "QuickTutor/student.html",  {'student':currentStudent,'specificStudentRequestList': specificStudentRequestList, 
+                                                            'session_num': session_num, 'tutors_online': tutors_online})
     except ObjectDoesNotExist:
         # First time students hit this branch
 
         # Block non-uva students
-        if email.split('@')[1] != "virginia.edu":
-            return render(request, "QuickTutor/error.html", {})
+        # if email.split('@')[1] != "virginia.edu":
+        #     return render(request, "QuickTutor/error.html", {})
 
         # redirect to a form to fill out name, major, etc.
         return render(request, "QuickTutor/signupStudent.html", {'email': email})
@@ -44,15 +54,16 @@ def tutor(request):
 
         # list of all student requests
         studentRequestList = StudentRequest.objects.all()
-        #studentUsernames = StudentRequest.objects.get('studentUsername')
+        session_num = len(studentRequestList)
+        tutors_online = len(Tutor.objects.all())
 
-        return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList})
+        return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList, 'session_num': session_num, 'tutors_online': tutors_online})
     except ObjectDoesNotExist:
         # First time students hit this branch
 
         # Block non-uva students
-        if email.split('@')[1] != "virginia.edu":
-            return render(request, "QuickTutor/error.html", {})
+        # if email.split('@')[1] != "virginia.edu":
+        #     return render(request, "QuickTutor/error.html", {})
 
         # redirect to a form to fill out name, major, etc.
         return render(request, "QuickTutor/signupTutor.html", {'email': email})
@@ -116,7 +127,7 @@ def make_request(request):
         confusion = request.POST['confusion']
         meetingDetails = request.POST['meetingDetails']
 
-        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location,
+        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location, status=0,
         meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
         # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
@@ -128,17 +139,20 @@ def make_request(request):
 @login_required
 def accept(request, username):
     student = get_object_or_404(Student, username=username)
-    currentUser = Tutor.objects.get(email=request.user.email)
-    currentUser.status = 2
     student.accepted = 1
     student.status = 1
     stReq = StudentRequest.objects.get(studentEmail=student.email)
-    stReq.tutorEmail = currentUser.email
-    stReq.tutorUsername = currentUser.username
+    currentUser = Tutor.objects.get(email=request.user.email)
+    # currentUser.status = 1 # Brandie: changed this status to be 1 (meaning waiting for student to pick from list of tutors)
+    currentUser.request = stReq
+    currentUser.save(update_fields=['request', 'status'])
+     
+    #stReq.tutorEmail = currentUser.email
+    #stReq.tutorUsername = currentUser.username
     student.save(update_fields=['status', 'accepted'])
-    stReq.save(update_fields=['tutorEmail', 'tutorUsername'])
+    #stReq.save(update_fields=['tutorEmail', 'tutorUsername'])
     #sRequest = get_object_or_404(StudentRequest, studentUsername=username)
-    return render(request, "QuickTutor/match.html", {'student': student, 'currentUser': currentUser, 'studentRequest': stReq})
+    return render(request, "QuickTutor/match.html", {'studentUsername': student.username, 'studentRequestHeader': stReq.header, 'currentUser': currentUser})
     #return HttpResponseRedirect(reverse('QuickTutor:accept', args=(user.username)))
 
 
@@ -151,16 +165,113 @@ def cancel(request, studentUsername):
         student.status = 0
         student.save(update_fields=['status'])
 
-        if studentRequest.tutorEmail != "":
-            tutor = Student.objects.get(email=studentRequest.tutorEmail)
+        for tutor in studentRequest.tutor_set.all():
             tutor.status = 0
             tutor.save(update_fields=['status'])
+
+        """ if studentRequest.tutorEmail != "":
+            tutor = Student.objects.get(email=studentRequest.tutorEmail)
+            tutor.status = 0
+            tutor.save(update_fields=['status']) """
 
         studentRequest.delete()
 
     return HttpResponseRedirect(reverse('QuickTutor:student'))
 
 
+#code for the student to choose a tutor from the list of accepted tutors
+@login_required
+def studentsession(request, studentRequestHeader, tutorUsername):
+    studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    studentUsername = request.user.username
+    selectedTutor = Tutor.objects.get(username=tutorUsername)
+    #set the selected tutor's status to be "accepted by student"
+    selectedTutor.status =2
+    selectedTutor.save(update_fields=['status'])
+    #set the request's fields so that Greg's session page works!
+    studentRequest.tutorEmail = selectedTutor.email
+    studentRequest.tutorUsername = tutorUsername
+    studentRequest.save(update_fields=['tutorEmail', 'tutorUsername'])
 
 
-    
+    #reset all the other tutor's statuses to be 0
+    for tutor in studentRequest.tutor_set.all():
+        if(tutor.username != tutorUsername):
+            tutor.status = 0
+            tutor.save(update_fields=['status'])
+
+    #Greg's studentsession code:
+    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest})
+
+
+""" @login_required
+def studentsession(request):
+    currentUser = request.user
+    email = currentUser.email
+    currentStudent = Student.objects.get(email=email)
+    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
+    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest}) """
+
+
+
+
+@login_required
+def tutorsession(request, studentRequestHeader, studentUsername):
+    # currentUser = request.user
+    # email = currentUser.email
+    # currentTutor = Tutor.objects.get(email=email)
+    # #studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
+    # studentRequest = currentTutor.request
+
+    studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    return render(request, "QuickTutor/tutorsession.html", {'StudentRequest': studentRequest})
+
+
+@login_required
+def startsession(request):
+    currentUser = request.user
+    email = currentUser.email
+    currentTutor = Tutor.objects.get(email=email)
+    #studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
+    studentRequest = currentTutor.request
+    studentRequest.status = 1 - studentRequest.status # this toggles right now, but should just be = 1 in the future
+    studentRequest.save(update_fields=['status'])
+    data = [{
+    }]
+    return JsonResponse(data, safe=False)
+
+@login_required
+def checkstart(request):
+    currentUser = request.user
+    email = currentUser.email
+    currentStudent = Student.objects.get(email=email)
+    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
+    data = [{
+        'status': studentRequest.status
+    }]
+    return JsonResponse(data, safe=False)
+
+def payment(request):
+    return render(request, "QuickTutor/payment.html", {})
+
+def charge(request): # new
+    if request.method == 'POST':
+        amount = 500
+        charge = stripe.Charge.create(
+            amount=amount,
+            currency='usd',
+            description='Paying the Tutor',
+            source=request.POST['stripeToken']
+        )
+
+        currentUser = request.user
+        email = currentUser.email
+        req =StudentRequest.objects.get(studentEmail=email)
+
+        student_payment = Student.objects.filter(email=email)
+        tutor_payment = Tutor.objects.filter(email=req.tutorEmail)
+
+        student_payment.update(balance=student_payment[0].balance-(amount/100))
+        tutor_payment.update(balance=tutor_payment[0].balance+(amount/100))
+
+        return HttpResponseRedirect(reverse('QuickTutor:student'))
