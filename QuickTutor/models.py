@@ -38,7 +38,9 @@ class StudentRequest(models.Model):
     #tutorUsername = models.CharField(max_length=10, default='')
     
     # session status
-    status = models.IntegerField(default=0)     # 0=not started        1=started  
+    status = models.IntegerField(default=0)     # 0=not started        1=started 
+
+    sessionStartTime =  
 
 class Tutor(models.Model):
     email = models.CharField(max_length=100, default='', primary_key=True)
