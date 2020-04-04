@@ -148,6 +148,9 @@ SOCIAL_AUTH_GOOGLE_PLUS_SCOPE = [
 ]
 GOOGLE_OAUTH2_EXTRA_DATA = [ ('id', 'id') ]
 
+STRIPE_SECRET_KEY = 'sk_test_vEErZOIBAyogvNWeqwWVRBqR004Dy1tmzv'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_Ltbh60zfVQxrwVcdJ0cFSVsg00Dwsg5x6u'
+
 # Activate Django-Heroku.
 try:
     # Configure Django App for Heroku.
