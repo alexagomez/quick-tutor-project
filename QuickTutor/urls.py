@@ -15,6 +15,9 @@ urlpatterns = [
     path('studentsession/<studentRequestHeader>/<tutorUsername>/', views.studentsession, name='studentsession'),
     path('startsession', views.startsession, name='startsession'),
     path('checkstart', views.checkstart, name='checkstart'),
+    path('checkaccepted', views.checkaccepted, name='checkaccepted'),
+    path('checkrequestcount', views.checkrequestcount, name='checkrequestcount'),
+    path('checkacceptedtutorcount', views.checkacceptedtutorcount, name='checkacceptedtutorcount'),
     path('payment', views.payment, name='payment'),
     path('charge', views.charge, name='charge'),
 ]
