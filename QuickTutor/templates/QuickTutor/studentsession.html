@@ -91,7 +91,7 @@
         window.location.replace("match/" + user_id);
     }
 
-    function checkStart() {
+    function runCheck() {
         $.ajax({
             url: "{% url 'QuickTutor:checkstart' %}", 
             success: function(data) {
@@ -106,7 +106,7 @@
                     $("#begunStatus").hide();
                     $("#waitingStatus").show();
                     adjustDots();
-                    setTimeout(checkStart, 250);
+                    setTimeout(runCheck, 250);
                 }
             },
             complete: function() {
@@ -116,7 +116,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(checkStart, 1);
+        setTimeout(runCheck, 1);
     }, false);
 
     function adjustDots(){

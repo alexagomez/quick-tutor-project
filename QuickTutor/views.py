@@ -251,6 +251,38 @@ def checkstart(request):
     }]
     return JsonResponse(data, safe=False)
 
+@login_required
+def checkaccepted(request):
+    currentUser = request.user
+    email = currentUser.email
+    currentTutor = Tutor.objects.get(email=email)
+    studentRequest = currentTutor.request
+    studentAccepted = 0
+    if (studentRequest.tutorEmail != ''):
+        studentAccepted = 1
+    data = [{
+        'accepted': studentAccepted
+    }]
+    return JsonResponse(data, safe=False)
+
+@login_required
+def checkrequestcount(request):
+    requestCount = len(StudentRequest.objects.all())
+    data = [{
+        'requestCount': requestCount
+    }]
+    return JsonResponse(data, safe=False)
+
+@login_required
+def checkacceptedtutorcount(request):
+    currentStudent = request.user
+    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
+    acceptedTutorCount = len(studentRequest.tutor_set.all())
+    data = [{
+        'acceptedTutorCount': acceptedTutorCount
+    }]
+    return JsonResponse(data, safe=False)
+
 def payment(request):
     return render(request, "QuickTutor/payment.html", {})
 

@@ -185,6 +185,32 @@
     
 
 <script>
+    acceptedTutorCount = {{specificStudentRequestList.first.tutor_set.all.count}}
+
+    function runCheck() {
+        $.ajax({
+            url: "{% url 'QuickTutor:checkacceptedtutorcount' %}", 
+            success: function(data) {
+                if (data[0].acceptedTutorCount != acceptedTutorCount)
+                {
+                    location.reload();
+                }
+                else
+                {
+                    setTimeout(runCheck, 250);
+                }
+            },
+            complete: function() {
+                    
+            }
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(runCheck, 1);
+    }, false);
+
+
     function cancel(user_id) {
         window.location.replace("cancel/" + user_id);
     }

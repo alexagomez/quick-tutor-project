@@ -152,6 +152,34 @@
 
 
 <script>
+
+requestCount = {{studentRequestList.count}};
+
+function runCheck() {
+    $.ajax({
+        url: "{% url 'QuickTutor:checkrequestcount' %}", 
+        success: function(data) {
+            if (data[0].requestCount != requestCount)
+            {
+                location.reload();
+                requestCount = data[0].requestCount;
+            }
+            else
+            {
+                setTimeout(runCheck, 250);
+            }
+        },
+        complete: function() {
+                
+        }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(runCheck, 1);
+    }, false);
+
+
     function transfer(user_id){
         window.location.replace("match/" + user_id);
     }
