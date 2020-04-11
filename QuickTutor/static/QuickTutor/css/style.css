@@ -449,6 +449,21 @@ body {
     border-radius: 10px;
 }
 
+.white_content_tutor {
+    display: none;
+    position: absolute;
+    top: 35%;
+    left: 35%;
+    width: 30%;
+    height: 30%;
+    padding: 16px;
+    background-color: white;
+    color: black;
+    z-index: 1002;
+    overflow: auto;
+    border-radius: 10px;
+}
+
 .cont {
     position: relative;
     width: 150px;

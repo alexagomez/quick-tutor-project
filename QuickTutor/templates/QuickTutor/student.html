@@ -41,16 +41,29 @@
             X
         </a>
     </div>
+</div>
+
+<div id="tutorPopup" class="white_content_tutor">
+    <div class='row text-center'>
+        <div class='col-12'>
+            <img id='tutorImg' src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
+            alt="profpicTutor" style="height: 120px; width: 120px; border-radius: 50%;">
+            <h3 id='tutorName'></h3>
+        </div>
+        <div class='col-12'>
+            <h5>Rating: <a id='tutorRating'></a></h5>
+            <h5>Major: <a id='tutorYear'></a> <a id='tutorMajor'></a></h5>
+        </div>
+
+        <a style="position: absolute; top: 0; right:10px; color:red; font-weight: 700;" href="javascript:void(0)"
+            onclick="document.getElementById('tutorPopup').style.display='none';document.getElementById('fade').style.display='none'">
+            X
+        </a>
+    </div>
 
 </div>
 <div id="fade" class="black_overlay"></div>
 
-<script>
-    function uploadImage() {
-        document.getElementById('light').style.display = 'block';
-        document.getElementById('fade').style.display = 'block';
-    }
-</script>
 
 <div class="row">
 
@@ -196,7 +209,7 @@
                                 {% for request in specificStudentRequestList %}
                                     {% for tutor in request.tutor_set.all %}
                                         <li>
-                                            <a href="#">
+                                            <a onclick="popupTutor('{{ tutor.firstName }}', '{{ tutor.lastName }}', '{{ tutor.rating }}', '{{ tutor.major }}', '{{ tutor.year }}', '{{ tutor.profile_image }}')" style="cursor: pointer;">
                                                 {% if tutor.profile_image == None %}
                                                     <img
                                                     src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
@@ -208,7 +221,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a>
+                                            <a onclick="popupTutor('{{ tutor.firstName }}', '{{ tutor.lastName }}', '{{ tutor.rating }}', '{{ tutor.major }}', '{{ tutor.year }}', '{{ tutor.profile_image }}')" style="cursor: pointer;">
                                                 <span>{{tutor.firstName}} Accepted | </span>
                                             </a>
                                             <a onclick="studentsession('{{request.header}}','{{tutor.username}}')">
@@ -270,6 +283,22 @@
 
     function cancel(user_id) {
         window.location.replace("cancel/" + user_id);
+    }
+
+    function uploadImage() {
+        document.getElementById('light').style.display = 'block';
+        document.getElementById('fade').style.display = 'block';
+    }
+
+    function popupTutor(firstName, lastName, rating, major, year, profile_image) {
+        document.getElementById('tutorName').textContent = firstName + " " + lastName;
+        document.getElementById('tutorRating').textContent = rating + "/5";
+        document.getElementById('tutorMajor').textContent = major;
+        document.getElementById('tutorYear').textContent = year;
+        document.getElementById('tutorImg').src = "media/"+profile_image;
+
+        document.getElementById('tutorPopup').style.display = 'block';
+        document.getElementById('fade').style.display = 'block';
     }
 </script>
 
