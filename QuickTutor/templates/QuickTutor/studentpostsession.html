@@ -59,32 +59,25 @@
     <div class="col-md-2"></div>
     <div class="col-3">
         <p style="">
-            <h1>TUTOR SESSION</h1>
+            <h1>STUDENT SESSION</h1>
         </p>
     </div>
     <div class="col-md-2"></div>
 </div>
 <p></p>
-<div class="row">
+<div class="row" >
     <div class="col-md-2"></div>
     <div class="col-3">
-        <p style="">
-            Currently tutoring: <b>{{StudentRequest.studentUsername}}</b>
-            Student location: <b>{{StudentRequest.location}}</b>
-            Specific meeting details: <b>{{StudentRequest.meetingDetails}}</b>
+        <p id="waitingStatus">
+            Waiting for <b>{{StudentRequest.tutorUsername}}</b> to start the session<span id="dots"></span>
+        </p>
+        <p id="begunStatus" style="display:none;">
+            <!--<b>{{StudentRequest.tutorUsername}}</b> has started the session!-->
+            <b>Session has started!</b>
         </p>
     </div>
     <div class="col-md-2"></div>
 </div>
-
-<div class="row">
-    <div class="col-md-2"></div>
-        <div class="col-3">
-            <button class="login_button" onclick=startSession("{% url 'QuickTutor:startsession' %}") style="margin-top: 3vh;">Start Session</button>
-        </div>
-    <div class="col-md-2"></div>
-</div>
-
 
 {% if user.is_authenticated %}
 
@@ -98,16 +91,48 @@
         window.location.replace("match/" + user_id);
     }
 
-    function startSession(passUrl){
+    function checkStart() {
         $.ajax({
-            url: passUrl,
+            url: "{% url 'QuickTutor:checkstart' %}", 
             success: function(data) {
-                console.log(data);
+                if (data[0].status == 1)
+                {
+                    $("#begunStatus").show();
+                    $("#waitingStatus").hide();
+                    setTimeout(checkStart, 250);
+                }
+                else
+                {
+                    $("#begunStatus").hide();
+                    $("#waitingStatus").show();
+                    adjustDots();
+                    setTimeout(checkStart, 250);
+                }
             },
             complete: function() {
+                
             }
         });
     }
-    
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(checkStart, 1);
+    }, false);
+
+    function adjustDots(){
+        div = $("#dots")
+        if (div.text() == "") {
+            div.text(".");
+        }
+        else if (div.text() == ".") {
+            div.text("..");
+        }
+        else if (div.text() == "..") {
+            div.text("...")
+        }
+        else {
+            div.text("");
+        }
+    }
 </script>
 {% endblock %}

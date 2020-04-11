@@ -59,7 +59,7 @@
     <div class="col-md-2"></div>
     <div class="col-3">
         <p style="">
-            <h1>TUTOR SESSION</h1>
+            <h1>TUTOR SESSION HAS ENDED</h1>
         </p>
     </div>
     <div class="col-md-2"></div>
@@ -69,21 +69,30 @@
     <div class="col-md-2"></div>
     <div class="col-3">
         <p style="">
+            <h1>TUTOR SESSION HAS ENDED</h1>
+        </p>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+<!-- <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-3">
+        <p style="">
             Currently tutoring: <b>{{StudentRequest.studentUsername}}</b>
             Student location: <b>{{StudentRequest.location}}</b>
             Specific meeting details: <b>{{StudentRequest.meetingDetails}}</b>
         </p>
     </div>
     <div class="col-md-2"></div>
-</div>
+</div> -->
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-2"></div>
         <div class="col-3">
             <button class="login_button" onclick=startSession("{% url 'QuickTutor:startsession' %}") style="margin-top: 3vh;">Start Session</button>
         </div>
     <div class="col-md-2"></div>
-</div>
+</div> -->
 
 
 {% if user.is_authenticated %}
