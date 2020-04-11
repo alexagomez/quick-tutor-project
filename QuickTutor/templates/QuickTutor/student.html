@@ -19,13 +19,59 @@
     }
 </style>
 
+<div id="light" class="white_content">
+    <div class='row'>
+        <div class='col-12 text-center'>
+            <h3>Upload Profile Picture</h3>
+        </div>
+        <div class='col-12 text-center'>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input class='btn btn-info' type="file" name="myfile">
+                <button class='btn btn-primary' type="submit">Upload</button>
+            </form>
+
+            {% if uploaded_file_url %}
+            <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+            {% endif %}
+        </div>
+
+        <a style="position: absolute; top: 0; right:10px; color:red; font-weight: 700;" href="javascript:void(0)"
+            onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">
+            X
+        </a>
+    </div>
+
+</div>
+<div id="fade" class="black_overlay"></div>
+
+<script>
+    function uploadImage() {
+        document.getElementById('light').style.display = 'block';
+        document.getElementById('fade').style.display = 'block';
+    }
+</script>
+
 <div class="row">
 
     <div class="col-md-8" style="margin: 8vh 0 0 15vh">
         <div class="coverPhoto"></div>
         <div class="row">
-            <img src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
-                style="border-radius: 50%;" alt="Avatar" width="150px">
+            
+
+            <div class="cont">
+                {% if student.profile_image == None %}
+                    <img src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
+                    class="image" alt="profpic">
+                {% else %}
+                    <img src="media/{{ student.profile_image }}" class="image" alt="profpic">
+                {% endif %}
+
+                <div class="overlay" onclick="uploadImage()">
+                    <div class="text">Upload Image</div>
+                </div>
+            </div>
+
             <div style="margin-left: 1vh;">
                 <a>
                     <h1 style="color:white">{{student.firstName}} {{student.lastName}}</h1>
@@ -96,9 +142,11 @@
                         <!--/ dropdown -->
                         <div class="media m-0">
                             <div class="d-flex mr-3">
-                                <a href=""><img class="img-fluid rounded-circle"
+                                <a href="">
+                                    <img class="img-fluid rounded-circle"
                                         src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
-                                        alt="User"></a>
+                                        alt="User">
+                                </a>
                             </div>
                             <div class="media-body">
                                 <p class="m-0">{{request.studentEmail}}</p>
@@ -147,9 +195,18 @@
                             {% else %}
                                 {% for request in specificStudentRequestList %}
                                     {% for tutor in request.tutor_set.all %}
-                                        <li><a href="#"><img
-                                            src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
-                                            class="img-fluid rounded-circle" alt="User"></a></li>
+                                        <li>
+                                            <a href="#">
+                                                {% if tutor.profile_image == None %}
+                                                    <img
+                                                    src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
+                                                    class="img-fluid rounded-circle" alt="User">
+                                                {% else %}
+                                                    <img src="media/{{ tutor.profile_image }}"
+                                                        style="border-radius: 50%;" alt="Avatar" width="150px">
+                                                {% endif %}
+                                            </a>
+                                        </li>
                                         <li>
                                             <a>
                                                 <span>{{tutor.firstName}} Accepted | </span>
