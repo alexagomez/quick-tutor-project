@@ -8,9 +8,9 @@
 
 <style>
     .coverPhoto {
-        background-image: linear-gradient(rgba(79, 94, 99, 0.486), rgba(79, 94, 99, 0.486)),url('https://www.itl.cat/pngfile/big/14-140246_beautiful-nature-wallpaper-background-free-beautiful-nature-background.jpg'); 
-        background-repeat: no-repeat; 
-        background-size: cover; 
+        background-image: linear-gradient(rgba(79, 94, 99, 0.486), rgba(79, 94, 99, 0.486)), url('https://www.itl.cat/pngfile/big/14-140246_beautiful-nature-wallpaper-background-free-beautiful-nature-background.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
         background-position: center;
         position: fixed;
         width: 100%;
@@ -19,13 +19,63 @@
         left: 0;
         z-index: -1;
     }
+
 </style>
+
+<div id="light" class="white_content">
+    <div class='row'>
+        <div class='col-12 text-center'>
+            <h3>Upload Profile Picture</h3>
+        </div>
+        <div class='col-12 text-center'>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input class='btn btn-info' type="file" name="myfile">
+                <button class='btn btn-primary' type="submit">Upload</button>
+            </form>
+
+            {% if uploaded_file_url %}
+            <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+            {% endif %}
+        </div>
+
+        <a style="position: absolute; top: 0; right:10px; color:red; font-weight: 700;" href="javascript:void(0)"
+            onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">
+            X
+        </a>
+    </div>
+
+</div>
+<div id="fade" class="black_overlay"></div>
+
+<script>
+    function uploadImage() {
+        document.getElementById('light').style.display = 'block';
+        document.getElementById('fade').style.display = 'block';
+    }
+</script>
 
 <div class="row">
     <div class="col-md-8" style="margin: 8vh 0 0 15vh">
         <div class="coverPhoto"></div>
         <div class="row">
-            <img src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg" style="border-radius: 50%;" alt="Avatar" width="150px">
+
+            <div class="cont">
+
+                {% if tutor.profile_image == None %}
+                <img src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
+                    class="image" alt="profpic">
+                {% else %}
+                <img src="media/{{ tutor.profile_image }}" class="image" alt="profpic">
+                {% endif %}
+
+                <div class="overlay" onclick="uploadImage()">
+                    <div class="text">Upload Image</div>
+                </div>
+
+            </div>
+
+
             <div style="margin-left: 1vh;">
                 <a>
                     <h1>{{tutor.firstName}} {{tutor.lastName}}</h1>
@@ -34,7 +84,7 @@
                     <h6 style="color:rgb(206, 206, 206)">{{user.username}}@virgnia.edu</h6>
                 </a>
             </div>
-            
+
         </div>
         <div class="row text-center" style="margin-top: 2vh">
             <div class="col-3">
@@ -50,11 +100,11 @@
                 Balance
             </div>
         </div>
-        
+
     </div>
     <div class="col-md-2"></div>
     <div class="col-md-2"></div>
-    
+
 </div>
 
 {% if user.is_authenticated %}
@@ -73,7 +123,8 @@
                     </button>
                     <div class="dropdown-menu dropdown-scale dropdown-menu-right" role="menu"
                         style="position: absolute; transform: translate3d(-136px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                        <a class="dropdown-item" onclick=transfer("{{request.studentUsername}}") style="color:green; cursor: pointer;">Accept</a>
+                        <a class="dropdown-item" onclick=transfer("{{request.studentUsername}}")
+                            style="color:green; cursor: pointer;">Accept</a>
                     </div>
                 </div>
                 <!--/ dropdown -->
@@ -96,38 +147,34 @@
             <!-- MAIN CONTENT -->
             <div class="row" style="margin-left: 3em; color:black;">
                 <div class='col-8'>
-                    <a style="font-size: 2em; color: black">{{request.header}} </a> <p>{{request.courseName}}</p>
+                    <a style="font-size: 2em; color: black">{{request.header}} </a>
+                    <p>{{request.courseName}}</p>
 
                     <p>{{request.description}}</p>
                 </div>
                 <div class='col-3 text-center' style='margin: 1vh 0 0 0'>
                     <div class="single-chart">
                         <svg viewBox="0 0 36 36" class="circular-chart confusion">
-                            <path class="circle-bg"
-                            d="M18 2.0845
+                            <path class="circle-bg" d="M18 2.0845
                                 a 15.9155 15.9155 0 0 1 0 31.831
-                                a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
-                            <path id="actSVG" class="circle"
-                            stroke-dasharray="{{request.confusionMeter}}0, 100"
-                            d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path id="actSVG" class="circle" stroke-dasharray="{{request.confusionMeter}}0, 100" d="M18 2.0845
                                 a 15.9155 15.9155 0 0 1 0 31.831
-                                a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
+                                a 15.9155 15.9155 0 0 1 0 -31.831" />
                             <text x="18" y="20.35" class="percentage">{{request.confusionMeter}}</text>
                         </svg>
                         <a style="color:red; text-align: center; font-weight: 500;">Confusion</a>
                     </div>
                 </div>
-                
+
             </div>
             <!--/ MAIN CONTENT -->
 
             <div class="cardbox-base text-center" style='margin: 1vh 0 0 0; padding: 0 0 1vh 0'>
 
-                    <a class="btn btn-primary" onclick=transfer("{{request.studentUsername}}")>
-                        Accept
-                    </a>
+                <a class="btn btn-primary" onclick=transfer("{{request.studentUsername}}")>
+                    Accept
+                </a>
             </div>
             <!--/ cardbox-base -->
 
@@ -153,34 +200,32 @@
 
 <script>
 
-requestCount = {{studentRequestList.count}};
+    requestCount = {{ studentRequestList.count }};
 
-function runCheck() {
-    $.ajax({
-        url: "{% url 'QuickTutor:checkrequestcount' %}", 
-        success: function(data) {
-            if (data[0].requestCount != requestCount)
-            {
-                location.reload();
-                requestCount = data[0].requestCount;
+    function runCheck() {
+        $.ajax({
+            url: "{% url 'QuickTutor:checkrequestcount' %}",
+            success: function (data) {
+                if (data[0].requestCount != requestCount) {
+                    location.reload();
+                    requestCount = data[0].requestCount;
+                }
+                else {
+                    setTimeout(runCheck, 250);
+                }
+            },
+            complete: function () {
+
             }
-            else
-            {
-                setTimeout(runCheck, 250);
-            }
-        },
-        complete: function() {
-                
-        }
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         setTimeout(runCheck, 1);
     }, false);
 
 
-    function transfer(user_id){
+    function transfer(user_id) {
         window.location.replace("match/" + user_id);
     }
 </script>
