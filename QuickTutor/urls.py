@@ -1,5 +1,7 @@
 from django.urls import path, re_path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'QuickTutor'
 urlpatterns = [
@@ -15,7 +17,11 @@ urlpatterns = [
     path('studentsession/<studentRequestHeader>/<tutorUsername>/', views.studentsession, name='studentsession'),
     path('startsession', views.startsession, name='startsession'),
     path('checkstart', views.checkstart, name='checkstart'),
+    path('checkaccepted', views.checkaccepted, name='checkaccepted'),
+    path('checkrequestcount', views.checkrequestcount, name='checkrequestcount'),
+    path('checkacceptedtutorcount', views.checkacceptedtutorcount, name='checkacceptedtutorcount'),
     path('payment', views.payment, name='payment'),
     path('charge', views.charge, name='charge'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
