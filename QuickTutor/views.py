@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
 from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse
 import stripe
 
@@ -20,6 +21,13 @@ def index(request):
 def student(request):
     currentUser = request.user
     email = currentUser.email
+
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        curr = Student.objects.get(email=email)
+        curr.profile_image = myfile
+        curr.save()
+
     try:
         # Returning students hit this branch
         currentStudent = Student.objects.get(email=email)
@@ -48,6 +56,13 @@ def student(request):
 def tutor(request):
     currentUser = request.user
     email = currentUser.email
+
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        curr = Tutor.objects.get(email=email)
+        curr.profile_image = myfile
+        curr.save()
+
     try:
         # Returning students hit this branch
         currentTutor = Tutor.objects.get(email=email)
