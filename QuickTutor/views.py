@@ -228,8 +228,6 @@ def studentsession(request):
     return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest}) """
 
 
-
-
 @login_required
 def tutorsession(request, studentRequestHeader, studentUsername):
     # currentUser = request.user
@@ -298,9 +296,11 @@ def checkacceptedtutorcount(request):
     }]
     return JsonResponse(data, safe=False)
 
+@login_required
 def payment(request):
     return render(request, "QuickTutor/payment.html", {})
 
+@login_required
 def charge(request): # new
     if request.method == 'POST':
         amount = 500
