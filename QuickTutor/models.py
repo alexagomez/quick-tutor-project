@@ -20,9 +20,12 @@ class Student(models.Model):
     disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
     accepted = models.IntegerField(default=0)
 
+    balance = models.IntegerField(default=1000)    # in USD
+
 class StudentRequest(models.Model):
     # form information
     #courseName = models.OneToOneField(Course, on_delete=models.CASCADE)
+
     header = models.CharField(max_length=100, default='')
     description = models.CharField(max_length=1000, default='')
     courseName = models.CharField(max_length=100, default='')
@@ -32,13 +35,13 @@ class StudentRequest(models.Model):
     
     # student ID
     studentEmail = models.CharField(max_length=100, default='')
-    studentUsername = models.CharField(max_length=10, default='')
+    studentUsername = models.CharField(max_length=10, default='')   
     #note that these will be used differently, now to store only the tutor that the student chooses!
     tutorEmail = models.CharField(max_length=100, default='')
     tutorUsername = models.CharField(max_length=10, default='')
     
     # session status
-    status = models.IntegerField(default=0)     # 0=not started        1=started  
+    status = models.IntegerField(default=0, null=True)     # 0=not started        1=started  
 
 class Tutor(models.Model):
     email = models.CharField(max_length=100, default='', primary_key=True)
@@ -51,9 +54,11 @@ class Tutor(models.Model):
     
     rating = models.IntegerField(default=0)
 #     matchedID = models.UUIDField(default=0, editable=True)
-    status = models.IntegerField(default=0)     # 0=canceled/waiting/off       2=accepted by student
-    disabled = models.IntegerField(default=0)   # 0=not disabled        1=disabled
-    request = models.ForeignKey(StudentRequest, on_delete=models.CASCADE, default='', blank=True, null=True)
+    status = models.IntegerField(default=0)     # 0=canceled/waiting/off        2=accepted by student
+    disabled = models.IntegerField(default=0)   # 0=not disabled                1=disabled
+    request = models.ForeignKey(StudentRequest, on_delete=models.SET_NULL, default='', null=True)
+
+    balance = models.IntegerField(default=0)    # in USD
 
 class TutorCourse(models.Model):
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name='tutor')

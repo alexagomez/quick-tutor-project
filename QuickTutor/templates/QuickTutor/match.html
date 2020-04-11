@@ -42,10 +42,31 @@
 
 
 <script>
+    function runCheck() {
+        $.ajax({
+            url: "{% url 'QuickTutor:checkaccepted' %}", 
+            success: function(data) {
+                if (data[0].accepted == 1)
+                {
+                    tutorSelected('{{currentUser.status}}','{{studentRequestHeader}}','{{studentUsername}}');
+                }
+                else
+                {
+                    setTimeout(runCheck, 250);
+                }
+            },
+            complete: function() {
+                
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(runCheck, 1);
+    }, false);
+
     function tutorSelected(status, studentRequestHeader, studentUsername){
-        if (status == 2) {
             window.location.replace("/tutorsession/" + studentRequestHeader + "/" + studentUsername);
-        }
     }
 </script>
 

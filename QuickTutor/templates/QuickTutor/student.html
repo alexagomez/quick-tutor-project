@@ -37,17 +37,17 @@
 
         </div>
         <div class="row text-center" style="margin-top: 2vh; color:rgb(206, 206, 206)">
-            <div class="col-3">
-                <h1>29</h1>
+            <div class="col-3" style="color:white">
+                <h1>{{session_num}}</h1>
                 Sessions
             </div>
-            <div class="col-3">
-                <h1>154</h1>
-                Requests
-            </div>
-            <div class="col-3">
-                <h1>101</h1>
+            <div class="col-3" style="color:white">
+                <h1>{{tutors_online}}</h1>
                 Tutors Online
+            </div>
+            <div class="col-3" style="color:white">
+                <h1>${{student.balance}}</h1>
+                Balance
             </div>
         </div>
 
@@ -150,10 +150,17 @@
                                         <li><a href="#"><img
                                             src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
                                             class="img-fluid rounded-circle" alt="User"></a></li>
-                                        <li><a><span>{{tutor.firstName}} Accepted <br> </span></a></li>
-                                        <a class="btn btn-primary" onclick="studentsession('{{request.header}}','{{tutor.username}}')">
-                                            Accept
-                                        </a>
+                                        <li>
+                                            <a>
+                                                <span>{{tutor.firstName}} Accepted | </span>
+                                            </a>
+                                            <a onclick="studentsession('{{request.header}}','{{tutor.username}}')">
+                                                <span style="cursor: pointer; margin: 0; color: blue" >Accept</span>
+                                            </a>
+                                        
+                                        </li>
+                                        
+                                        </br>
                                     {% endfor %}
                                 {% endfor %}
                             {% endif %}
@@ -178,6 +185,32 @@
     
 
 <script>
+    acceptedTutorCount = {{specificStudentRequestList.first.tutor_set.all.count}}
+
+    function runCheck() {
+        $.ajax({
+            url: "{% url 'QuickTutor:checkacceptedtutorcount' %}", 
+            success: function(data) {
+                if (data[0].acceptedTutorCount != acceptedTutorCount)
+                {
+                    location.reload();
+                }
+                else
+                {
+                    setTimeout(runCheck, 250);
+                }
+            },
+            complete: function() {
+                    
+            }
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(runCheck, 1);
+    }, false);
+
+
     function cancel(user_id) {
         window.location.replace("cancel/" + user_id);
     }
@@ -191,4 +224,4 @@
     {% endif %}
 
 
-    {% endblock %}
+{% endblock %}
