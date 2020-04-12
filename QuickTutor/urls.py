@@ -25,5 +25,6 @@ urlpatterns = [
     path('payment', views.payment, name='payment'),
     path('charge', views.charge, name='charge'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# delete later
 
 

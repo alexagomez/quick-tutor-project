@@ -312,7 +312,7 @@ def tutorpostsession(request, studentRequestHeader, studentUsername):
         Tutor.objects.filter(email=email).update(status = 0)
         Tutor.objects.filter(email=email).update(request = '')
 
-        # update student rating... not exactly a true average
+        # update student rating... not exactly a true average unfortunate
         if (currentRating != 0):
             selectedStudent.rating = (currentRating + newRating)/2
         else:
