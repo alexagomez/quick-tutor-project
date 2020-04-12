@@ -13,7 +13,7 @@
                 <h1 class="mt-1" style="padding-top: 10rem;">Sign Up as a Student</h1>
                 {% csrf_token %}
                 <form action="{% url 'QuickTutor:update_student' %}" method="POST">
-                    <!-- required inputs  -->
+                    
                     <div class="form-group">
                         <label for="exampleInputEmail1">First Name</label>
                         <input class="form-control" type="text" name="firstName" id="firstName" required>
