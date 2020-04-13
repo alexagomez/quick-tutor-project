@@ -22,9 +22,7 @@ urlpatterns = [
     path('checkacceptedtutorcount', views.checkacceptedtutorcount, name='checkacceptedtutorcount'),
     path('tutorpostsession/<studentRequestHeader>/<studentUsername>', views.tutorpostsession, name='tutorpostsession'),
     path('studentpostsession/<studentRequestHeader>/<tutorUsername>/', views.studentpostsession, name='studentpostsession'),
-    path('payment', views.payment, name='payment'),
     path('charge', views.charge, name='charge'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# delete later
 
 

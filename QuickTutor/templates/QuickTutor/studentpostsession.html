@@ -2,7 +2,10 @@
 
 {% block content %}
 {% load static %}
-
+<script src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript">
+    var stripe = Stripe('pk_test_Ltbh60zfVQxrwVcdJ0cFSVsg00Dwsg5x6u');
+</script>
 
 <div class="row">
     <div class="col-md-3"></div>
@@ -10,22 +13,25 @@
         <div class="row justify-content-center">
             <div class="col-8" style="background-color: #7D80DA; border-radius: 1rem; border-color:black;">
                 <h1 class="mt-1" style="padding-top: 10rem;">STUDENT SESSION HAS ENDED</h1>
-                {% csrf_token %}
-                <form action="" method="POST">
+
+                <form action="{% url 'QuickTutor:charge' %}" method="POST">
+                    {% csrf_token %}
                     <!-- required inputs  -->
                     <div class="form-group">
                         <label for="exampleInputEmail1">Rate your session(1-5)</label>
                         <p><font size = "3"><i>With 0 being the worst and 5 being the best</i></font></p>
                         <input class="form-control" type="number" name="rating" id="rating" min="1" max="5" required>
+                        <input class="form-control" type="text" name="tutorUsername" id="tutorUsername" value="" style='display: none;'>
+                        <input class="form-control" type="text" name="header" id="header" value="" style='display: none;'>
                     </div>
-                    <!-- How do we want to handle complaints? Google form link? -->
-                    <!-- <div class="form-group">
-                        <label for="exampleInputEmail1">Any issues or complaints?</label>
-                        <input class="form-control" type="text" name="complaint" id="complaint">
-                    </div> -->
-                    <!-- how do i do pay stuff? -->
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                        data-key="pk_test_Ltbh60zfVQxrwVcdJ0cFSVsg00Dwsg5x6u"
+                        data-description="Paying the Tutor"
+                        data-amount="{{ amount }}"
+                        data-locale="auto">
+                    </script>
                 </form>
             </div>
         </div>
@@ -33,6 +39,20 @@
     <div class="col-md-3"></div>
 </div>
 
+<script>
+    let temp = (window.location.href).split('/').slice(-3);
+    tutorUsername = '';
+    header = '';
+    if(temp[2].length == 0){
+        tutorUsername = temp[1];
+        header = temp[0];
+    } else {
+        tutorUsername = temp[2];
+        header = temp[1];
+    }
+    document.getElementById('tutorUsername').value = tutorUsername;
+    document.getElementById('header').value = header;
+</script>
 
 
 {% endblock %}
