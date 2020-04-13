@@ -108,88 +108,114 @@
 </div>
 
 {% if user.is_authenticated %}
-{% for request in studentRequestList %}
-<div class='row' style='margin-top: 2em;'>
-    <div class='col-md-3'></div>
-    <div class="col-md-6" style='margin: 0 auto;'>
-        <div class="cardbox shadow-lg bg-white">
 
-            <div class="cardbox-heading">
-                <!-- START dropdown-->
-                <div class="dropdown float-right">
-                    <button class="btn btn-flat btn-flat-icon" type="button" data-toggle="dropdown"
-                        aria-expanded="false">
-                        <em class="fa fa-ellipsis-h"></em>
-                    </button>
-                    <div class="dropdown-menu dropdown-scale dropdown-menu-right" role="menu"
-                        style="position: absolute; transform: translate3d(-136px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
-                        <a class="dropdown-item" onclick=transfer("{{request.studentUsername}}")
-                            style="color:green; cursor: pointer;">Accept</a>
-                    </div>
+<div class="container">
+    {% if studentRequestList.count == 0 %}
+            <div class="row" style="margin-top: 5vh;">
+                <div class='col-1'></div>
+                <div class='col-10 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0'>
+                    <h3 style='margin: 0 100px 0 100px'>
+                        No requests available at the moment, please check again later!
+                    </h3>
                 </div>
-                <!--/ dropdown -->
-                <div class="media m-0">
-                    <div class="d-flex mr-3">
-                        <a href=""><img class="img-fluid rounded-circle"
-                                src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
-                                alt="User"></a>
-                    </div>
-                    <div class="media-body">
-                        <p class="m-0">{{request.studentEmail}}</p>
-                        <small><span><i class="fas fa-map-marker-alt"></i> {{request.location}}</span></small>
-                        <small><span><i class="icon ion-md-time"></i> x minutes ago</span></small>
-                    </div>
-                </div>
-                <!--/ media -->
             </div>
-            <!--/ cardbox-heading -->
+    {% endif %}
 
-            <!-- MAIN CONTENT -->
-            <div class="row" style="margin-left: 3em; color:black;">
-                <div class='col-8'>
-                    <a style="font-size: 2em; color: black">{{request.header}} </a>
-                    <p>{{request.courseName}}</p>
+    {% for request in studentRequestList %}
+    <div class='row' style='margin-top: 2em;'>
+        <div class="col-md-12" style='margin: 0 auto;'>
+            <div class="cardbox shadow-lg bg-white">
 
-                    <p>{{request.description}}</p>
-                </div>
-                <div class='col-3 text-center' style='margin: 1vh 0 0 0'>
-                    <div class="single-chart">
-                        <svg viewBox="0 0 36 36" class="circular-chart confusion">
-                            <path class="circle-bg" d="M18 2.0845
-                                a 15.9155 15.9155 0 0 1 0 31.831
-                                a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path id="actSVG" class="circle" stroke-dasharray="{{request.confusionMeter}}0, 100" d="M18 2.0845
-                                a 15.9155 15.9155 0 0 1 0 31.831
-                                a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <text x="18" y="20.35" class="percentage">{{request.confusionMeter}}</text>
-                        </svg>
-                        <a style="color:red; text-align: center; font-weight: 500;">Confusion</a>
+                <div class="cardbox-heading">
+                    <!-- START dropdown-->
+                    <div class="dropdown float-right">
+                        <button class="btn btn-flat btn-flat-icon" type="button" data-toggle="dropdown"
+                            aria-expanded="false">
+                            <em class="fa fa-ellipsis-h"></em>
+                        </button>
+                        <div class="dropdown-menu dropdown-scale dropdown-menu-right" role="menu"
+                            style="position: absolute; transform: translate3d(-136px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
+                            <a class="dropdown-item" onclick=transfer("{{request.studentUsername}}")
+                                style="color:green; cursor: pointer;">Accept</a>
+                        </div>
                     </div>
+                    <!--/ dropdown -->
+                    <div class="media m-0">
+                        <div class="d-flex mr-3">
+                            <a href=""><img class="img-fluid rounded-circle"
+                                    src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
+                                    alt="User"></a>
+                        </div>
+                        <div class="media-body">
+                            <p class="m-0">{{request.studentEmail}}</p>
+                            <small><span><i class="fas fa-map-marker-alt"></i> {{request.location}}</span></small>
+                            <small><span><i class="icon ion-md-time"></i> x minutes ago</span></small>
+                        </div>
+                    </div>
+                    <!--/ media -->
                 </div>
+                <!--/ cardbox-heading -->
 
+                <!-- MAIN CONTENT -->
+                <div class="row" style="margin-left: 3em; color:black;">
+                    <div class='col-8'>
+                        <a style="font-size: 2em; color: black">{{request.header}} </a>
+                        <p>{{request.courseName}}</p>
+
+                        <p>{{request.description}}</p>
+                    </div>
+                    <div class='col-3 text-center' style='margin: 1vh 0 0 0'>
+                        <div class="single-chart">
+                            <svg viewBox="0 0 36 36" class="circular-chart confusion">
+                                <path class="circle-bg" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path id="actSVG" class="circle" stroke-dasharray="{{request.confusionMeter}}0, 100" d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <text x="18" y="20.35" class="percentage">{{request.confusionMeter}}</text>
+                            </svg>
+                            <a style="color:red; text-align: center; font-weight: 500;">Confusion</a>
+                        </div>
+                    </div>
+
+                </div>
+                <!--/ MAIN CONTENT -->
+
+                <div class="cardbox-base text-center" style='margin: 1vh 0 0 0; padding: 0 0 1vh 0'>
+
+                    <a class="btn btn-primary" onclick=transfer("{{request.studentUsername}}")>
+                        Accept
+                    </a>
+                </div>
+                <!--/ cardbox-base -->
             </div>
-            <!--/ MAIN CONTENT -->
-
-            <div class="cardbox-base text-center" style='margin: 1vh 0 0 0; padding: 0 0 1vh 0'>
-
-                <a class="btn btn-primary" onclick=transfer("{{request.studentUsername}}")>
-                    Accept
-                </a>
-            </div>
-            <!--/ cardbox-base -->
-
+            <!--/ cardbox -->
         </div>
-        <!--/ cardbox -->
-
+        <!--/ col-6 -->
     </div>
-    <!--/ col-6 -->
+    <!--/ row -->
+    {% endfor %}
 
-    <div class='col-md-3'></div>
+    <div class="row" style="margin-top: 1vh; margin-bottom: 2vh;">
+        <div class='col-1'></div>
+        <div class='col-5 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0'>
+            <h3 style='margin: 0 40px 0 40px'>
+                View your transaction history and payments!
+            </h3>
+
+            <a class="btn btn-info" href="#" style='margin-top: 5vh;'>View transactions</a>
+        </div>
+        <div class='col-5 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0; margin-left: 1vh; border-right: 1vh solid #7D80DA;'>
+            <h3 style='margin: 0 40px 0 40px'>
+                Have a problem with an ongoing or past session?
+            </h3>
+
+            <a class="btn btn-secondary" href="mailto:sg4fz@virginia.edu?Subject=Scrumpy%20Cat" style='margin-top: 5vh;'>Contact Us</a>
+        </div>
+    </div>
 
 </div>
-<!--/ row -->
-
-{% endfor %}
 
 
 {% else %}

@@ -173,23 +173,22 @@ def accept(request, username):
 
 @login_required
 def cancel(request, studentUsername):
-    if(request.user.username == studentUsername):
-        studentRequest = StudentRequest.objects.get(studentUsername=studentUsername)
+    studentRequest = StudentRequest.objects.get(studentUsername=studentUsername)
 
-        student = Student.objects.get(email=studentRequest.studentEmail)
-        student.status = 0
-        student.save(update_fields=['status'])
+    student = Student.objects.get(email=studentRequest.studentEmail)
+    student.status = 0
+    student.save(update_fields=['status'])
 
-        for tutor in studentRequest.tutor_set.all():
-            tutor.status = 0
-            tutor.save(update_fields=['status'])
+    for tutor in studentRequest.tutor_set.all():
+        tutor.status = 0
+        tutor.save(update_fields=['status'])
 
-        """ if studentRequest.tutorEmail != "":
-            tutor = Student.objects.get(email=studentRequest.tutorEmail)
-            tutor.status = 0
-            tutor.save(update_fields=['status']) """
+    if studentRequest.tutorEmail != "":
+        tutor = Student.objects.get(email=studentRequest.tutorEmail)
+        tutor.status = 0
+        tutor.save(update_fields=['status'])
 
-        studentRequest.delete()
+    studentRequest.delete()
 
     return HttpResponseRedirect(reverse('QuickTutor:student'))
 
@@ -296,13 +295,47 @@ def checkacceptedtutorcount(request):
     }]
     return JsonResponse(data, safe=False)
 
+@csrf_exempt
 @login_required
-def payment(request):
-    return render(request, "QuickTutor/payment.html", {})
+def tutorpostsession(request, studentRequestHeader, studentUsername):
+    studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    if request.method == "POST":
+        # get tutor object of person requesting and rating given
+        currentUser = request.user
+        email = currentUser.email
+        selectedStudent = Student.objects.get(username=studentUsername)
+        currentRating = selectedStudent.rating
+        newRating = request.POST['rating']
+
+        # update tutor status and request
+        Tutor.objects.filter(email=email).update(status=0)
+        Tutor.objects.filter(email=email).update(request='')
+
+        # update student rating... not exactly a true average unfortunate
+        if (currentRating != 0):
+            selectedStudent.rating = (int(currentRating) + int(newRating))/2
+        else:
+            selectedStudent.rating = newRating
+        selectedStudent.save(update_fields=['rating'])
+        Student.objects.filter(username=studentUsername).update(status=0)
+        Student.objects.filter(username=studentUsername).update(accepted=0)
+
+        StudentRequest.objects.filter(header=studentRequestHeader).delete()
+
+        return HttpResponseRedirect(reverse('QuickTutor:tutor'))
+
+    return render(request, "QuickTutor/tutorpostsession.html", {'StudentRequest': studentRequest})
+
+@csrf_exempt
+@login_required
+def studentpostsession(request, studentRequestHeader, tutorUsername):
+    studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    return render(request, "QuickTutor/studentpostsession.html", {'StudentRequest': studentRequest, 'tutorUsername': tutorUsername})    
 
 @login_required
-def charge(request): # new
+def charge(request):
     if request.method == 'POST':
+        # HANDLE PAYMENT
         amount = 500
         charge = stripe.Charge.create(
             amount=amount,
@@ -320,5 +353,30 @@ def charge(request): # new
 
         student_payment.update(balance=student_payment[0].balance-(amount/100))
         tutor_payment.update(balance=tutor_payment[0].balance+(amount/100))
+
+        # HANDlE RATINGS AND COMPLAINTS
+        # get student object of person requesting and rating given
+        currentUser = request.user
+        email = currentUser.email
+        selectedTutor = Tutor.objects.get(username=request.POST['tutorUsername'])
+        currentRating = selectedTutor.rating
+        newRating = request.POST['rating']
+
+        # update student status and accepted
+        Student.objects.filter(email=email).update(status=0)
+        Student.objects.filter(email=email).update(accepted=0)
+
+        Tutor.objects.filter(username=request.POST['tutorUsername']).update(status=0)
+        Tutor.objects.filter(username=request.POST['tutorUsername']).update(request='')
+
+        # update tutor rating... not exactly a true average
+        if (currentRating != 0):
+            selectedTutor.rating = (int(currentRating) + int(newRating))/2
+        else:
+            selectedTutor.rating = newRating
+        selectedTutor.save(update_fields=['rating'])
+
+        # delete the request
+        StudentRequest.objects.filter(header=request.POST['header']).delete()
 
         return HttpResponseRedirect(reverse('QuickTutor:student'))

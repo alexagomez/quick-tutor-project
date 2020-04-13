@@ -13,14 +13,15 @@ urlpatterns = [
     path('make_request', views.make_request, name='make_request'),
     path('match/<username>/', views.accept, name='accept'),
     path('cancel/<studentUsername>/', views.cancel, name='cancel'),
-    path('tutorsession/<studentRequestHeader>/<studentUsername>', views.tutorsession, name='tutorsession'),
+    path('tutorsession/<studentRequestHeader>/<studentUsername>/', views.tutorsession, name='tutorsession'),
     path('studentsession/<studentRequestHeader>/<tutorUsername>/', views.studentsession, name='studentsession'),
     path('startsession', views.startsession, name='startsession'),
     path('checkstart', views.checkstart, name='checkstart'),
     path('checkaccepted', views.checkaccepted, name='checkaccepted'),
     path('checkrequestcount', views.checkrequestcount, name='checkrequestcount'),
     path('checkacceptedtutorcount', views.checkacceptedtutorcount, name='checkacceptedtutorcount'),
-    path('payment', views.payment, name='payment'),
+    path('tutorpostsession/<studentRequestHeader>/<studentUsername>/', views.tutorpostsession, name='tutorpostsession'),
+    path('studentpostsession/<studentRequestHeader>/<tutorUsername>/', views.studentpostsession, name='studentpostsession'),
     path('charge', views.charge, name='charge'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
