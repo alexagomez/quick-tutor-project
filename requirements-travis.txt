@@ -3,3 +3,5 @@ gunicorn
 social-auth-app-django
 requests
 django-google-api
+stripe
+Pillow

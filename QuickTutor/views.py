@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
 from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse
 import stripe
 
@@ -20,6 +21,13 @@ def index(request):
 def student(request):
     currentUser = request.user
     email = currentUser.email
+
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        curr = Student.objects.get(email=email)
+        curr.profile_image = myfile
+        curr.save()
+
     try:
         # Returning students hit this branch
         currentStudent = Student.objects.get(email=email)
@@ -48,6 +56,13 @@ def student(request):
 def tutor(request):
     currentUser = request.user
     email = currentUser.email
+
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        curr = Tutor.objects.get(email=email)
+        curr.profile_image = myfile
+        curr.save()
+
     try:
         # Returning students hit this branch
         currentTutor = Tutor.objects.get(email=email)
@@ -213,8 +228,6 @@ def studentsession(request):
     return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest}) """
 
 
-
-
 @login_required
 def tutorsession(request, studentRequestHeader, studentUsername):
     # currentUser = request.user
@@ -283,9 +296,65 @@ def checkacceptedtutorcount(request):
     }]
     return JsonResponse(data, safe=False)
 
+@login_required
+
+def tutorpostsession(request, studentRequestHeader, studentUsername):
+    studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    if request.method == "POST":
+        # get tutor object of person requesting and rating given
+        currentUser = request.user
+        email = currentUser.email
+        selectedStudent = Student.objects.get(username=studentUsername)
+        currentRating = selectedStudent.rating
+        newRating = request.POST['rating']
+
+        # update tutor status and request
+        Tutor.objects.filter(email=email).update(status = 0)
+        Tutor.objects.filter(email=email).update(request = '')
+
+        # update student rating... not exactly a true average unfortunate
+        if (currentRating != 0):
+            selectedStudent.rating = (currentRating + newRating)/2
+        else:
+            selectedStudent.rating = newRating
+        selectedStudent.save(update_fields=['rating'])
+
+        # return render(request, "QuickTutor/tutor.html", {})
+        return HttpResponseRedirect(reverse('QuickTutor:tutor'))
+
+    return render(request, "QuickTutor/tutorpostsession.html", {'StudentRequest': studentRequest})
+
+@login_required
+def studentpostsession(request, studentRequestHeader, tutorUsername):
+    studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    if request.method == "POST":
+        # get student object of person requesting and rating given
+        currentUser = request.user
+        email = currentUser.email
+        selectedTutor = Tutor.objects.get(username = tutorUsername)
+        currentRating = selectedTutor.rating
+        newRating = request.POST['rating']
+
+        # update student status and accepted
+        Student.objects.filter(email=email).update(status = 0)
+        Student.objects.filter(email=email).update(accepted = 0)
+
+        # update tutor rating... not exactly a true average
+        if (currentRating != 0):
+            selectedTutor.rating = (currentRating + newRating)/2
+        else:
+            selectedTutor.rating = newRating
+        selectedTutor.save(update_fields=['rating'])
+
+        # return render(request, "QuickTutor/student.html", {})
+        return HttpResponseRedirect(reverse('QuickTutor:student'))
+
+    return render(request, "QuickTutor/studentpostsession.html", {'StudentRequest': studentRequest})    
+
 def payment(request):
     return render(request, "QuickTutor/payment.html", {})
 
+@login_required
 def charge(request): # new
     if request.method == 'POST':
         amount = 500

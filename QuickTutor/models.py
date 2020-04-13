@@ -2,11 +2,15 @@ import datetime
 import uuid 
 from django.db import models
 import random
+import os
 
+def get_image_path(instance, filename):
+    return os.path.join('photos', str(instance.username), filename)
 
 class Student(models.Model):
     email = models.CharField(max_length=100, default='', primary_key=True)
     username = models.CharField(max_length=10, default='')
+    profile_image = models.ImageField(upload_to=get_image_path, blank=True, null=True)
 
     firstName = models.CharField(max_length=100, default='')
     lastName = models.CharField(max_length=100, default='')
@@ -35,7 +39,8 @@ class StudentRequest(models.Model):
     
     # student ID
     studentEmail = models.CharField(max_length=100, default='')
-    studentUsername = models.CharField(max_length=10, default='')   
+    studentUsername = models.CharField(max_length=10, default='')
+
     #note that these will be used differently, now to store only the tutor that the student chooses!
     tutorEmail = models.CharField(max_length=100, default='')
     tutorUsername = models.CharField(max_length=10, default='')
@@ -46,6 +51,7 @@ class StudentRequest(models.Model):
 class Tutor(models.Model):
     email = models.CharField(max_length=100, default='', primary_key=True)
     username = models.CharField(max_length=10, default='')
+    profile_image = models.ImageField(upload_to=get_image_path, blank=True, null=True)
 
     firstName = models.CharField(max_length=100, default='')
     lastName = models.CharField(max_length=100, default='')

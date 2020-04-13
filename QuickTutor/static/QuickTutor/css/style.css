@@ -416,3 +416,96 @@ body {
     font-size: 16px;
     color: #8d8d8d;
 }
+
+
+
+/* ------------------ PROFILE PIC - -------------- */
+.black_overlay {
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 1001;
+    -moz-opacity: 0.8;
+    opacity: .80;
+    filter: alpha(opacity=80);
+}
+
+.white_content {
+    display: none;
+    position: absolute;
+    top: 40%;
+    left: 35%;
+    width: 30%;
+    height: 15%;
+    padding: 16px;
+    background-color: white;
+    color: black;
+    z-index: 1002;
+    overflow: auto;
+    border-radius: 10px;
+}
+
+.white_content_tutor {
+    display: none;
+    position: absolute;
+    top: 35%;
+    left: 35%;
+    width: 30%;
+    height: 30%;
+    padding: 16px;
+    background-color: white;
+    color: black;
+    z-index: 1002;
+    overflow: auto;
+    border-radius: 10px;
+}
+
+.cont {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    border-radius: 50%;
+    background-color: #008CBA;
+}
+
+.cont:hover .overlay {
+    opacity: 0.8;
+}
+
+.text {
+    color: white;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+/* ---------------------------------------------------- */

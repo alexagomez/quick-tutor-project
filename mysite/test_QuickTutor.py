@@ -1,7 +1,7 @@
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth.models import AnonymousUser, User
 from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest
-from QuickTutor.views import student, tutor, index, make_request
+from QuickTutor.views import student, tutor, index, make_request, payment, charge
 
 
 # Written By: Soukarya
@@ -35,6 +35,7 @@ class StudentModelTest(TestCase):
 
 #Written By: Brandie
 #Test Case Id: T2_1.1
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class LandingPageTest(TestCase):
     def setUp(self):
         # Every test needs access to the request factory.
@@ -49,10 +50,6 @@ class LandingPageTest(TestCase):
         # Recall that middleware are not supported. You can simulate a
         # logged-in user by setting request.user manually.
         request.user = self.user
-
-        # Or you can simulate an anonymous user by setting request.user to
-        # an AnonymousUser instance.
-        request.user = AnonymousUser()
 
         # Test my_view() as if it were deployed at /customer/details
         response = index(request)
@@ -71,3 +68,79 @@ class TutorRequestTest(TestCase):
         self.assertTrue(StudentRequest.objects.filter(header ="normal distribution").exists())
         self.assertFalse(StudentRequest.objects.filter(header ="calc 3").exists())
         self.assertTrue(StudentRequest.objects.filter(description ="making the first web app",).exists())
+
+
+#Written By: Soukarya
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class StudentPageTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+
+    def test_details(self):
+        request = self.factory.get('')
+        request.user = self.user
+        response = student(request)
+        self.assertEqual(response.status_code, 200)
+
+#Written By: Soukarya
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class TutorPageTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+
+    def test_details(self):
+        request = self.factory.get('')
+        request.user = self.user
+        response = tutor(request)
+        self.assertEqual(response.status_code, 200)
+
+#Written By: Soukarya
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class MakeRequestPageTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+
+    def test_details(self):
+        request = self.factory.get('')
+        request.user = self.user
+        response = make_request(request)
+        self.assertEqual(response.status_code, 200)
+
+#Written By: Soukarya
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class ChargePageTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+
+    def test_details(self):
+        try:
+            request = self.factory.get('')
+            request.user = self.user
+            response = charge(request)
+
+            # if it passes the request, it is function, so return true
+            return True
+        except:
+            return False
+
+#Written By: Soukarya
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class PaymentPageTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+
+    def test_details(self):
+        request = self.factory.get('')
+        request.user = self.user
+        response = payment(request)
+        self.assertEqual(response.status_code, 200)
