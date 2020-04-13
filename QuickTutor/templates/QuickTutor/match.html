@@ -3,70 +3,70 @@
 {% block content %}
 {% load static %}
 
-
+<link rel="stylesheet" type="text/css" href="{% static 'QuickTutor/css/balls.css' %}">
 <div class="row" style="margin-top: 5vh;">
     <div class="col-md-3"></div>
     <div class="col-md-6 text-center" style="font-size: 2rem;">
-        <h1>Match Page</h1>
+        <h1>Waiting for Student Response...</h1>
     </div>
     <div class="col-md-3"></div>
-    
+
 </div>
 <div class="row" style="margin-top: 10vh; height: 45vh">
     <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        {% if user.is_authenticated %}
-            <p>Welcome, {{currentUser.firstName}}</p>
-            <p>Please wait while we match you with your student...</p>
-            <!-- <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a> -->
-            <!-- <ul class="list-group"></ul>
-                <li = class="list-group-item"><font size = "4">
-                    Student Name: <font color = "blue">{{student.firstName}}</font> 
-                    <br>Student Location <font color = "blue">{{studentRequest.location}}</font> 
-                    </li>
-            </ul> -->
-        {% else %}
-            <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}" style="width: 10vh;">
-                Login
-            </a>
-        {% endif %}
+    <div class="col-md-6 text-center" style="font-size: 1.4rem;">
+        <p>Hi {{currentUser.firstName}},</p>
+        <p>
+            We have alerted the student of your acceptance! We will let you know if the student accepts back.
+            You will be automatically redirected if the student accepts :)
+        </p>
+        <p>
+            Please enjoy this animation while you wait!
+        </p>
+        <p>
+            - Team Scrumpy Cat
+        </p>
+
+        <div class="ballCont">
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+        </div>
     </div>
     <div class="col-md-3"></div>
+
 </div>
-
-
-<a class="btn btn-primary" onclick="tutorSelected('{{currentUser.status}}', '{{studentRequestHeader}}', '{{studentUsername}}')">
-    Refresh!
-</a>
 
 
 
 <script>
     function runCheck() {
         $.ajax({
-            url: "{% url 'QuickTutor:checkaccepted' %}", 
-            success: function(data) {
-                if (data[0].accepted == 1)
-                {
-                    tutorSelected('{{currentUser.status}}','{{studentRequestHeader}}','{{studentUsername}}');
+            url: "{% url 'QuickTutor:checkaccepted' %}",
+            success: function (data) {
+                if (data[0].accepted == 1) {
+                    tutorSelected('{{currentUser.status}}', '{{studentRequestHeader}}', '{{studentUsername}}');
                 }
-                else
-                {
+                else {
                     setTimeout(runCheck, 250);
                 }
             },
-            complete: function() {
-                
+            complete: function () {
+
             }
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         setTimeout(runCheck, 1);
     }, false);
 
-    function tutorSelected(status, studentRequestHeader, studentUsername){
-            window.location.replace("/tutorsession/" + studentRequestHeader + "/" + studentUsername);
+    function tutorSelected(status, studentRequestHeader, studentUsername) {
+        window.location.replace("/tutorsession/" + studentRequestHeader + "/" + studentUsername);
     }
 </script>
 

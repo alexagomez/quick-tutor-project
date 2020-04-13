@@ -19,6 +19,13 @@
     }
 </style>
 
+<script>
+    function uploadImage() {
+        document.getElementById('light').style.display = 'block';
+        document.getElementById('fade').style.display = 'block';
+    }
+</script>
+
 <div id="light" class="white_content">
     <div class='row'>
         <div class='col-12 text-center'>
@@ -119,25 +126,44 @@
 {% if student.status == 0 %}
 <!-- Default (make request) -->
 
-    <div class="row" style="margin-top: 10vh;">
-        <div class="col-md-3"></div>
-        <div class="col-md-6 text-center" style="font-size: 2rem;">
-            <a class="btn btn-primary" href="{% url 'QuickTutor:make_request' %}">Make Request</a>
+    <div class="container">
+        <div class="row" style="margin-top: 5vh;">
+            <div class='col-1'></div>
+            <div class='col-10 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0'>
+                <h3 style='margin: 0 100px 0 100px'>
+                    Have a question? Have it answered by one of our {{tutors_online}} tutors available right now!
+                </h3>
+    
+                <a class="btn btn-primary btn-lg" href="{% url 'QuickTutor:make_request' %}" style='margin-top: 5vh;'>Make Request</a>
+            </div>
         </div>
-        <div class="col-md-3"></div>
+        <div class="row" style="margin-top: 1vh; margin-bottom: 2vh;">
+            <div class='col-1'></div>
+            <div class='col-5 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0'>
+                <h3 style='margin: 0 40px 0 40px'>
+                    View your transaction history and payments!
+                </h3>
+    
+                <a class="btn btn-info" href="#" style='margin-top: 5vh;'>View transactions</a>
+            </div>
+            <div class='col-5 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0; margin-left: 1vh; border-right: 1vh solid #7D80DA;'>
+                <h3 style='margin: 0 40px 0 40px'>
+                    Have a problem with an ongoing or past session?
+                </h3>
+    
+                <a class="btn btn-secondary" href="mailto:sg4fz@virginia.edu?Subject=Scrumpy%20Cat" style='margin-top: 5vh;'>Contact Us</a>
+            </div>
+        </div>
     </div>
-
-    <div class="row">
-
-    </div>
+    
 
 {% elif student.status == 1 %}
 <!-- waiting for tutors state/list view -->
+<div class="container">
     {% for request in specificStudentRequestList %}
 
         <div class='row' style='margin-top: 2em;'>
-            <div class='col-md-3'></div>
-            <div class="col-md-6" style='margin: 0 auto;'>
+            <div class="col-md-12" style='margin: 0 auto;'>
                 <div class="cardbox shadow-lg bg-white">
         
                     <div class="cardbox-heading">
@@ -244,14 +270,30 @@
                 <!--/ cardbox -->
         
             </div>
-            <!--/ col-6 -->
-        
-            <div class='col-md-3'></div>
+            <!--/ col-12 -->
         
         </div>
         <!--/ row -->
     {% endfor %}
 
+    <div class="row" style="margin-top: 1vh; margin-bottom: 2vh;">
+        <div class='col-1'></div>
+        <div class='col-5 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0'>
+            <h3 style='margin: 0 40px 0 40px'>
+                View your transaction history and payments!
+            </h3>
+
+            <a class="btn btn-info" href="#" style='margin-top: 5vh;'>View transactions</a>
+        </div>
+        <div class='col-5 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0; margin-left: 1vh; border-right: 1vh solid #7D80DA;'>
+            <h3 style='margin: 0 40px 0 40px'>
+                Have a problem with an ongoing or past session?
+            </h3>
+
+            <a class="btn btn-secondary" href="mailto:sg4fz@virginia.edu?Subject=Scrumpy%20Cat" style='margin-top: 5vh;'>Contact Us</a>
+        </div>
+    </div>
+</div>
     
 
 <script>
@@ -283,11 +325,6 @@
 
     function cancel(user_id) {
         window.location.replace("cancel/" + user_id);
-    }
-
-    function uploadImage() {
-        document.getElementById('light').style.display = 'block';
-        document.getElementById('fade').style.display = 'block';
     }
 
     function popupTutor(firstName, lastName, rating, major, year, profile_image) {

@@ -173,23 +173,22 @@ def accept(request, username):
 
 @login_required
 def cancel(request, studentUsername):
-    if(request.user.username == studentUsername):
-        studentRequest = StudentRequest.objects.get(studentUsername=studentUsername)
+    studentRequest = StudentRequest.objects.get(studentUsername=studentUsername)
 
-        student = Student.objects.get(email=studentRequest.studentEmail)
-        student.status = 0
-        student.save(update_fields=['status'])
+    student = Student.objects.get(email=studentRequest.studentEmail)
+    student.status = 0
+    student.save(update_fields=['status'])
 
-        for tutor in studentRequest.tutor_set.all():
-            tutor.status = 0
-            tutor.save(update_fields=['status'])
+    for tutor in studentRequest.tutor_set.all():
+        tutor.status = 0
+        tutor.save(update_fields=['status'])
 
-        """ if studentRequest.tutorEmail != "":
-            tutor = Student.objects.get(email=studentRequest.tutorEmail)
-            tutor.status = 0
-            tutor.save(update_fields=['status']) """
+    if studentRequest.tutorEmail != "":
+        tutor = Student.objects.get(email=studentRequest.tutorEmail)
+        tutor.status = 0
+        tutor.save(update_fields=['status'])
 
-        studentRequest.delete()
+    studentRequest.delete()
 
     return HttpResponseRedirect(reverse('QuickTutor:student'))
 
@@ -318,6 +317,8 @@ def tutorpostsession(request, studentRequestHeader, studentUsername):
         else:
             selectedStudent.rating = newRating
         selectedStudent.save(update_fields=['rating'])
+        Student.objects.filter(username=studentUsername).update(status=0)
+        Student.objects.filter(username=studentUsername).update(accepted=0)
 
         StudentRequest.objects.filter(header=studentRequestHeader).delete()
 
@@ -364,6 +365,9 @@ def charge(request):
         # update student status and accepted
         Student.objects.filter(email=email).update(status=0)
         Student.objects.filter(email=email).update(accepted=0)
+
+        Tutor.objects.filter(username=request.POST['tutorUsername']).update(status=0)
+        Tutor.objects.filter(username=request.POST['tutorUsername']).update(request='')
 
         # update tutor rating... not exactly a true average
         if (currentRating != 0):

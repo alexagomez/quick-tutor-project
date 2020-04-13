@@ -83,17 +83,11 @@
             <button class = "login_button" id="login_button" onclick=startSession("{% url 'QuickTutor:startsession' %}") style="margin-top: 3vh;">Start Session</button>
         </div>
         <div class="col-3">
-            <button class = "login_button" id="end_session" style="display: none; margin-top: 3vh;">End Session</button>
+            <button class="login_button" id="end_session" onclick="endSession('{{StudentRequest.header}}', '{{StudentRequest.studentUsername}}')" style="display: none; margin-top: 3vh;">End Session</button>
         </div>
     <div class="col-md-2"></div>
 </div>
 
-
-{% if user.is_authenticated %}
-
-
-
-{% endif %}
 
 
 <script>
@@ -114,5 +108,8 @@
         });
     }
     
+    function endSession(studentRequestHeader, studentUsername) {
+        window.location.replace("/tutorpostsession/" + studentRequestHeader + "/" + studentUsername);
+    }
 </script>
 {% endblock %}
