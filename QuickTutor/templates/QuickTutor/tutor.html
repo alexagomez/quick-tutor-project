@@ -153,26 +153,26 @@
 
 <script>
 
-requestCount = {{studentRequestList.count}};
+    requestCount = {{studentRequestList.count}};
 
-function runCheck() {
-    $.ajax({
-        url: "{% url 'QuickTutor:checkrequestcount' %}", 
-        success: function(data) {
-            if (data[0].requestCount != requestCount)
-            {
-                location.reload();
-                requestCount = data[0].requestCount;
+    function runCheck() {
+        $.ajax({
+            url: "{% url 'QuickTutor:checkrequestcount' %}", 
+            success: function(data) {
+                if (data[0].requestCount != requestCount)
+                {
+                    location.reload();
+                    requestCount = data[0].requestCount;
+                }
+                else
+                {
+                    setTimeout(runCheck, 250);
+                }
+            },
+            complete: function() {
+                    
             }
-            else
-            {
-                setTimeout(runCheck, 250);
-            }
-        },
-        complete: function() {
-                
-        }
-        });
+            });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
