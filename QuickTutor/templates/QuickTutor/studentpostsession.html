@@ -3,6 +3,7 @@
 {% block content %}
 {% load static %}
 
+
 <div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6 text-center" style="font-size: 2rem;">
@@ -11,6 +12,7 @@
                 <h1 class="mt-1" style="padding-top: 10rem;">STUDENT SESSION HAS ENDED</h1>
                 {% csrf_token %}
                 <form action="" method="POST">
+                    <!-- required inputs  -->
                     <div class="form-group">
                         <label for="exampleInputEmail1">Rate your session(1-5)</label>
                         <p><font size = "3"><i>With 0 being the worst and 5 being the best</i></font></p>
@@ -21,7 +23,8 @@
                         <label for="exampleInputEmail1">Any issues or complaints?</label>
                         <input class="form-control" type="text" name="complaint" id="complaint">
                     </div> -->
-                    <!-- how do i do cost stuff? -->
+                    <!-- how do i do pay stuff? -->
+
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
@@ -29,6 +32,7 @@
     </div>
     <div class="col-md-3"></div>
 </div>
+
 
 
 {% endblock %}
