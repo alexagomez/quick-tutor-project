@@ -69,7 +69,9 @@
     <div class="col-md-2"></div>
     <div class="col-3">
         <p style="">
-            Currently tutoring: <b>{{StudentRequest.studentUsername}}</b>
+            Currently tutoring: <b>{{StudentRequest.studentUsername}}</b><br/>
+            Student location: <b>{{StudentRequest.location}}</b><br/>
+            Specific meeting details: <b>{{StudentRequest.meetingDetails}}</b>
         </p>
     </div>
     <div class="col-md-2"></div>
@@ -78,7 +80,10 @@
 <div class="row">
     <div class="col-md-2"></div>
         <div class="col-3">
-            <button class="login_button" onclick=startSession("{% url 'QuickTutor:startsession' %}") style="margin-top: 3vh;">Start Session</button>
+            <button class = "login_button" id="login_button" onclick=startSession("{% url 'QuickTutor:startsession' %}") style="margin-top: 3vh;">Start Session</button>
+        </div>
+        <div class="col-3">
+            <button class = "login_button" id="end_session" style="display: none; margin-top: 3vh;">End Session</button>
         </div>
     <div class="col-md-2"></div>
 </div>
@@ -97,6 +102,8 @@
     }
 
     function startSession(passUrl){
+        $('#login_button').hide();
+        $('#end_session').show();
         $.ajax({
             url: passUrl,
             success: function(data) {
