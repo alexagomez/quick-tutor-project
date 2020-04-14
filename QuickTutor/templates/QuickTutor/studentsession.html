@@ -99,7 +99,7 @@
                 {
                     $("#begunStatus").show();
                     $("#waitingStatus").hide();
-                    setTimeout(checkStart, 250);
+                    setTimeout(runCheck, 250);
                 }
                 else
                 {
@@ -107,6 +107,22 @@
                     $("#waitingStatus").show();
                     adjustDots();
                     setTimeout(runCheck, 250);
+                }
+            },
+            complete: function() {
+                
+            }
+        });
+
+        $.ajax({
+            url: "{% url 'QuickTutor:checksessionstudent' %}", 
+            success: function(data) {
+                console.log(data);
+                if (data[0].sessionEnded = 1){
+
+                }
+                else{
+                    setTimeout(runCheck, 250); 
                 }
             },
             complete: function() {

@@ -11,6 +11,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
 from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse
 import stripe
+import datetime
+from datetime import datetime, date, time, timezone, timedelta
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -250,6 +253,10 @@ def startsession(request):
     studentRequest.save(update_fields=['status'])
     data = [{
     }]
+
+    studentRequest.sessionStartTime = datetime.now()
+    studentRequest.save(update_fields=['sessionStartTime'])
+
     return JsonResponse(data, safe=False)
 
 @login_required
@@ -295,6 +302,26 @@ def checkacceptedtutorcount(request):
     }]
     return JsonResponse(data, safe=False)
 
+@login_required
+def checksessionstudent(request):
+    currentStudent = request.user
+    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
+
+    sessionEnded = studentRequest.sessionEnded
+
+    startTime = studentRequest.sessionStartTime
+    nowTime = datetime.now()
+    elapsedTime = timedelta(hours=nowTime.hour, minutes=nowTime.minute, seconds=nowTime.second) - timedelta(hours=startTime.hour, minutes=startTime.minute, seconds=startTime.second)
+    studentRequest.sessionElapsedTime = elapsedTime
+    studentRequest.save(update_fields=['sessionElapsedTime'])
+
+    
+    data = [{
+        'sessionEnded': sessionEnded,
+        'elapsedTime': elapsedTime.total_seconds()
+    }]
+
+    return JsonResponse(data, safe=False)
 @csrf_exempt
 @login_required
 def tutorpostsession(request, studentRequestHeader, studentUsername):

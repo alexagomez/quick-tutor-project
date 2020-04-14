@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 import random
 import os
+from datetime import datetime, date, time, timezone, timedelta
 
 def get_image_path(instance, filename):
     return os.path.join('photos', str(instance.username), filename)
@@ -48,6 +49,10 @@ class StudentRequest(models.Model):
     # session status
     status = models.IntegerField(default=0, null=True)     # 0=not started        1=started  
 
+    sessionStartTime = models.TimeField(auto_now=False, auto_now_add=False, default = datetime.now())
+    sessionElapsedTime = models.DurationField(default = timedelta())
+    sessionEndTime = models.TimeField(auto_now=False, auto_now_add=False, default = datetime.now())
+    sessionEnded = models.IntegerField(default=0, null=True)    # 0=not ended   1=ended
 class Tutor(models.Model):
     email = models.CharField(max_length=100, default='', primary_key=True)
     username = models.CharField(max_length=10, default='')
