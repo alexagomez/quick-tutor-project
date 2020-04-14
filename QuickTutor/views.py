@@ -363,7 +363,13 @@ def tutorpostsession(request, studentRequestHeader, studentUsername):
         if (description != ''):
             obj, created = Complaint.objects.update_or_create(complainantUsername = currentUser.username, complaineeUsername = studentUsername, description = description)
 
-        StudentRequest.objects.filter(header=studentRequestHeader).delete()
+        deleteStatus = StudentRequest.objects.get(header=studentRequestHeader).deleteStatus
+        if deleteStatus == 0:
+            StudentRequest.objects.filter(header=studentRequestHeader).update(deleteStatus=1)
+        elif deleteStatus == 1:
+            StudentRequest.objects.filter(header=studentRequestHeader).update(deleteStatus=2)
+            # delete the request
+            StudentRequest.objects.filter(header=studentRequestHeader).delete()
 
         return HttpResponseRedirect(reverse('QuickTutor:tutor'))
 
@@ -429,7 +435,12 @@ def charge(request):
         if (description != ''):
             obj, created = Complaint.objects.update_or_create(complainantUsername=currentUser.username, complaineeUsername=request.POST['tutorUsername'], description=description)
 
-        # delete the request
-        StudentRequest.objects.filter(header=request.POST['header']).delete()
+        deleteStatus = StudentRequest.objects.get(studentEmail=email).deleteStatus
+        if deleteStatus == 0:
+            StudentRequest.objects.filter(studentEmail=email).update(deleteStatus=1)
+        elif deleteStatus == 1:
+            StudentRequest.objects.filter(studentEmail=email).update(deleteStatus=2)
+            # delete the request
+            StudentRequest.objects.filter(studentEmail=email).delete()
 
         return HttpResponseRedirect(reverse('QuickTutor:student'))
