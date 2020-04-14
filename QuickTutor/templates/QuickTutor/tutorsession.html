@@ -80,10 +80,14 @@
 <div class="row">
     <div class="col-md-2"></div>
         <div class="col-3">
-            <button class = "login_button" id="login_button" onclick=startSession("{% url 'QuickTutor:startsession' %}") style="margin-top: 3vh;">Start Session</button>
+            <button class = "login_button" id="login_button" onclick=startSession("{% url 'QuickTutor:startsession' %}") style="">Start Session</button>
         </div>
         <div class="col-3">
-            <button class="login_button" id="end_session" onclick="endSession('{{StudentRequest.header}}', '{{StudentRequest.studentUsername}}')" style="display: none; margin-top: 3vh;">End Session</button>
+            <div id="elapsedTimeContainer" class="container">
+                <h1><span id=elapsedTime></span></h1>
+            </div>
+            <button class="login_button" id="end_session" onclick="endSession()" style="display: none; margin-top: 3vh;">End Session</button>
+            
         </div>
     <div class="col-md-2"></div>
 </div>
@@ -98,18 +102,46 @@
     function startSession(passUrl){
         $('#login_button').hide();
         $('#end_session').show();
+        $('#elapsedTimeContainer').show();
         $.ajax({
             url: passUrl,
             success: function(data) {
                 console.log(data);
+                runCheck();
             },
             complete: function() {
             }
         });
     }
+
+    function runCheck() {
+        $.ajax({
+            url: "{% url 'QuickTutor:checksessionstudent' %}", 
+            success: function(data) {
+                console.log(data);
+                if (data[0].sessionEnded == 1) {
+                  endSession();
+                }
+                else {
+                    setTimeout(runCheck, 250); 
+                    var date  = new Date(null);
+                    date.setSeconds(data[0].elapsedTime);
+                    var isoDate = date.toISOString().substr(11,8);
+                    console.log("sup");
+                    $("#elapsedTime").html(isoDate);
+                }
+            },
+            complete: function() {
+                
+            },
+            error: function() {
+                setTimeout(runCheck, 250); 
+            }
+        });
+    }
     
-    function endSession(studentRequestHeader, studentUsername) {
-        window.location.replace("/tutorpostsession/" + studentRequestHeader + "/" + studentUsername);
+    function endSession() {
+        window.location.replace("/tutorpostsession/" + '{{StudentRequest.header}}' + "/" + '{{StudentRequest.studentUsername}}');
     }
 </script>
 {% endblock %}

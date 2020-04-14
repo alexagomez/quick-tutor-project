@@ -317,7 +317,7 @@ def checksessionstudent(request):
 
     
     data = [{
-        'sessionEnded': sessionEnded,
+        'sessionEnded': studentRequest.sessionEnded,
         'elapsedTime': elapsedTime.total_seconds()
     }]
 
@@ -326,6 +326,10 @@ def checksessionstudent(request):
 @login_required
 def tutorpostsession(request, studentRequestHeader, studentUsername):
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+
+    studentRequest.sessionEnded = 1
+    studentRequest.save(update_fields=['sessionEnded'])
+
     if request.method == "POST":
         # get tutor object of person requesting and rating given
         currentUser = request.user
@@ -357,6 +361,8 @@ def tutorpostsession(request, studentRequestHeader, studentUsername):
 @login_required
 def studentpostsession(request, studentRequestHeader, tutorUsername):
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    studentRequest.sessionEnded = 1
+    studentRequest.save(update_fields=['sessionEnded'])
     return render(request, "QuickTutor/studentpostsession.html", {'StudentRequest': studentRequest, 'tutorUsername': tutorUsername})    
 
 @login_required
