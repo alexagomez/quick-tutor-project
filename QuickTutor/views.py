@@ -45,8 +45,8 @@ def student(request):
         # First time students hit this branch
 
         # Block non-uva students
-        # if email.split('@')[1] != "virginia.edu":
-        #     return render(request, "QuickTutor/error.html", {})
+        if email.split('@')[1] != "virginia.edu" or email.split('@')[0] != 'admin':
+            return render(request, "QuickTutor/error.html", {})
 
         # redirect to a form to fill out name, major, etc.
         return render(request, "QuickTutor/signupStudent.html", {'email': email})
