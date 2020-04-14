@@ -1,7 +1,7 @@
 from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth.models import AnonymousUser, User
 from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest
-from QuickTutor.views import student, tutor, index, make_request, payment, charge
+from QuickTutor.views import student, tutor, index, make_request, charge
 
 
 # Written By: Soukarya
@@ -130,17 +130,3 @@ class ChargePageTest(TestCase):
             return True
         except:
             return False
-
-#Written By: Soukarya
-@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
-class PaymentPageTest(TestCase):
-    def setUp(self):
-        self.factory = RequestFactory()
-        self.user = User.objects.create_user(
-            username='user', email='user@virginia.edu', password='top_secret')
-
-    def test_details(self):
-        request = self.factory.get('')
-        request.user = self.user
-        response = payment(request)
-        self.assertEqual(response.status_code, 200)

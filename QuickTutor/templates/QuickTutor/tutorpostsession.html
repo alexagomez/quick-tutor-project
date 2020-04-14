@@ -10,8 +10,8 @@
         <div class="row justify-content-center">
             <div class="col-8" style="background-color: #7D80DA; border-radius: 1rem; border-color:black;">
                 <h1 class="mt-1" style="padding-top: 10rem;">TUTOR SESSION HAS ENDED</h1>
-                {% csrf_token %}
                 <form action="" method="POST">
+                    {% csrf_token %}
                     <!-- required inputs  -->
                     <div class="form-group">
                         <label for="exampleInputEmail1">Rate your session(1-5)</label>
@@ -23,7 +23,6 @@
                         <label for="exampleInputEmail1">Any issues or complaints?</label>
                         <input class="form-control" type="text" name="complaint" id="complaint">
                     </div> -->
-                    <!-- how do i do pay stuff? -->
 
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
