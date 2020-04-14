@@ -78,10 +78,17 @@
             Waiting for <b>{{StudentRequest.tutorUsername}}</b> to start the session<span id="dots"></span>
         </h4>
         <h4 id="begunStatus" style="display:none;">
-            Session has started!
+            <!--<b>{{StudentRequest.tutorUsername}}</b> has started the session!-->
+            <b>Session has started!</b> 
         </h4>
     </div>
-    <div class="col-md-3"></div>
+    <div id="sessionStartedContainer" class="col-3">
+        <div class="container">
+            <h1><span id=elapsedTime></span></h1>
+        </div>
+        <button class="login_button" id="end_session" onclick="endSession()" style="">End Session</button>
+    </div>
+    <div class="col-md-2"></div>
 </div>
 
 <script>
@@ -96,8 +103,9 @@
                 if (data[0].status == 1)
                 {
                     $("#begunStatus").show();
+                    $("#sessionStartedContainer").show();
                     $("#waitingStatus").hide();
-                    setTimeout(checkStart, 250);
+                    runSessionCheck();
                 }
                 else
                 {
@@ -111,9 +119,37 @@
                 
             }
         });
+
+        
     }
 
+    function runSessionCheck() {
+        $.ajax({
+            url: "{% url 'QuickTutor:checksessionstudent' %}", 
+            success: function(data) {
+                if (data[0].sessionEnded == 1) {
+                  endSession();
+                }
+                else {
+                    setTimeout(runSessionCheck, 250); 
+                    var date  = new Date(null);
+                    date.setSeconds(data[0].elapsedTime);
+                    var isoDate = date.toISOString().substr(11,8);
+                    $("#elapsedTime").html(isoDate);
+                }
+            },
+            complete: function() {
+                
+            },
+            error: function() {
+                setTimeout(runSessionCheck, 250); 
+            }
+        });
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
+        $("#begunStatus").hide();
+        $("#sessionStartedContainer").hide();
         setTimeout(runCheck, 1);
     }, false);
 
@@ -132,6 +168,11 @@
             div.text("");
         }
     }
+
+    function endSession() {
+        window.location.replace("/studentpostsession/" + '{{StudentRequest.header}}' + "/" + '{{StudentRequest.tutorUsername}}');
+    }
+
 </script>
 
 {% endblock %}

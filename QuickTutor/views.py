@@ -9,8 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
-from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse
+from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse, Complaint
 import stripe
+import datetime
+from datetime import datetime, date, time, timezone, timedelta
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -252,6 +255,10 @@ def startsession(request):
     studentRequest.save(update_fields=['status'])
     data = [{
     }]
+
+    studentRequest.sessionStartTime = datetime.now()
+    studentRequest.save(update_fields=['sessionStartTime'])
+
     return JsonResponse(data, safe=False)
 
 @login_required
@@ -297,30 +304,65 @@ def checkacceptedtutorcount(request):
     }]
     return JsonResponse(data, safe=False)
 
+@login_required
+def checksessionstudent(request):
+    currentStudent = request.user
+    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
+
+    sessionEnded = studentRequest.sessionEnded
+
+    startTime = studentRequest.sessionStartTime
+    nowTime = datetime.now()
+    elapsedTime = timedelta(hours=nowTime.hour, minutes=nowTime.minute, seconds=nowTime.second) - timedelta(hours=startTime.hour, minutes=startTime.minute, seconds=startTime.second)
+    studentRequest.sessionElapsedTime = elapsedTime
+    studentRequest.save(update_fields=['sessionElapsedTime'])
+
+    
+    data = [{
+        'sessionEnded': studentRequest.sessionEnded,
+        'elapsedTime': elapsedTime.total_seconds()
+    }]
+
+    return JsonResponse(data, safe=False)
+
 @csrf_exempt
 @login_required
 def tutorpostsession(request, studentRequestHeader, studentUsername):
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+
+    studentRequest.sessionEnded = 1
+    studentRequest.save(update_fields=['sessionEnded'])
+
     if request.method == "POST":
         # get tutor object of person requesting and rating given
         currentUser = request.user
         email = currentUser.email
+        
         selectedStudent = Student.objects.get(username=studentUsername)
         currentRating = selectedStudent.rating
+        newNumOfRatings = selectedStudent.numOfRatings + 1
         newRating = request.POST['rating']
 
         # update tutor status and request
         Tutor.objects.filter(email=email).update(status=0)
         Tutor.objects.filter(email=email).update(request='')
 
-        # update student rating... not exactly a true average unfortunate
+        # update student number of ratings
+        Student.objects.filter(username=studentUsername).update(numOfRatings = newNumOfRatings)
+
+        # update student rating
         if (currentRating != 0):
-            selectedStudent.rating = (int(currentRating) + int(newRating))/2
+            selectedStudent.rating = (int(currentRating) + int(newRating)) / newNumOfRatings 
         else:
             selectedStudent.rating = newRating
         selectedStudent.save(update_fields=['rating'])
         Student.objects.filter(username=studentUsername).update(status=0)
         Student.objects.filter(username=studentUsername).update(accepted=0)
+
+        # complaint
+        description = request.POST['complaint']
+        if (description != ''):
+            obj, created = Complaint.objects.update_or_create(complainantUsername = currentUser.username, complaineeUsername = studentUsername, description = description)
 
         StudentRequest.objects.filter(header=studentRequestHeader).delete()
 
@@ -332,6 +374,8 @@ def tutorpostsession(request, studentRequestHeader, studentUsername):
 @login_required
 def studentpostsession(request, studentRequestHeader, tutorUsername):
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    studentRequest.sessionEnded = 1
+    studentRequest.save(update_fields=['sessionEnded'])
     return render(request, "QuickTutor/studentpostsession.html", {'StudentRequest': studentRequest, 'tutorUsername': tutorUsername})    
 
 @login_required
@@ -362,21 +406,29 @@ def charge(request):
         email = currentUser.email
         selectedTutor = Tutor.objects.get(username=request.POST['tutorUsername'])
         currentRating = selectedTutor.rating
+        newNumOfRatings = selectedTutor.numOfRatings + 1
         newRating = request.POST['rating']
 
         # update student status and accepted
         Student.objects.filter(email=email).update(status=0)
         Student.objects.filter(email=email).update(accepted=0)
-
+        
+        
         Tutor.objects.filter(username=request.POST['tutorUsername']).update(status=0)
         Tutor.objects.filter(username=request.POST['tutorUsername']).update(request='')
+        Tutor.objects.filter(username=request.POST['tutorUsername']).update(numOfRatings = newNumOfRatings)
 
-        # update tutor rating... not exactly a true average
+        # update tutor rating
         if (currentRating != 0):
-            selectedTutor.rating = (int(currentRating) + int(newRating))/2
+            selectedTutor.rating = (int(currentRating) + int(newRating)) / newNumOfRatings
         else:
             selectedTutor.rating = newRating
         selectedTutor.save(update_fields=['rating'])
+
+        # complaint
+        description = request.POST['complaint']
+        if (description != ''):
+            obj, created = Complaint.objects.update_or_create(complainantUsername = currentUser.username, complaineeUsername = tutorUsername, description = description)
 
         # delete the request
         StudentRequest.objects.filter(header=request.POST['header']).delete()
