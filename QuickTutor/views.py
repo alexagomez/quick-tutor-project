@@ -301,36 +301,6 @@ def checkacceptedtutorcount(request):
         'acceptedTutorCount': acceptedTutorCount
     }]
     return JsonResponse(data, safe=False)
-@csrf_exempt
-@login_required
-def make_request(request):
-    if request.method == "POST":
-        # get student object of person requesting
-        currentUser = request.user
-        email = currentUser.email
-        currentStudent = Student.objects.get(email=email)
-
-        # update student table to be WAITING
-        Student.objects.filter(email=email).update(status=1)
-
-
-        # create a new row in studentRequests table
-        courseName = request.POST['courseName']
-        header = request.POST['header']
-
-        description = request.POST['description']
-        location = request.POST['location']
-        confusion = request.POST['confusion']
-        meetingDetails = request.POST['meetingDetails']
-
-        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location, status=0,
-        meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
-        # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
-        
-        return HttpResponseRedirect(reverse('QuickTutor:student'))
-
-
-    return render(request, "QuickTutor/studentRequest.html", {})
 
 @login_required
 def checksessionstudent(request):
