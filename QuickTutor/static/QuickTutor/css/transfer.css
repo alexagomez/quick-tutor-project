@@ -1,0 +1,141 @@
+
+ .connection {
+    position: relative;
+    height: 20px;
+}
+.connection:before {
+    position: absolute;
+    content: '';
+    display: block;
+    background: rgba(255, 255, 255, 0.1);
+    height: 1px;
+    width: 100%;
+    top: 10px;
+}
+.connection .node {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    background: white;
+    position: relative;
+    z-index: 500;
+}
+.connection .node:before {
+    content: '';
+    display: block;
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    opacity: 0.4;
+    box-shadow: 0 0 10px 2px white;
+    animation-timing-function: linear;
+    animation-name: pulse;
+    animation-duration: 7s;
+}
+.connection .node:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.connection .point {
+    display: block;
+    position: absolute;
+    left: 0.5%;
+    height: 6px;
+    z-index: 100;
+    width: 6px;
+    border-radius: 6px;
+    top: 7px;
+    background: white;
+    animation-timing-function: linear;
+    animation-name: transfer;
+    animation-duration: 7s;
+    animation-delay: 0s;
+    animation-direction: normal;
+    animation-iteration-count: 10;
+}
+.connection .point:nth-child(1) {
+    animation-delay: 1s;
+}
+.connection .point:nth-child(1):before {
+    animation-delay: 1s;
+}
+.connection .point:nth-child(2) {
+    animation-delay: 1.5s;
+}
+.connection .point:nth-child(2):before {
+    animation-delay: 1.5s;
+}
+.connection .point:nth-child(3) {
+    animation-delay: 1.8s;
+}
+.connection .point:nth-child(3):before {
+    animation-delay: 1.8s;
+}
+.connection .point:nth-child(4) {
+    animation-delay: 2.5s;
+}
+.connection .point:nth-child(4):before {
+    animation-delay: 2.5s;
+}
+.connection .point:before {
+    content: '';
+    display: block;
+    position: relative;
+    z-index: 50;
+    opacity: 1;
+    height: 6px;
+    width: 6px;
+    border-radius: 50px;
+    box-shadow: 0px 0px 10px 5px #3192bd;
+    animation-timing-function: ease-in;
+    animation-name: glow;
+    animation-duration: 7s;
+    animation-delay: 0s;
+    animation-direction: normal;
+    animation-iteration-count: 10;
+}
+.connection .node-start {
+    float: left;
+}
+.connection .node-end {
+    float: right;
+}
+.stage {
+    padding: 50px;
+    position: relative;
+    margin-top: 100px;
+}
+@keyframes transfer {
+    0% {
+        left: 0;
+   }
+    100% {
+        left: 99%;
+   }
+}
+@keyframes glow {
+    0% {
+        opacity: 0;
+   }
+    10% {
+        opacity: 1;
+   }
+    50% {
+        opacity: 1;
+   }
+    90% {
+        opacity: 1;
+   }
+    100% {
+        opacity: 0;
+   }
+}
+@keyframes pulse {
+    0% {
+        opacity: 0;
+   }
+    100% {
+        opacity: 1;
+   }
+}

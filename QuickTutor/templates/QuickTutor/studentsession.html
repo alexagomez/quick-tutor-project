@@ -2,89 +2,97 @@
 
 {% block content %}
 {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'QuickTutor/css/transfer.css' %}">
 
-<style>
-    .coverPhoto {
-        background-image: linear-gradient(rgba(79, 94, 99, 0.486), rgba(79, 94, 99, 0.486)),url('https://www.itl.cat/pngfile/big/14-140246_beautiful-nature-wallpaper-background-free-beautiful-nature-background.jpg'); 
-        background-repeat: no-repeat; 
-        background-size: cover; 
-        background-position: center;
-        position: fixed;
-        width: 100%;
-        height: 40vh;
-        top: 0;
-        left: 0;
-        z-index: -1;
-    }
-</style>
+<div class="row" style='margin-top: 5vh;'>
+    <div class="col-md-3"></div>
+    <div class="col-6 text-center">
+        <p>
+            <h1 style='font-size: 5rem;'>QuickTutor</h1>
+        </p>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
 
 <div class="row">
-        
-    <div class="col-md-8" style="margin: 8vh 0 0 15vh">
-        <div class="coverPhoto"></div>
+    <div class="col-3" style="margin: 8vh 0 0 6vh; padding:0;">
         <div class="row">
-            <img src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg" style="border-radius: 50%;" alt="Avatar" width="150px">
+            <div class="cont">
+                {% if tutor.profile_image == '' or tutor.profile_image == None %}
+                <img src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
+                    class="image" alt="profpic">
+                {% else %}
+                <img src="../../../media/{{ tutor.profile_image }}" class="image" alt="profpic">
+                {% endif %}
+
+            </div>
             <div style="margin-left: 1vh;">
                 <a>
-                    <h1>{{tutor.firstName}} {{tutor.lastName}}</h1>
-                    <h5 style="color:rgb(206, 206, 206)">{{tutor.major}}</h5>
-                    <h5 style="color:rgb(206, 206, 206)">{{tutor.year}} Year</h5>
-                    <h6 style="color:rgb(206, 206, 206)">{{user.username}}@virgnia.edu</h6>
+                    <h1>Tutor</h1>
+                    <h4>{{tutor.firstName}} {{tutor.lastName}}</h4>
+                    <h5 style="color:rgb(206, 206, 206)">{{tutor.email}}</h5>
                 </a>
             </div>
-            
         </div>
-        <div class="row text-center" style="margin-top: 2vh">
-            <div class="col-3">
-                <h1>29</h1>
-                Sessions
-            </div>
-            <div class="col-3">
-                <h1>154</h1>
-                Requests
-            </div>
-            <div class="col-3">
-                <h1>101</h1>
-                Tutors Online
-            </div>
-        </div>
-        
     </div>
-    <div class="col-md-2"></div>
-    <div class="col-md-2"></div>
-    
+
+    <div class='col-5' style='padding: 0;'>
+        <section class="stage">
+            <div class="connection" id="example">
+                <div class="node node-start"></div>
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+                <div class="node node-end"></div>
+            </div>
+        </section>
+    </div>
+
+    <div class="col-3 text-right" style="margin: 8vh 4vh 0 0; padding:0;">
+        <div class="row" style='right:0; position: absolute'>
+            <div class="text-right" style="margin-right: 1vh;">
+                <a>
+                    <h1>Student</h1>
+                    <h4>{{student.firstName}} {{student.lastName}}</h4>
+                    <h5 style="color:rgb(206, 206, 206)">{{student.email}}</h5>
+                </a>
+            </div>
+            <div class="cont">
+                {% if student.profile_image == '' or student.profile_image == None %}
+                    <img src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
+                    class="image" alt="profpic">
+                {% else %}
+                    <img src="../../../media/{{ student.profile_image }}" class="image" alt="profpic">
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
-<p></p>
+
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-3">
-        <p style="">
-            <h1>STUDENT SESSION</h1>
-        </p>
-    </div>
-    <div class="col-md-2"></div>
-</div>
-<p></p>
-<div class="row" >
-    <div class="col-md-2"></div>
-    <div class="col-3">
-        <p id="waitingStatus">
+    <div class="col-md-3"></div>
+    <div class="col-6 text-center">
+        <h4 id="waitingStatus">
             Waiting for <b>{{StudentRequest.tutorUsername}}</b> to start the session<span id="dots"></span>
-        </p>
-        <p id="begunStatus" style="display:none;">
-            <!--<b>{{StudentRequest.tutorUsername}}</b> has started the session!-->
-            <b>Session has started!</b>
-        </p>
+        </h4>
+        <h4 id="begunStatus" style="display:none;">
+            <b>Session has started!</b> 
+        </h4>
     </div>
-    <div class="col-md-2"></div>
+    <div class="col-md-3"></div>
 </div>
-
-{% if user.is_authenticated %}
-
-
-
-{% endif %}
-
+<div class="row">
+    <div class="col-md-3"></div>
+    <div id="sessionStartedContainer" class="col-6 text-center">
+        <div class="container">
+            <h1 style="font-size: 3rem"><span id=elapsedTime></span></h1>
+        </div>
+        <button style="margin-top: 5vh;" class="login_button" id="end_session" onclick="endSession()">End Session</button>
+    </div>
+    <div class="col-md-3"></div>
+</div>
 
 <script>
     function transfer(user_id){
@@ -98,8 +106,9 @@
                 if (data[0].status == 1)
                 {
                     $("#begunStatus").show();
+                    $("#sessionStartedContainer").show();
                     $("#waitingStatus").hide();
-                    setTimeout(checkStart, 250);
+                    runSessionCheck();
                 }
                 else
                 {
@@ -113,9 +122,37 @@
                 
             }
         });
+
+        
     }
 
+    function runSessionCheck() {
+        $.ajax({
+            url: "{% url 'QuickTutor:checksessionstudent' %}", 
+            success: function(data) {
+                if (data[0].sessionEnded == 1) {
+                  endSession();
+                }
+                else {
+                    setTimeout(runSessionCheck, 250); 
+                    var date  = new Date(null);
+                    date.setSeconds(data[0].elapsedTime);
+                    var isoDate = date.toISOString().substr(11,8);
+                    $("#elapsedTime").html(isoDate);
+                }
+            },
+            complete: function() {
+                
+            },
+            error: function() {
+                setTimeout(runSessionCheck, 250); 
+            }
+        });
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
+        $("#begunStatus").hide();
+        $("#sessionStartedContainer").hide();
         setTimeout(runCheck, 1);
     }, false);
 
@@ -134,5 +171,11 @@
             div.text("");
         }
     }
+
+    function endSession() {
+        window.location.replace("/studentpostsession/" + '{{StudentRequest.header}}' + "/" + '{{StudentRequest.tutorUsername}}');
+    }
+
 </script>
+
 {% endblock %}
