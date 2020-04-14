@@ -78,17 +78,20 @@
             Waiting for <b>{{StudentRequest.tutorUsername}}</b> to start the session<span id="dots"></span>
         </h4>
         <h4 id="begunStatus" style="display:none;">
-            <!--<b>{{StudentRequest.tutorUsername}}</b> has started the session!-->
             <b>Session has started!</b> 
         </h4>
     </div>
-    <div id="sessionStartedContainer" class="col-3">
+    <div class="col-md-3"></div>
+</div>
+<div class="row">
+    <div class="col-md-3"></div>
+    <div id="sessionStartedContainer" class="col-6 text-center">
         <div class="container">
-            <h1><span id=elapsedTime></span></h1>
+            <h1 style="font-size: 3rem"><span id=elapsedTime></span></h1>
         </div>
-        <button class="login_button" id="end_session" onclick="endSession()" style="">End Session</button>
+        <button style="margin-top: 5vh;" class="login_button" id="end_session" onclick="endSession()">End Session</button>
     </div>
-    <div class="col-md-2"></div>
+    <div class="col-md-3"></div>
 </div>
 
 <script>

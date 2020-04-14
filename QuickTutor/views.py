@@ -317,7 +317,6 @@ def checksessionstudent(request):
     studentRequest.sessionElapsedTime = elapsedTime
     studentRequest.save(update_fields=['sessionElapsedTime'])
 
-    
     data = [{
         'sessionEnded': studentRequest.sessionEnded,
         'elapsedTime': elapsedTime.total_seconds()
@@ -428,7 +427,7 @@ def charge(request):
         # complaint
         description = request.POST['complaint']
         if (description != ''):
-            obj, created = Complaint.objects.update_or_create(complainantUsername = currentUser.username, complaineeUsername = tutorUsername, description = description)
+            obj, created = Complaint.objects.update_or_create(complainantUsername=currentUser.username, complaineeUsername=request.POST['tutorUsername'], description=description)
 
         # delete the request
         StudentRequest.objects.filter(header=request.POST['header']).delete()
