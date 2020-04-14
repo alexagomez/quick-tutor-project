@@ -80,7 +80,7 @@
             
 
             <div class="cont">
-                {% if student.profile_image == None %}
+                {% if student.profile_image == '' or student.profile_image == None %}
                     <img src="https://www.swifthausdesign.com/wp-content/uploads/2014/08/profileIcon-300x300.jpg"
                     class="image" alt="profpic">
                 {% else %}
@@ -97,7 +97,7 @@
                     <h1 style="color:white">{{student.firstName}} {{student.lastName}}</h1>
                     <h5 style="color:rgb(206, 206, 206)">{{student.major}}</h5>
                     <h5 style="color:rgb(206, 206, 206)">{{student.year}} Year</h5>
-                    <h6 style="color:rgb(206, 206, 206)">{{user.username}}@virgnia.edu</h6>
+                    <h6 style="color:rgb(206, 206, 206)">{{user.username}}@virginia.edu</h6>
                 </a>
             </div>
 
