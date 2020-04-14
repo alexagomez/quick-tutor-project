@@ -62,7 +62,7 @@
 
             <div class="cont">
 
-                {% if tutor.profile_image "" or student.profile_image == None %}
+                {% if tutor.profile_image == '' or tutor.profile_image == None %}
                 <img src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
                     class="image" alt="profpic">
                 {% else %}
@@ -81,7 +81,7 @@
                     <h1>{{tutor.firstName}} {{tutor.lastName}}</h1>
                     <h5 style="color:rgb(206, 206, 206)">{{tutor.major}}</h5>
                     <h5 style="color:rgb(206, 206, 206)">{{tutor.year}} Year</h5>
-                    <h6 style="color:rgb(206, 206, 206)">{{user.username}}@virgnia.edu</h6>
+                    <h6 style="color:rgb(206, 206, 206)">{{user.username}}@virginia.edu</h6>
                 </a>
             </div>
 
