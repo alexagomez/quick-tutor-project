@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
-from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse
+from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse, Complaint
 import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -294,7 +294,35 @@ def checkacceptedtutorcount(request):
         'acceptedTutorCount': acceptedTutorCount
     }]
     return JsonResponse(data, safe=False)
+@csrf_exempt
+@login_required
+def make_request(request):
+    if request.method == "POST":
+        # get student object of person requesting
+        currentUser = request.user
+        email = currentUser.email
+        currentStudent = Student.objects.get(email=email)
 
+        # update student table to be WAITING
+        Student.objects.filter(email=email).update(status=1)
+
+        # create a new row in studentRequests table
+        courseName = request.POST['courseName']
+        header = request.POST['header']
+
+        description = request.POST['description']
+        location = request.POST['location']
+        confusion = request.POST['confusion']
+        meetingDetails = request.POST['meetingDetails']
+
+        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location, status=0,
+        meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
+        # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
+        
+        return HttpResponseRedirect(reverse('QuickTutor:student'))
+
+
+    return render(request, "QuickTutor/studentRequest.html", {})
 @csrf_exempt
 @login_required
 def tutorpostsession(request, studentRequestHeader, studentUsername):
@@ -303,22 +331,32 @@ def tutorpostsession(request, studentRequestHeader, studentUsername):
         # get tutor object of person requesting and rating given
         currentUser = request.user
         email = currentUser.email
+        
         selectedStudent = Student.objects.get(username=studentUsername)
         currentRating = selectedStudent.rating
+        newNumOfRatings = selectedStudent.numOfRatings + 1
         newRating = request.POST['rating']
 
         # update tutor status and request
         Tutor.objects.filter(email=email).update(status=0)
         Tutor.objects.filter(email=email).update(request='')
 
-        # update student rating... not exactly a true average unfortunate
+        # update student number of ratings
+        Student.objects.filter(username=studentUsername).update(numOfRatings = newNumOfRatings)
+
+        # update student rating
         if (currentRating != 0):
-            selectedStudent.rating = (int(currentRating) + int(newRating))/2
+            selectedStudent.rating = (int(currentRating) + int(newRating)) / newNumOfRatings 
         else:
             selectedStudent.rating = newRating
         selectedStudent.save(update_fields=['rating'])
         Student.objects.filter(username=studentUsername).update(status=0)
         Student.objects.filter(username=studentUsername).update(accepted=0)
+
+        # complaint
+        description = request.POST['complaint']
+        if (description != ''):
+            obj, created = Complaint.objects.update_or_create(complainantUsername = currentUser.username, complaineeUsername = studentUsername, description = description)
 
         StudentRequest.objects.filter(header=studentRequestHeader).delete()
 
@@ -360,21 +398,29 @@ def charge(request):
         email = currentUser.email
         selectedTutor = Tutor.objects.get(username=request.POST['tutorUsername'])
         currentRating = selectedTutor.rating
+        newNumOfRatings = selectedTutor.numOfRatings + 1
         newRating = request.POST['rating']
 
         # update student status and accepted
         Student.objects.filter(email=email).update(status=0)
         Student.objects.filter(email=email).update(accepted=0)
-
+        
+        
         Tutor.objects.filter(username=request.POST['tutorUsername']).update(status=0)
         Tutor.objects.filter(username=request.POST['tutorUsername']).update(request='')
+        Tutor.objects.filter(username=request.POST['tutorUsername']).update(numOfRatings = newNumOfRatings)
 
-        # update tutor rating... not exactly a true average
+        # update tutor rating
         if (currentRating != 0):
-            selectedTutor.rating = (int(currentRating) + int(newRating))/2
+            selectedTutor.rating = (int(currentRating) + int(newRating)) / newNumOfRatings
         else:
             selectedTutor.rating = newRating
         selectedTutor.save(update_fields=['rating'])
+
+        # complaint
+        description = request.POST['complaint']
+        if (description != ''):
+            obj, created = Complaint.objects.update_or_create(complainantUsername = currentUser.username, complaineeUsername = tutorUsername, description = description)
 
         # delete the request
         StudentRequest.objects.filter(header=request.POST['header']).delete()
