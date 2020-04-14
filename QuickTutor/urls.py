@@ -20,6 +20,7 @@ urlpatterns = [
     path('checkaccepted', views.checkaccepted, name='checkaccepted'),
     path('checkrequestcount', views.checkrequestcount, name='checkrequestcount'),
     path('checkacceptedtutorcount', views.checkacceptedtutorcount, name='checkacceptedtutorcount'),
+    path('checksessionstudent', views.checksessionstudent, name='checksessionstudent'),
     path('tutorpostsession/<studentRequestHeader>/<studentUsername>/', views.tutorpostsession, name='tutorpostsession'),
     path('studentpostsession/<studentRequestHeader>/<tutorUsername>/', views.studentpostsession, name='studentpostsession'),
     path('charge', views.charge, name='charge'),

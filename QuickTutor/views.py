@@ -11,6 +11,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
 from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse, Complaint
 import stripe
+import datetime
+from datetime import datetime, date, time, timezone, timedelta
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -250,6 +253,10 @@ def startsession(request):
     studentRequest.save(update_fields=['status'])
     data = [{
     }]
+
+    studentRequest.sessionStartTime = datetime.now()
+    studentRequest.save(update_fields=['sessionStartTime'])
+
     return JsonResponse(data, safe=False)
 
 @login_required
@@ -294,39 +301,36 @@ def checkacceptedtutorcount(request):
         'acceptedTutorCount': acceptedTutorCount
     }]
     return JsonResponse(data, safe=False)
-@csrf_exempt
+
 @login_required
-def make_request(request):
-    if request.method == "POST":
-        # get student object of person requesting
-        currentUser = request.user
-        email = currentUser.email
-        currentStudent = Student.objects.get(email=email)
+def checksessionstudent(request):
+    currentStudent = request.user
+    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
 
-        # update student table to be WAITING
-        Student.objects.filter(email=email).update(status=1)
+    sessionEnded = studentRequest.sessionEnded
 
-        # create a new row in studentRequests table
-        courseName = request.POST['courseName']
-        header = request.POST['header']
+    startTime = studentRequest.sessionStartTime
+    nowTime = datetime.now()
+    elapsedTime = timedelta(hours=nowTime.hour, minutes=nowTime.minute, seconds=nowTime.second) - timedelta(hours=startTime.hour, minutes=startTime.minute, seconds=startTime.second)
+    studentRequest.sessionElapsedTime = elapsedTime
+    studentRequest.save(update_fields=['sessionElapsedTime'])
 
-        description = request.POST['description']
-        location = request.POST['location']
-        confusion = request.POST['confusion']
-        meetingDetails = request.POST['meetingDetails']
+    
+    data = [{
+        'sessionEnded': studentRequest.sessionEnded,
+        'elapsedTime': elapsedTime.total_seconds()
+    }]
 
-        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location, status=0,
-        meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
-        # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
-        
-        return HttpResponseRedirect(reverse('QuickTutor:student'))
+    return JsonResponse(data, safe=False)
 
-
-    return render(request, "QuickTutor/studentRequest.html", {})
 @csrf_exempt
 @login_required
 def tutorpostsession(request, studentRequestHeader, studentUsername):
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+
+    studentRequest.sessionEnded = 1
+    studentRequest.save(update_fields=['sessionEnded'])
+
     if request.method == "POST":
         # get tutor object of person requesting and rating given
         currentUser = request.user
@@ -368,6 +372,8 @@ def tutorpostsession(request, studentRequestHeader, studentUsername):
 @login_required
 def studentpostsession(request, studentRequestHeader, tutorUsername):
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+    studentRequest.sessionEnded = 1
+    studentRequest.save(update_fields=['sessionEnded'])
     return render(request, "QuickTutor/studentpostsession.html", {'StudentRequest': studentRequest, 'tutorUsername': tutorUsername})    
 
 @login_required
