@@ -363,7 +363,13 @@ def tutorpostsession(request, studentRequestHeader, studentUsername):
         if (description != ''):
             obj, created = Complaint.objects.update_or_create(complainantUsername = currentUser.username, complaineeUsername = studentUsername, description = description)
 
-        StudentRequest.objects.filter(header=studentRequestHeader).delete()
+        deleteStatus = StudentRequest.objects.get(header=studentRequestHeader).deleteStatus
+        if deleteStatus == 0:
+            StudentRequest.objects.filter(header=studentRequestHeader).update(deleteStatus=1)
+        elif deleteStatus == 1:
+            StudentRequest.objects.filter(header=studentRequestHeader).update(deleteStatus=2)
+            # delete the request
+            StudentRequest.objects.filter(header=studentRequestHeader).delete()
 
         return HttpResponseRedirect(reverse('QuickTutor:tutor'))
 
@@ -375,13 +381,24 @@ def studentpostsession(request, studentRequestHeader, tutorUsername):
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
     studentRequest.sessionEnded = 1
     studentRequest.save(update_fields=['sessionEnded'])
-    return render(request, "QuickTutor/studentpostsession.html", {'StudentRequest': studentRequest, 'tutorUsername': tutorUsername})    
+
+    currentUser = request.user
+    email = currentUser.email
+    elapsedTime = StudentRequest.objects.get(studentEmail=email).sessionElapsedTime
+
+    amount = round(elapsedTime.total_seconds()/100, 2) + 1
+
+    return render(request, "QuickTutor/studentpostsession.html", {'StudentRequest': studentRequest, 'tutorUsername': tutorUsername, 'amount': amount, 'cents': amount*100})    
 
 @login_required
 def charge(request):
     if request.method == 'POST':
         # HANDLE PAYMENT
-        amount = 500
+        currentUser = request.user
+        email = currentUser.email
+        elapsedTime = StudentRequest.objects.get(studentEmail=email).sessionElapsedTime
+
+        amount = int(elapsedTime.total_seconds()) + 100
         charge = stripe.Charge.create(
             amount=amount,
             currency='usd',
@@ -401,8 +418,6 @@ def charge(request):
 
         # HANDlE RATINGS AND COMPLAINTS
         # get student object of person requesting and rating given
-        currentUser = request.user
-        email = currentUser.email
         selectedTutor = Tutor.objects.get(username=request.POST['tutorUsername'])
         currentRating = selectedTutor.rating
         newNumOfRatings = selectedTutor.numOfRatings + 1
@@ -429,7 +444,12 @@ def charge(request):
         if (description != ''):
             obj, created = Complaint.objects.update_or_create(complainantUsername=currentUser.username, complaineeUsername=request.POST['tutorUsername'], description=description)
 
-        # delete the request
-        StudentRequest.objects.filter(header=request.POST['header']).delete()
+        deleteStatus = StudentRequest.objects.get(studentEmail=email).deleteStatus
+        if deleteStatus == 0:
+            StudentRequest.objects.filter(studentEmail=email).update(deleteStatus=1)
+        elif deleteStatus == 1:
+            StudentRequest.objects.filter(studentEmail=email).update(deleteStatus=2)
+            # delete the request
+            StudentRequest.objects.filter(studentEmail=email).delete()
 
         return HttpResponseRedirect(reverse('QuickTutor:student'))

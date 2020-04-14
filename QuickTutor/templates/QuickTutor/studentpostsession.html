@@ -30,10 +30,12 @@
                         <input class="form-control" type="text" name="complaint" id="complaint">
                     </div>
 
+                    <h3>Total Due: ${{ amount }}</h3>
+
                     <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                         data-key="pk_test_Ltbh60zfVQxrwVcdJ0cFSVsg00Dwsg5x6u"
                         data-description="Paying the Tutor"
-                        data-amount="{{ amount }}"
+                        data-amount="{{ cents }}"
                         data-locale="auto">
                     </script>
                 </form>
