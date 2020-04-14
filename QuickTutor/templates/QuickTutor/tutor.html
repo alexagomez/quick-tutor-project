@@ -200,28 +200,6 @@
 
 <script>
 
-<<<<<<< HEAD
-    requestCount = {{studentRequestList.count}};
-
-    function runCheck() {
-        $.ajax({
-            url: "{% url 'QuickTutor:checkrequestcount' %}", 
-            success: function(data) {
-                if (data[0].requestCount != requestCount)
-                {
-                    location.reload();
-                    requestCount = data[0].requestCount;
-                }
-                else
-                {
-                    setTimeout(runCheck, 250);
-                }
-            },
-            complete: function() {
-                    
-            }
-            });
-=======
     requestCount = {{ studentRequestList.count }};
 
     function runCheck() {
@@ -240,7 +218,6 @@
 
             }
         });
->>>>>>> 0bebd2e8718e2cf99f6f7051aeefe42dfcb5661c
     }
 
     document.addEventListener('DOMContentLoaded', function () {
