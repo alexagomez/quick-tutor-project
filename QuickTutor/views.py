@@ -200,13 +200,14 @@ def studentsession(request, studentRequestHeader, tutorUsername):
     studentUsername = request.user.username
     selectedTutor = Tutor.objects.get(username=tutorUsername)
     #set the selected tutor's status to be "accepted by student"
-    selectedTutor.status =2
+    selectedTutor.status = 2
     selectedTutor.save(update_fields=['status'])
     #set the request's fields so that Greg's session page works!
     studentRequest.tutorEmail = selectedTutor.email
     studentRequest.tutorUsername = tutorUsername
     studentRequest.save(update_fields=['tutorEmail', 'tutorUsername'])
 
+    selectedStudent = Student.objects.get(username=studentUsername)
 
     #reset all the other tutor's statuses to be 0
     for tutor in studentRequest.tutor_set.all():
@@ -215,7 +216,7 @@ def studentsession(request, studentRequestHeader, tutorUsername):
             tutor.save(update_fields=['status'])
 
     #Greg's studentsession code:
-    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest})
+    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest, 'student': selectedStudent, 'tutor': selectedTutor})
 
 
 """ @login_required
@@ -229,14 +230,15 @@ def studentsession(request):
 
 @login_required
 def tutorsession(request, studentRequestHeader, studentUsername):
-    # currentUser = request.user
-    # email = currentUser.email
-    # currentTutor = Tutor.objects.get(email=email)
-    # #studentRequest = StudentRequest.objects.get(tutorUsername=currentTutor.username)
-    # studentRequest = currentTutor.request
+    currentUser = request.user
+    email = currentUser.email
+    selectedTutor = Tutor.objects.get(email=email)
+    studentRequest = StudentRequest.objects.get(tutorUsername=selectedTutor.username)
+    
+    selectedStudent = Student.objects.get(username=studentRequest.studentUsername)
 
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
-    return render(request, "QuickTutor/tutorsession.html", {'StudentRequest': studentRequest})
+    return render(request, "QuickTutor/tutorsession.html", {'StudentRequest': studentRequest, 'student': selectedStudent, 'tutor': selectedTutor})
 
 
 @login_required
