@@ -10,9 +10,12 @@
         <div class="row justify-content-center">
             <div class="col-8" style="background-color: #7D80DA; border-radius: 1rem; border-color:black;">
                 <h1 class="mt-1" style="padding-top: 10rem;">TUTOR SESSION HAS ENDED</h1>
+                <h1 class="mt-1" style="color:rgb(0, 204, 0)">You earned ${{amount}}!</h1>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <!-- required inputs  -->
+                    
+
                     <div class="form-group">
                         <label for="exampleInputEmail1">Rate your session(1-5)</label>
                         <p><font size = "3"><i>With 1 being the worst and 5 being the best</i></font></p>
