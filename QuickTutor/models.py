@@ -72,7 +72,7 @@ class Tutor(models.Model):
 #     matchedID = models.UUIDField(default=0, editable=True)
     status = models.IntegerField(default=0)     # 0=canceled/waiting/off        2=accepted by student
     disabled = models.IntegerField(default=0)   # 0=not disabled                1=disabled
-    request = models.ForeignKey(StudentRequest, on_delete=models.SET_NULL, default='', null=True)
+    request = models.ForeignKey(StudentRequest, on_delete=models.SET_NULL, default=None, null=True)
 
     balance = models.IntegerField(default=0)    # in USD
 
