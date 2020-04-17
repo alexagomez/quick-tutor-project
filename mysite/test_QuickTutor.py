@@ -130,3 +130,71 @@ class ChargePageTest(TestCase):
             return True
         except:
             return False
+
+from django.test import TestCase, RequestFactory, override_settings
+from django.contrib.auth.models import AnonymousUser, User
+from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest
+from QuickTutor.views import student, tutor, index, make_request, charge
+
+
+
+
+#Written By: Brandie
+#testing the many to one relationship with tutors and requests
+class ManyTutorsToOneRequest(TestCase):
+    def test_request_model(self):
+        requestObj, created1 = StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu",)
+        tutor1, created2 = Tutor.objects.update_or_create(email="bay5fb@virginia.edu", firstName="Brandie", major="Computer Science", year="Fourth", request=requestObj)
+        tutor2, created3 = Tutor.objects.update_or_create(email="tji5rj@virginia.edu", firstName="Tim", major="Chemistry", year="Fourth", request=requestObj)
+        tutor3, created4 = Tutor.objects.update_or_create(email="ral7lk@virginia.edu", firstName="Ryanne", major="Biology", year="Third", request=requestObj)
+        
+        self.assertTrue(StudentRequest.objects.filter(header ="django practice").exists())
+        self.assertTrue(tutor1 in requestObj.tutor_set.all())
+        self.assertTrue(tutor2 in requestObj.tutor_set.all())
+        self.assertTrue(tutor3 in requestObj.tutor_set.all())
+
+
+#Written By: Brandie
+#testing the many to one relationship with tutors and requests
+class OneTutorToOneRequest(TestCase):
+    def test_request_model(self):
+        requestObj, created1 = StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu",)
+        tutor1, created2 = Tutor.objects.update_or_create(email="bay5fb@virginia.edu", firstName="Brandie", major="Computer Science", year="Fourth", request=requestObj)
+        tutor2, created3 = Tutor.objects.update_or_create(email="tji5rj@virginia.edu", firstName="Tim", major="Chemistry", year="Fourth")
+        
+        self.assertTrue(StudentRequest.objects.filter(header ="django practice").exists())
+        self.assertTrue(tutor1 in requestObj.tutor_set.all())
+        self.assertTrue(tutor2 not in requestObj.tutor_set.all())
+
+#Written By: Brandie
+#testing the many to one relationship with tutors and requests
+class OneTutorToDeletedRequest(TestCase):
+    def test_request_model(self):
+        requestObj, created1 = StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu",)
+        tutor1, created2 = Tutor.objects.update_or_create(email="bay5fb@virginia.edu", firstName="Brandie", major="Computer Science", year="Fourth", request=requestObj)
+        requestObj.delete()
+        tutor1.request=None
+        self.assertFalse(StudentRequest.objects.filter(header ="django practice").exists())
+        self.assertTrue(Tutor.objects.filter(firstName="Brandie").exists())
+        self.assertEqual(tutor1.request, None)
+
+#Written By: Brandie
+#testing the many to one relationship with tutors and requests
+class TutorOriginallyNoRequest(TestCase):
+    def test_request_model(self):
+        tutor1, created1 = Tutor.objects.update_or_create(email="bay5fb@virginia.edu", firstName="Brandie", major="Computer Science", year="Fourth")
+        self.assertTrue(tutor1.request is None)
+        #self.assertTrue(tutor1.request_id is None)
+
+#Written By: Brandie
+#testing the many to one relationship with tutors and requests
+class OneTutorToNewRequest(TestCase):
+    def test_request_model(self):
+        requestObj1, created1 = StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu")
+        tutor1, created2 = Tutor.objects.update_or_create(email="bay5fb@virginia.edu", firstName="Brandie", major="Computer Science", year="Fourth", request=requestObj1)
+        requestObj2, created1 = StudentRequest.objects.update_or_create(header ="operating systems", description ="reading the FAT", courseName="CS4414", location ="Rice", confusionMeter=10, studentEmail="jfg8kk@virginia.edu")
+        tutor1.request=requestObj2
+        self.assertTrue(StudentRequest.objects.filter(header ="django practice").exists())
+        self.assertTrue(StudentRequest.objects.filter(header ="operating systems").exists())
+        self.assertTrue(Tutor.objects.filter(firstName="Brandie").exists())
+        self.assertEqual(tutor1.request, requestObj2)
