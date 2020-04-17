@@ -38,10 +38,12 @@ class StudentRequest(models.Model):
     location = models.CharField(max_length=100, default='')
     meetingDetails = models.CharField(max_length=1000, default='')
     confusionMeter = models.IntegerField(default=0)  
+    requestTime = models.TimeField(auto_now=False, auto_now_add=False, default = datetime.now())
     
     # student ID
     studentEmail = models.CharField(max_length=100, default='')
     studentUsername = models.CharField(max_length=10, default='')
+
 
     #note that these will be used differently, now to store only the tutor that the student chooses!
     tutorEmail = models.CharField(max_length=100, default='')
