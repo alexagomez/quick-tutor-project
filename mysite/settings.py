@@ -27,7 +27,11 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'h3SMS-tQ-58Jo1g8AJVFfEhD'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# FOR HEROKU
+if 'DYNO' in os.environ.keys():
+    DEBUG = False
+
+ALLOWED_HOSTS = []  
 
 
 # Application definition
