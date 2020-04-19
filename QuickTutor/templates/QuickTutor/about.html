@@ -1,0 +1,159 @@
+{% extends 'QuickTutor/base.html' %}
+
+{% block content %}
+{% load static %}
+
+<style>
+    .bg_img_init {
+        background: url("{% static 'QuickTutor/images/background.jpg' %}") no-repeat center;
+        background-size: cover;
+        width: 100%;
+    }
+
+    .card {
+        background: #ffffff00;
+        box-shadow: none !important;
+        border: 0 !important;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /* Five columns side by side */
+    .column {
+        float: left;
+        width: 20%;
+        margin-bottom: 16px;
+        padding: 0 8px;
+        color: white;
+    }
+
+    /* Display the columns below each other instead of side by side on small screens */
+    @media screen and (max-width: 650px) {
+        .column {
+            width: 100%;
+            display: block;
+        }
+    }
+
+    /* Add some shadows to create a card effect */
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    /* Some left and right padding inside the container */
+    .container {
+        padding: 0 16px;
+    }
+
+    /* Clear floats */
+    .container::after,
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    .title {
+        color: rgb(214, 214, 214);
+    }
+
+    .button {
+        border: none;
+        outline: 0;
+        display: inline-block;
+        padding: 8px;
+        color: white;
+        background-color: #7D80DA;
+        text-align: center;
+        cursor: pointer;
+        width: 80%;
+    }
+
+    .button:hover {
+        background-color: rgb(150, 153, 248);
+    }
+    
+    .image {
+        margin: 0 auto;
+    }
+</style>
+
+<body class="bg_img_init" style="overflow: hidden;">
+    <div class="blur_img"></div>
+
+    <div class="row text-center" style="margin-top: 5vh;">
+        <div class="col-12 text-center welcome-banner">
+            <h2>Meet the Team</h2>
+        </div>
+    </div>
+
+    <div class="row text-center" style="margin-top:5vh">
+        <div class="column">
+            <div class="card">
+                <img src="https://media-exp1.licdn.com/dms/image/C4E03AQFrlHYe0i3S2g/profile-displayphoto-shrink_200_200/0?e=1593043200&v=beta&t=v_sgL6rhI-E5ldpwdUYaL-T7SRE0eYAx93mPngGll0Q" alt="Brandie" class="image">
+                <div class="container">
+                    <h2>Brandie Young</h2>
+                    <p class="title">Scrum Master</p>
+                    <p>Some text that describes me lorem ipsum ipsum lorem.</p>
+                    <p>bay5fb@virginia.edu</p>
+                    <a href="mailto:bay5fb@virginia.edu"><button class="button">Contact</button></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="card">
+                <img src="{% static 'QuickTutor/images/alexa.jpg' %}" alt="Alexa" class="image">
+                <div class="container">
+                    <h2>Alexa Gomez</h2>
+                    <p class="title">Requirements Manager</p>
+                    <p>Some text that describes me lorem ipsum ipsum lorem.</p>
+                    <p>apg2hv@virginia.edu</p>
+                    <a href="mailto:apg2hv@virginia.edu"><button class="button">Contact</button></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="card">
+                <img src="https://media-exp1.licdn.com/dms/image/C4E03AQEIi7sDURUiTA/profile-displayphoto-shrink_200_200/0?e=1593043200&v=beta&t=6Cta7e0OOek0bvajTuEl-JZQn9i4CKZ1GHCtzft5R78" alt="Greg" class="image">
+                <div class="container">
+                    <h2>Greg Vavoso</h2>
+                    <p class="title">DevOps Manager</p>
+                    <p>Some text that describes me lorem ipsum ipsum lorem.</p>
+                    <p>gvv8hp@virginia.edu</p>
+                    <a href="mailto:gvv8hp@virginia.edu"><button class="button">Contact</button></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="card">
+                <img src="https://media-exp1.licdn.com/dms/image/C4E03AQGAzUis3Ryrfg/profile-displayphoto-shrink_200_200/0?e=1593043200&v=beta&t=cT2_gsuhXBbxbgpbYZ439HsVkxoi6_Y0Pa7vFdPGxzo" alt="Edward" class="image">
+                <div class="container">
+                    <h2>Edward Shen</h2>
+                    <p class="title">Software Architect</p>
+                    <p>Some text that describes me lorem ipsum ipsum lorem.</p>
+                    <p>es6xs@virginia.edu</p>
+                    <a href="mailto:es6xs@virginia.edu"><button class="button">Contact</button></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="card">
+                <img src="https://media-exp1.licdn.com/dms/image/C4E03AQEGZqvadqgnXQ/profile-displayphoto-shrink_200_200/0?e=1593043200&v=beta&t=FiPoyp1d3jMsOb9Y579GpYPAn1_WhUmwiCSRa-FcOao" alt="Soukarya" class="image">
+                <div class="container">
+                    <h2>Soukarya Ghosh</h2>
+                    <p class="title">Testing Manager</p>
+                    <p>Shameless plug: <a href="https://www.trackcorona.live">TrackCorona</a></p>
+                    <p>sg4fz@virginia.edu</p>
+                    <a href="mailto:sg4fz@virginia.edu"><button class="button">Contact</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+{% endblock %}

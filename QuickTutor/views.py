@@ -457,3 +457,6 @@ def charge(request):
             StudentRequest.objects.filter(studentEmail=email).delete()
 
         return HttpResponseRedirect(reverse('QuickTutor:student'))
+
+def about(request):
+    return render(request, "QuickTutor/about.html", {})
