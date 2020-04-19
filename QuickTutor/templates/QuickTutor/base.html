@@ -30,19 +30,16 @@
       
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#" style="color: white;">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{% url 'QuickTutor:index' %}" style="color: white;">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" href="#" style="color: white;">About Us </a>
+          <a class="nav-link" href="{% url 'QuickTutor:about' %}" style="color: white;">About Us </a>
         </li>
+        {% if user.is_authenticated %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false" style="color: white">
-            {% if user.is_authenticated %}
               {{ user.username }}
-            {% else %}
-              More
-            {% endif %}
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{% url 'QuickTutor:student' %}">Student</a>
@@ -53,6 +50,7 @@
             {% endif %}
           </div>
         </li>
+        {% endif %}
       </ul>
 
 
