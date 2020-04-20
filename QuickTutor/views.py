@@ -71,10 +71,19 @@ def tutor(request):
         currentTutor = Tutor.objects.get(email=email)
 
         # list of all student requests
-        studentRequestList = StudentRequest.objects.all()
-        session_num = len(studentRequestList)
+        allStudentRequests = StudentRequest.objects.all()
+        session_num = len(allStudentRequests)
         tutors_online = len(Tutor.objects.all())
 
+        studentRequestList = set()
+        #now filter the student requests on courses the tutor listed in profile
+        for studentRequest in allStudentRequests:
+            for tc in currentTutor.tutorcourse_set.all():
+                if(tc.course == studentRequest.courseName):
+                    studentRequestList.add(studentRequest)
+                
+
+        
         return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList, 'session_num': session_num, 'tutors_online': tutors_online})
     except ObjectDoesNotExist:
         # First time students hit this branch
@@ -223,13 +232,6 @@ def studentsession(request, studentRequestHeader, tutorUsername):
     return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest, 'student': selectedStudent, 'tutor': selectedTutor})
 
 
-""" @login_required
-def studentsession(request):
-    currentUser = request.user
-    email = currentUser.email
-    currentStudent = Student.objects.get(email=email)
-    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
-    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest}) """
 
 
 @login_required
@@ -287,9 +289,19 @@ def checkaccepted(request):
     }]
     return JsonResponse(data, safe=False)
 
+
+
 @login_required
 def checkrequestcount(request):
-    requestCount = len(StudentRequest.objects.all())
+    #filter the student requests on courses the tutor listed in profile
+    studentRequestList = []
+    for studentRequest in StudentRequest.objects.all():
+        for tc in request.user.tutorcourse_set.all():
+            if(tc.course == studentRequest.courseName):
+                studentRequestList.add(studentRequest)
+
+    #then use the length for request count
+    requestCount = len(studentRequestList)
     data = [{
         'requestCount': requestCount
     }]
