@@ -82,7 +82,7 @@ def tutor(request):
                 if(tc.course == studentRequest.courseName):
                     studentRequestList.add(studentRequest)
                 
-
+        print(len(studentRequestList))
         
         return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList, 'session_num': session_num, 'tutors_online': tutors_online})
     except ObjectDoesNotExist:
@@ -294,13 +294,15 @@ def checkaccepted(request):
 @login_required
 def checkrequestcount(request):
     #filter the student requests on courses the tutor listed in profile
-    studentRequestList = []
+    studentRequestList = set()
+    currentTutor = Tutor.objects.get(email=request.user.email)
     for studentRequest in StudentRequest.objects.all():
-        for tc in request.user.tutorcourse_set.all():
+        for tc in currentTutor.tutorcourse_set.all():
             if(tc.course == studentRequest.courseName):
                 studentRequestList.add(studentRequest)
 
     #then use the length for request count
+   # print(len(studentRequestList))
     requestCount = len(studentRequestList)
     data = [{
         'requestCount': requestCount
