@@ -3,15 +3,40 @@
 {% block content %}
 {% load static %}
 
+<style>
+    .bg_img_init {
+        background: url("{% static 'QuickTutor/images/background.jpg' %}") no-repeat center;
+        background-size: cover;
+        width: 100%;
+    }
+</style>
 
-<div class="row" style="margin-top: 5vh;">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 text-center" style="font-size: 2rem;">
-        <h1>Sorry, we only allow UVA students</h1>
-    </div>
-    <div class="col-md-3"></div>
+
+<body class="bg_img_init" style="overflow: hidden;">
+    <div class="blur_img"></div>
     
-</div>
+    <div class="row text-center" style="margin-top: 5vh;">
+        <div class="col-12 text-center welcome-banner">
+            <h1>QuickTutor</h1>
+            <h5>
+                Sorry, we only allow UVA students at the moment!
+            </h5>
+        </div>
+
+    </div>
+    <div class="row" style="margin-top: 10vh; height: 45vh">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-center" style="font-size: 2rem;">
+
+            <a class="login_button" href="{% url 'logout' %}">
+                Logout
+            </a>
+
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+</body>
 
 
 

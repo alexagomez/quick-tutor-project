@@ -6,41 +6,51 @@
 <script type="text/javascript">
     var stripe = Stripe('pk_test_Ltbh60zfVQxrwVcdJ0cFSVsg00Dwsg5x6u');
 </script>
+<link rel="stylesheet" type="text/css" href="{% static 'QuickTutor/css/range.css' %}">
 
 <div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6 text-center" style="font-size: 2rem;">
         <div class="row justify-content-center">
             <div class="col-8" style="background-color: #7D80DA; border-radius: 1rem; border-color:black;">
-                <h1 class="mt-1" style="padding-top: 10rem;">STUDENT SESSION HAS ENDED</h1>
+                <h1 class="mt-1" style="padding-top: 5rem;">STUDENT SESSION HAS ENDED</h1>
 
-                <form action="{% url 'QuickTutor:charge' %}" method="POST">
+                <form action="{% url 'QuickTutor:charge' %}" method="POST" style='margin-top: 5vh;'>
                     {% csrf_token %}
                     <!-- required inputs  -->
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Rate your session(1-5)</label>
-                        <p><font size = "3"><i>With 1 being the worst and 5 being the best</i></font></p>
-                        <input class="form-control" type="number" name="rating" id="rating" min="1" max="5" required>
-                        <input class="form-control" type="text" name="tutorUsername" id="tutorUsername" value="" style='display: none;'>
-                        <input class="form-control" type="text" name="header" id="header" value="" style='display: none;'>
+                    <div class="form-group" style='margin-bottom: 6vh;'>
+                        <label for="exampleInputEmail1">Rate your Tutor</label>
+                        <!-- <input type="range" name="rating" id="rating" min="1" value="3" max="5" step="1" required> -->
+                        <div class='text-center' style='margin: 0 auto'>
+                            <fieldset class="rating">
+                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time">1 star</label>
+                            </fieldset>
+                        </div>
+                        
+                        <input class="form-control" type="text" name="tutorUsername" id="tutorUsername" value=""
+                            style='display: none;'>
+                        <input class="form-control" type="text" name="header" id="header" value=""
+                            style='display: none;'>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top: 10vh !important">
                         <label for="exampleInputEmail1">Any issues or complaints?</label>
                         <input class="form-control" type="text" name="complaint" maxlength="100" id="complaint">
                     </div>
 
-                    <h3>Total Due: ${{ amount }}</h3>
+                    <h3 style='margin-top: 2vh'>Total Due: ${{ amount }}</h3>
 
                     <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                        data-key="pk_test_Ltbh60zfVQxrwVcdJ0cFSVsg00Dwsg5x6u"
-                        data-description="Paying the Tutor"
-                        data-amount="{{ cents }}"
-                        data-locale="auto">
-                    </script>
+                        data-key="pk_test_Ltbh60zfVQxrwVcdJ0cFSVsg00Dwsg5x6u" data-description="Paying the Tutor"
+                        data-amount="{{ cents }}" data-locale="auto">
+                        </script>
                 </form>
 
-                <p style='color:whitesmoke; font-size:small'> 
+                <p style='color:whitesmoke; font-size:small'>
                     <b>FOR BETA TESTERS</b> : <br>
                     enter YOUR email for the email field <br>
                     enter <b>4242 4242 4242 4242</b> as the credit card number <br>
@@ -57,7 +67,7 @@
     let temp = (window.location.href).split('/').slice(-3);
     tutorUsername = '';
     header = '';
-    if(temp[2].length == 0){
+    if (temp[2].length == 0) {
         tutorUsername = temp[1];
         header = temp[0];
     } else {
@@ -66,6 +76,16 @@
     }
     document.getElementById('tutorUsername').value = tutorUsername;
     document.getElementById('header').value = header;
+
+
+    // stars
+    var logID = 'log',
+        log = $('<div id="' + logID + '"></div>');
+    $('body').append(log);
+    $('[type*="radio"]').change(function () {
+        var me = $(this);
+        log.html(me.attr('value'));
+    });
 </script>
 
 
