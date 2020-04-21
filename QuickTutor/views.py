@@ -128,8 +128,11 @@ def update_student(request):
                 'lastName': lastName,
                 'major': major,
                 'year': year,
-                'profile_image': myfile,
             }
+
+            if request.FILES.get('myfile') != None:
+                updated_values['profile_image'] = request.FILES.get('myfile')
+
             Student.objects.update_or_create(email=email, defaults=updated_values)
 
         # creating
@@ -166,26 +169,30 @@ def update_tutor(request):
         if email == None:
             currentUser = request.user
             email = currentUser.email
-            myfile = request.FILES['myfile']
             updated_values = {
                 'firstName': firstName,
                 'lastName': lastName,
                 'major': major,
                 'year': year,
-                'profile_image': myfile,
             }
-            Tutor.objects.update_or_create(email=email, defaults=updated_values)
+
+            if request.FILES.get('myfile') != None:
+                updated_values['profile_image'] = request.FILES.get('myfile')
+
+            obj, created = Tutor.objects.update_or_create(email=email, defaults=updated_values)
         
         # creating
         else:
             obj, created = Tutor.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
-            myStr = "course" 
-            x = 1
+
+
+        myStr = "course"
+        x = 1
+        temp = myStr + str(x)
+        while temp in request.POST.keys():
+            TutorCourse.objects.get_or_create(tutor=obj,course=request.POST[temp])
+            x+=1
             temp = myStr + str(x)
-            while temp in request.POST.keys():
-                TutorCourse.objects.get_or_create(tutor=obj,course=request.POST[temp])
-                x+=1
-                temp = myStr + str(x)
        
        
     return HttpResponseRedirect(reverse('QuickTutor:tutor'))
