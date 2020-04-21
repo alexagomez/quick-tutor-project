@@ -97,17 +97,63 @@ def tutor(request):
 
 @csrf_exempt
 @login_required
+def edit_student(request):
+    currentUser = request.user
+    email = currentUser.email
+    currStudent = Student.objects.get(email=email)
+    return render(request, "QuickTutor/editStudent.html", {
+        'firstName': currStudent.firstName,
+        'lastName': currStudent.lastName,
+        'major': currStudent.major,
+        'year': currStudent.year,
+    })
+
+@csrf_exempt
+@login_required
 def update_student(request):
     if request.method == "POST":
         firstName = request.POST['firstName']
         lastName = request.POST['lastName']
         major = request.POST['major']
         year = request.POST['year']
-        email = request.POST['email']
+        email = request.POST.get('email')
 
-        Student.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
+        # updating
+        if email == None:
+            currentUser = request.user
+            email = currentUser.email
+            myfile = request.FILES['myfile']
+            updated_values = {
+                'firstName': firstName,
+                'lastName': lastName,
+                'major': major,
+                'year': year,
+            }
+
+            if request.FILES.get('myfile') != None:
+                updated_values['profile_image'] = request.FILES.get('myfile')
+
+            Student.objects.update_or_create(email=email, defaults=updated_values)
+
+        # creating
+        else:
+            Student.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
 
     return HttpResponseRedirect(reverse('QuickTutor:student'))
+
+
+@csrf_exempt
+@login_required
+def edit_tutor(request):
+    currentUser = request.user
+    email = currentUser.email
+    currTutor = Tutor.objects.get(email=email)
+    return render(request, "QuickTutor/editTutor.html", {
+        'firstName': currTutor.firstName,
+        'lastName': currTutor.lastName,
+        'major': currTutor.major,
+        'year': currTutor.year,
+    })
 
 @csrf_exempt
 @login_required
@@ -117,11 +163,30 @@ def update_tutor(request):
         lastName = request.POST['lastName']
         major = request.POST['major']
         year = request.POST['year']
-        email = request.POST['email']
+        email = request.POST.get('email')
         
-        obj, created = Tutor.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
+        # updating
+        if email == None:
+            currentUser = request.user
+            email = currentUser.email
+            updated_values = {
+                'firstName': firstName,
+                'lastName': lastName,
+                'major': major,
+                'year': year,
+            }
+
+            if request.FILES.get('myfile') != None:
+                updated_values['profile_image'] = request.FILES.get('myfile')
+
+            obj, created = Tutor.objects.update_or_create(email=email, defaults=updated_values)
         
-        myStr = "course" 
+        # creating
+        else:
+            obj, created = Tutor.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
+
+
+        myStr = "course"
         x = 1
         temp = myStr + str(x)
         while temp in request.POST.keys():
