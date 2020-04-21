@@ -224,8 +224,8 @@
 
 <script>
 
-    requestCount = parseInt('{{ studentRequestList.count }}');
-
+    //requestCount = parseInt('{{ studentRequestList.count }}');
+    requestCount = len(studentRequestList)
     function runCheck() {
         $.ajax({
             url: "{% url 'QuickTutor:checkrequestcount' %}",

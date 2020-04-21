@@ -79,7 +79,7 @@ class Tutor(models.Model):
     balance = models.IntegerField(default=0)    # in USD
 
 class TutorCourse(models.Model):
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name='tutor')
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
     course = models.CharField(max_length=100, default='')
     
 class Complaint(models.Model):
