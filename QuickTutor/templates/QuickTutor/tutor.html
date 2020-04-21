@@ -28,7 +28,7 @@
         <div class='col-12 text-center'>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input class='btn btn-info' type="file" name="myfile">
+                <input class='btn btn-info' type="file" name="myfile" accept="image/*">
                 <button class='btn btn-primary' type="submit">Upload</button>
             </form>
 
