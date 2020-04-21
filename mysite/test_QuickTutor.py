@@ -1,7 +1,7 @@
 from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth.models import AnonymousUser, User
-from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest
-from QuickTutor.views import student, tutor, index, make_request, charge
+from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest, Complaint
+from QuickTutor.views import student, tutor, index, make_request, charge, tutorsession, studentsession, tutorpostsession, studentpostsession
 
 
 # Written By: Soukarya
@@ -130,3 +130,17 @@ class ChargePageTest(TestCase):
             return True
         except:
             return False
+
+#Written By: Alexa
+class ComplaintTest(TestCase):
+    def setUp(self):
+        Complaint.objects.update_or_create(complainantUsername = 'chb8ue', complaineeUsername = 'abd9dd', description= 'silent the entire time')
+        Complaint.objects.update_or_create(complainantUsername = 'jdj9er', complaineeUsername = 'kjh9hjj', description= 'showed up super late')
+    
+    def test_complaint_model(self):
+        self.assertTrue(Complaint.objects.filter(complainantUsername = 'chb8ue').exists())
+        self.assertFalse(Complaint.objects.filter(complainantUsername = 'oid0di').exists())
+        self.assertTrue(Complaint.objects.filter(description = 'silent the entire time').exists())
+        self.assertFalse(Complaint.objects.filter(description = 'never showed up').exists())
+        self.assertTrue(Complaint.objects.filter(complaineeUsername = 'kjh9hjj').exists())
+
