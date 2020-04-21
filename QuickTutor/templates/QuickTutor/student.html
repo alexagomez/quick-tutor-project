@@ -161,6 +161,7 @@
 <div class="container">
     {% for request in specificStudentRequestList %}
 
+        {% if request.deleteStatus == 0 %}
         <div class='row' style='margin-top: 2em;'>
             <div class="col-md-12" style='margin: 0 auto;'>
                 <div class="cardbox shadow-lg bg-white">
@@ -235,7 +236,7 @@
                                     {% for tutor in request.tutor_set.all %}
                                         <li>
                                             <a onclick="popupTutor('{{ tutor.firstName }}', '{{ tutor.lastName }}', '{{ tutor.rating }}', '{{ tutor.major }}', '{{ tutor.year }}', '{{ tutor.profile_image }}')" style="cursor: pointer;">
-                                                {% if tutor.profile_image == None %}
+                                                {% if tutor.profile_image == '' or tutor.profile_image == None %}
                                                     <img
                                                     src="https://cdn4.iconfinder.com/data/icons/web-app-flat-circular-icons-set/64/Iconos_Redondos_Flat_Usuario_Icn-512.png"
                                                     class="img-fluid rounded-circle" alt="User">
@@ -273,6 +274,39 @@
         
         </div>
         <!--/ row -->
+        {% else %}
+
+        <div class="container">
+            <div class="row" style="margin-top: 5vh;">
+                <div class='col-1'></div>
+                <div class='col-10 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0'>
+                    <h3 style='margin: 0 100px 0 100px'>
+                        Have a question? Have it answered by one of our {{tutors_online}} tutors available right now!
+                    </h3>
+        
+                    <a class="btn btn-primary btn-lg" href="{% url 'QuickTutor:make_request' %}" style='margin-top: 5vh;'>Make Request</a>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1vh; margin-bottom: 2vh;">
+                <div class='col-1'></div>
+                <div class='col-5 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0'>
+                    <h3 style='margin: 0 40px 0 40px'>
+                        Change personal information and customize your profile!
+                    </h3>
+        
+                    <a class="btn btn-info" href="{% url 'QuickTutor:edit_student' %}" style='margin-top: 5vh;'>Edit Profile</a>
+                </div>
+                <div class='col-5 text-center' style='background-color: white; border-radius: 5px; color: black; padding: 20px 0 50px 0; margin-left: 1vh; border-right: 1vh solid #7D80DA;'>
+                    <h3 style='margin: 0 40px 0 40px'>
+                        Have a problem with an ongoing or past session?
+                    </h3>
+        
+                    <a class="btn btn-secondary" href="mailto:sg4fz@virginia.edu?Subject=Scrumpy%20Cat" style='margin-top: 5vh;'>Contact Us</a>
+                </div>
+            </div>
+        </div>
+
+        {% endif %}
     {% endfor %}
 
     <div class="row" style="margin-top: 1vh; margin-bottom: 2vh;">
