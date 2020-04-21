@@ -71,10 +71,19 @@ def tutor(request):
         currentTutor = Tutor.objects.get(email=email)
 
         # list of all student requests
-        studentRequestList = StudentRequest.objects.all()
-        session_num = len(studentRequestList)
+        allStudentRequests = StudentRequest.objects.all()
+        session_num = len(allStudentRequests)
         tutors_online = len(Tutor.objects.all())
 
+        studentRequestList = set()
+        #now filter the student requests on courses the tutor listed in profile
+        for studentRequest in allStudentRequests:
+            for tc in currentTutor.tutorcourse_set.all():
+                if(tc.course == studentRequest.courseName):
+                    studentRequestList.add(studentRequest)
+                
+        print(len(studentRequestList))
+        
         return render(request, "QuickTutor/tutor.html", {'tutor': currentTutor, 'studentRequestList': studentRequestList, 'session_num': session_num, 'tutors_online': tutors_online})
     except ObjectDoesNotExist:
         # First time students hit this branch
@@ -88,17 +97,63 @@ def tutor(request):
 
 @csrf_exempt
 @login_required
+def edit_student(request):
+    currentUser = request.user
+    email = currentUser.email
+    currStudent = Student.objects.get(email=email)
+    return render(request, "QuickTutor/editStudent.html", {
+        'firstName': currStudent.firstName,
+        'lastName': currStudent.lastName,
+        'major': currStudent.major,
+        'year': currStudent.year,
+    })
+
+@csrf_exempt
+@login_required
 def update_student(request):
     if request.method == "POST":
         firstName = request.POST['firstName']
         lastName = request.POST['lastName']
         major = request.POST['major']
         year = request.POST['year']
-        email = request.POST['email']
+        email = request.POST.get('email')
 
-        Student.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
+        # updating
+        if email == None:
+            currentUser = request.user
+            email = currentUser.email
+            myfile = request.FILES['myfile']
+            updated_values = {
+                'firstName': firstName,
+                'lastName': lastName,
+                'major': major,
+                'year': year,
+            }
+
+            if request.FILES.get('myfile') != None:
+                updated_values['profile_image'] = request.FILES.get('myfile')
+
+            Student.objects.update_or_create(email=email, defaults=updated_values)
+
+        # creating
+        else:
+            Student.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
 
     return HttpResponseRedirect(reverse('QuickTutor:student'))
+
+
+@csrf_exempt
+@login_required
+def edit_tutor(request):
+    currentUser = request.user
+    email = currentUser.email
+    currTutor = Tutor.objects.get(email=email)
+    return render(request, "QuickTutor/editTutor.html", {
+        'firstName': currTutor.firstName,
+        'lastName': currTutor.lastName,
+        'major': currTutor.major,
+        'year': currTutor.year,
+    })
 
 @csrf_exempt
 @login_required
@@ -108,11 +163,30 @@ def update_tutor(request):
         lastName = request.POST['lastName']
         major = request.POST['major']
         year = request.POST['year']
-        email = request.POST['email']
+        email = request.POST.get('email')
         
-        obj, created = Tutor.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
+        # updating
+        if email == None:
+            currentUser = request.user
+            email = currentUser.email
+            updated_values = {
+                'firstName': firstName,
+                'lastName': lastName,
+                'major': major,
+                'year': year,
+            }
+
+            if request.FILES.get('myfile') != None:
+                updated_values['profile_image'] = request.FILES.get('myfile')
+
+            obj, created = Tutor.objects.update_or_create(email=email, defaults=updated_values)
         
-        myStr = "course" 
+        # creating
+        else:
+            obj, created = Tutor.objects.update_or_create(email=email, username=email.split('@')[0], firstName=firstName, lastName=lastName, major=major, year=year)
+
+
+        myStr = "course"
         x = 1
         temp = myStr + str(x)
         while temp in request.POST.keys():
@@ -144,8 +218,9 @@ def make_request(request):
         location = request.POST['location']
         confusion = request.POST['confusion']
         meetingDetails = request.POST['meetingDetails']
+        requestTime = datetime.now()
 
-        obj, created = StudentRequest.objects.update_or_create(courseName=courseName, header=header, description=description, location=location, status=0,
+        obj, created = StudentRequest.objects.update_or_create(sessionStartTime=requestTime, courseName=courseName, header=header, description=description, location=location, status=0,
         meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
         # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
@@ -222,13 +297,6 @@ def studentsession(request, studentRequestHeader, tutorUsername):
     return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest, 'student': selectedStudent, 'tutor': selectedTutor})
 
 
-""" @login_required
-def studentsession(request):
-    currentUser = request.user
-    email = currentUser.email
-    currentStudent = Student.objects.get(email=email)
-    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
-    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest}) """
 
 
 @login_required
@@ -286,9 +354,21 @@ def checkaccepted(request):
     }]
     return JsonResponse(data, safe=False)
 
+
+
 @login_required
 def checkrequestcount(request):
-    requestCount = len(StudentRequest.objects.all())
+    #filter the student requests on courses the tutor listed in profile
+    studentRequestList = set()
+    currentTutor = Tutor.objects.get(email=request.user.email)
+    for studentRequest in StudentRequest.objects.all():
+        for tc in currentTutor.tutorcourse_set.all():
+            if(tc.course == studentRequest.courseName):
+                studentRequestList.add(studentRequest)
+
+    #then use the length for request count
+   # print(len(studentRequestList))
+    requestCount = len(studentRequestList)
     data = [{
         'requestCount': requestCount
     }]
@@ -328,6 +408,9 @@ def checksessionstudent(request):
 @login_required
 def tutorpostsession(request, studentRequestHeader, studentUsername):
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
+
+    elapsedTime = studentRequest.sessionElapsedTime
+    amount = round(elapsedTime.total_seconds()/100, 2) + 1
 
     studentRequest.sessionEnded = 1
     studentRequest.save(update_fields=['sessionEnded'])
@@ -373,7 +456,7 @@ def tutorpostsession(request, studentRequestHeader, studentUsername):
 
         return HttpResponseRedirect(reverse('QuickTutor:tutor'))
 
-    return render(request, "QuickTutor/tutorpostsession.html", {'StudentRequest': studentRequest})
+    return render(request, "QuickTutor/tutorpostsession.html", {'StudentRequest': studentRequest, 'amount': amount})
 
 @csrf_exempt
 @login_required
@@ -453,3 +536,6 @@ def charge(request):
             StudentRequest.objects.filter(studentEmail=email).delete()
 
         return HttpResponseRedirect(reverse('QuickTutor:student'))
+
+def about(request):
+    return render(request, "QuickTutor/about.html", {})

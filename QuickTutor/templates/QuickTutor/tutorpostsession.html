@@ -2,29 +2,39 @@
 
 {% block content %}
 {% load static %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'QuickTutor/css/range.css' %}">
 
 <div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6 text-center" style="font-size: 2rem;">
         <div class="row justify-content-center">
             <div class="col-8" style="background-color: #7D80DA; border-radius: 1rem; border-color:black;">
-                <h1 class="mt-1" style="padding-top: 10rem;">TUTOR SESSION HAS ENDED</h1>
+                <h1 class="mt-1" style="padding-top: 5rem;">TUTOR SESSION HAS ENDED</h1>
+                <h2 class="mt-1" style="color:rgb(0, 204, 0)">You earned ${{amount}}!</h2>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <!-- required inputs  -->
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Rate your session(1-5)</label>
-                        <p><font size = "3"><i>With 1 being the worst and 5 being the best</i></font></p>
-                        <input class="form-control" type="number" name="rating" id="rating" min="1" max="5" required>
+                    
+                    <div class="form-group" style='margin-bottom: 6vh; margin-top: 5vh'>
+                        <label for="exampleInputEmail1">Rate your Student</label>
+                        <!-- <input class="range blue" type="range" name="rating" id="rating" min="1" value="3" max="5" step="1" required> -->
+                        <div class='text-center' style='margin: 0 auto'>
+                            <fieldset class="rating">
+                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time">1 star</label>
+                            </fieldset>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top: 10vh !important">
                         <label for="exampleInputEmail1">Any issues or complaints?</label>
                         <input class="form-control" type="text" name="complaint" id="complaint">
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary btn-lg" style='margin-top: 2vh;'>Submit</button>
                 </form>
             </div>
         </div>
