@@ -5,8 +5,7 @@
 
 <style>
     .bg_img_init {
-        background: linear-gradient(rgba(125, 128, 218, 0.463), rgba(125, 128, 218, 0.363), transparent),
-        url("{% static 'QuickTutor/images/tutor.jpg' %}") no-repeat center;
+        background: linear-gradient(rgba(125, 128, 218, 0.463), rgba(125, 128, 218, 0.363), transparent), url("{% static 'QuickTutor/images/tutor.jpg' %}") no-repeat center;
         background-size: cover;
         width: 100%;
     }
@@ -18,42 +17,47 @@
         <div class="col-md-3"></div>
         <div class="col-md-6 text-center" style="font-size: 2rem;">
             <div class="row justify-content-center">
-                <div class="col-8" style="background-color: #7d80da00; border-radius: 1rem;">
-                    <h1 class="mt-1" style="padding-top: 10rem;">Sign Up as a Tutor</h1>
+                <div class="col-8" style="background-color: #7D80DA00; border-radius: 1rem;">
+                    <h1 class="mt-1" style="padding-top: 5rem; font-size: 4rem; margin-bottom: 5vh;">Edit Profile</h1>
                     {% csrf_token %}
-                    <form id="RegForm" name="RegForm" onsubmit="return(validate());"
-                        action="{% url 'QuickTutor:update_tutor' %}" method="POST">
+                    <form action="{% url 'QuickTutor:update_tutor' %}" method="POST" enctype="multipart/form-data">
 
                         <div class="form-group">
                             <label for="exampleInputEmail1">First Name</label>
                             <input class="form-control" type="text" name="firstName" id="firstName" maxlength="100"
-                                required>
+                                value="{{firstName}}" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Last Name</label>
                             <input class="form-control" type="text" name="lastName" id="lastName" maxlength="100"
-                                required>
+                                value="{{lastName}}" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Major</label>
-                            <input class="form-control" type="text" name="major" id="major" maxlength="100" required>
+                            <input class="form-control" type="text" name="major" id="major" maxlength="100"
+                                value="{{major}}" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Year</label>
-                            <select id="year" name="year">
+                            <select id="year" name="year" value="{{year}}">
                                 <option value="1st">1st</option>
                                 <option value="2nd">2nd</option>
                                 <option value="3rd">3rd</option>
                                 <option value="4th">4th</option>
                                 <option value="Grad">Grad</option>
                             </select>
+                            <!-- <label for="exampleInputEmail1">Year</label> -->
+                            <!-- <input class="form-control" type="text" name="year" id="year"> -->
                         </div>
+
+                        <label for="changePic">Upload Profile Picture</label>
+                        <input class='btn btn-info' type="file" name="myfile" accept="image/*"> <br>
 
                         <html>
 
                         <body>
                             <div class="input_fields_container_part">
-                                <label for="exampleInputEmail1">Courses to Tutor</label>
+                                <label for="exampleInputEmail1">Add Courses to Tutor</label>
                                 <div><input type="text" name="course1" id="course1">
                                     <button class="btn btn-sm btn-primary add_more_button">Add More Courses</button>
                                 </div>
@@ -105,9 +109,8 @@
                         </body>
 
                         </html>
-                        <input class="form-control" type="text" name="email" id="email" value="{{ email }}"
-                            style="display: none;">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top: 3vh">Save Changes</button>
                     </form>
                 </div>
             </div>
@@ -115,5 +118,4 @@
         <div class="col-md-3"></div>
     </div>
 </body>
-
 {% endblock %}
