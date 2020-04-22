@@ -28,8 +28,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'h3SMS-tQ-58Jo1g8AJVFfEhD'
 DEBUG = True
 
 # FOR HEROKU
-if 'DYNO' in os.environ.keys():
-    DEBUG = False
+# if 'DYNO' in os.environ.keys():
+#     DEBUG = False
 
 ALLOWED_HOSTS = []  
 
