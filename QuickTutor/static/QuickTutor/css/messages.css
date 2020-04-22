@@ -1,0 +1,462 @@
+.truncate-text {
+    width: 135px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.truncate-message {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.chat__left__bubble, .chat__right__bubble {
+    font-size: 0.9em;
+    padding: 8px;
+    border-radius: 6px;
+    word-break: break-all;
+}
+
+.chat__left__bubble {
+    float: left;
+    position: relative;
+    border-bottom-left-radius: 0;
+    color: #002419;
+    background-color: #e0e0e0;
+}
+
+.chat__left__bubble:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -5px;
+    width: 10px;
+    height: 10px;
+    border-top-left-radius: 8px;
+    background-color: #e0e0e0;
+}
+
+.chat__right__bubble {
+    float: right;
+    position: relative;
+    border-bottom-right-radius: 0;
+    color: #fff;
+    background-color: #a733ca;
+}
+
+.chat__right__bubble:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    border-top-right-radius: 8px;
+    background-color: #a733ca;
+}
+
+.chat__mask--minimize {
+    height: 40px !important;
+}
+
+.chat__list--active {
+    transform: translateX(50%) !important;
+}
+
+.chat__notification--active {
+    opacity: 1 !important;
+    transform: translateX(40px);
+}
+
+.chat__item--new {
+    color: #f2830c;
+    font-weight: 700;
+}
+
+.close__chat {
+    display: none !important;
+}
+
+.main__container {
+    height: 100vh;
+}
+
+.main__container .chat__mask {
+    width: 300px;
+    height: 400px;
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    display: flex;
+    flex-direction: row-reverse;
+    margin-right: 5em;
+    overflow: hidden;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    transition: height 300ms cubic-bezier(0.79, 0.14, 0.15, 0.86);
+    transition-delay: 100ms;
+    box-shadow: 0 0 5px #fff;
+    animation: appear 1s ease-in 0s;
+    background-color: #fff;
+}
+
+@media (max-width: 500px) {
+    .main__container .chat__mask {
+        width: 100vw;
+        height: 100vh;
+        margin-right: initial;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+}
+
+.main__container .chat__mask .chat__container {
+    width: 600px;
+    height: 400px;
+    display: flex;
+    flex-direction: row;
+    transition: transform 300ms cubic-bezier(0.79, 0.14, 0.15, 0.86);
+    transition-delay: 100ms;
+}
+
+@media (max-width: 500px) {
+    .main__container .chat__mask .chat__container {
+        height: 100vh;
+        width: auto;
+    }
+}
+
+.main__container .chat__mask .chat__container .list__view, .main__container .chat__mask .chat__container .conversation__view {
+    width: 300px;
+    height: 400px;
+    display: flex;
+    flex-flow: column;
+}
+
+@media (max-width: 500px) {
+    .main__container .chat__mask .chat__container .list__view, .main__container .chat__mask .chat__container .conversation__view {
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__header {
+    height: 40px;
+    line-height: 1.1em;
+    background-color: #4f4f4f;
+    cursor: pointer;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__header .header__list__icon, .main__container .chat__mask .chat__container .list__view .list__view__header .header__list__title {
+    display: inline-block;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__header .header__list__icon {
+    padding: 10px 10px 6px 10px;
+    vertical-align: middle;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__header .header__list__icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__header .header__list__icon svg path {
+    fill: #ffffff;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__header .header__list__title {
+    font-size: 1.2em;
+    color: #e0e0e0;
+    vertical-align: middle;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body {
+    position: relative;
+    padding: 15px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list {
+    list-style-type: none;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item:hover, .main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item:focus {
+    box-shadow: 0px 3px 6px #A8A8A8;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item .item__information .item__user {
+    display: block;
+    font-weight: 700;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item .item__information .item__message {
+    display: block;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item .item__close {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 6px;
+    transition: all 300ms ease-in-out;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item .item__close:focus, .main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item .item__close:hover {
+    background-color: rgba(68, 68, 68, 0.2);
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item .item__close svg {
+    width: 16px;
+    height: 16px;
+}
+
+.main__container .chat__mask .chat__container .list__view .list__view__body .list__view__list .list__item .item__close svg path {
+    fill: #4f4f4f;
+}
+
+.main__container .chat__mask .chat__container .conversation__view {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header {
+    min-height: 40px;
+    background-color: #4f4f4f;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .list__view__link {
+    padding: 10px 9px 6px 10px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .list__view__link svg {
+    width: 20px;
+    height: 20px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .list__view__link svg path {
+    fill: #ffffff;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__new__message {
+    opacity: 0;
+    position: absolute;
+    left: -40px;
+    background-color: #f2830c;
+    border-right: 1px solid #e0e0e0;
+    padding: 9px 9px 8px 11px;
+    transition: all 300ms ease-in-out;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__new__message:hover, .main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__new__message:focus {
+    background-color: #a7a7a7;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__new__message svg {
+    width: 20px;
+    height: 20px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__new__message svg path {
+    fill: #ffffff;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__user__info {
+    padding: 8px 8px 8px 10px;
+    cursor: pointer;
+}
+
+@media (max-width: 500px) {
+    .main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__user__info {
+        position: absolute;
+        left: 45px;
+    }
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__user__info .conversation__user__status {
+    display: inline-block;
+    vertical-align: middle;
+    width: 10px;
+    height: 10px;
+    background-color: #15e928;
+    border: 1px solid #ffffff;
+    border-radius: 20px;
+    margin-right: 5px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__user__info .conversation__user__name {
+    font-size: 1.2em;
+    color: #e0e0e0;
+    display: inline-block;
+    vertical-align: middle;
+    width: 135px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions {
+    display: flex;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__videocall, .main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__close {
+    transition: all 300ms ease-in-out;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__videocall:hover, .main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__close:hover, .main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__videocall:focus, .main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__close:focus {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__videocall {
+    padding: 7px 9px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__videocall svg {
+    width: 22px;
+    height: 22px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__videocall svg path {
+    fill: #ffffff;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__close {
+    padding: 7px 12px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__close svg {
+    width: 16px;
+    height: 16px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__header .conversation__view__actions .conversation__actions__close svg path {
+    fill: #ffffff;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__body {
+    height: 100%;
+    padding: 15px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__body .conversation__view__bubbles {
+    margin-bottom: 5px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__body .conversation__view__bubbles:before, .main__container .chat__mask .chat__container .conversation__view .conversation__view__body .conversation__view__bubbles:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__write {
+    min-height: 50px;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #e0e0e0;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__input {
+    height: 30px;
+    width: 85%;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 0.9em;
+    margin-right: 5px;
+    border-style: none;
+    padding: 5px;
+    border-radius: 6px;
+    caret-color: #cc003a;
+    font-family: 'Fira Sans', sans-serif;
+    transition: all 300ms ease-in-out;
+    box-shadow: inset 0 0 2px #4f4f4f;
+    border: 1px solid #e0e0e0;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__input:hover, .main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__input:focus {
+    border-color: #f2830c;
+    border-width: 2px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__send {
+    display: inline-block;
+    vertical-align: sub;
+    transition: all 300ms ease-in-out;
+    border-radius: 20px;
+}
+
+@media (max-width: 500px) {
+    .main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__send {
+        padding: 0;
+    }
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__send:hover, .main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__send:focus {
+    transform: rotate(-90deg);
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__send:hover svg path, .main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__send:focus svg path {
+    fill: #f2830c;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__send svg {
+    width: 15px;
+    height: 15px;
+}
+
+.main__container .chat__mask .chat__container .conversation__view .conversation__view__write .chat__conversation__send svg path {
+    fill: #4f4f4f;
+}
+
+@keyframes appear {
+    1% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    25% {
+        transform: translateY(-15px);
+    }
+    65% {
+        transform: translateY(10px);
+        opacity: 1;
+    }
+    80% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}

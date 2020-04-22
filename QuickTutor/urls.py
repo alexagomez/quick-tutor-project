@@ -27,6 +27,8 @@ urlpatterns = [
     path('studentpostsession/<studentRequestHeader>/<tutorUsername>/', views.studentpostsession, name='studentpostsession'),
     path('charge', views.charge, name='charge'),
     path('about', views.about, name='about'),
+    path('store_message/<content>/<sender>/<receiver>/', views.store_message, name='store_message'),
+    path('get_message/<sender>/<receiver>/', views.get_message, name='get_message'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
