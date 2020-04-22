@@ -1,8 +1,9 @@
 from django.test import TestCase, RequestFactory, override_settings
+from django.http import JsonResponse
 from django.contrib.auth.models import AnonymousUser, User
 from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest, Complaint
-from QuickTutor.views import student, tutor, index, make_request, charge, tutorsession, studentsession, tutorpostsession, studentpostsession
-
+from QuickTutor.views import student, tutor, index, make_request, charge, tutorsession, studentsession, tutorpostsession, studentpostsession, checkstart
+import json
 
 # Written By: Soukarya
 # Test Case ID: T2_1.1, T2_2.3
@@ -211,3 +212,44 @@ class OneTutorToNewRequest(TestCase):
         self.assertTrue(StudentRequest.objects.filter(header ="operating systems").exists())
         self.assertTrue(Tutor.objects.filter(firstName="Brandie").exists())
         self.assertEqual(tutor1.request, requestObj2)
+
+#Written By: Greg
+class CheckStart(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="tutor@virginia.edu",
+            tutorUsername="tutor",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+    def test_checkstart(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkstart(request).content)[0]
+        self.assertEqual(jsonResponse["status"], 0)
