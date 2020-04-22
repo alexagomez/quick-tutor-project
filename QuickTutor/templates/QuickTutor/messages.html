@@ -43,7 +43,7 @@
                     </button>
                     <section class="conversation__user__info">
                         <span class="conversation__user__status"></span>
-                        <span class="conversation__user__name">John</span>
+                        <span class="conversation__user__name">{{ commName }}</span>
                     </section>
                     <div class="conversation__view__actions">
                         <button class="conversation__actions__videocall" title="Start videocall">
@@ -63,18 +63,6 @@
 
                 <!-- Conversation -->
                 <section class="conversation__view__body">
-
-                    {% for msg in msgs %}
-                        {% if msg.mine == 1 %}
-                            <div class="conversation__view__bubbles">
-                                <p class="chat__right__bubble">How are you?</p>
-                            </div>
-                        {% else %}
-                            <div class="conversation__view__bubbles">
-                                <p class="chat__left__bubble">Nice One</p>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
 
                 </section>
                 <footer class="conversation__view__write">
@@ -107,10 +95,15 @@
             if (newMessage == '') {
                 return false;
             } else {
-                // Add to conversation.
-                $('<article class="conversation__view__bubbles"><p class="chat__right__bubble">' + newMessage + '</p></article>').appendTo('.conversation__view__body');
-                // Add message as last message received in the chat list.
-                $('#chatID-1 .item__message').html('<span class=".item__message">' + newMessage + '</span');
+                
+
+                // append to database
+                $.ajax({
+                    url: "/store_message/" + newMessage + "/{{sender}}{{personalmsgID}}/{{receiver}}{{oppmsgID}}/", 
+                    success: function () {console.log('nice');},
+                    complete: function () {}
+                });
+
                 // Clear input.
                 $('#chat__input').val('');
             }
@@ -153,6 +146,34 @@
             $('.chat__mask').toggleClass('chat__mask--minimize');
         });
 
+        getMessages();
+
     });
+
+    let msgsShown = 0;
+
+    function getMessages() {
+        $.ajax({
+            url: "/get_message/{{sender}}{{personalmsgID}}/{{receiver}}{{oppmsgID}}/", 
+            success: function(data) {
+                for(let idx=msgsShown; idx < data.length; idx++){
+                    if(data[idx].mine == 1) {
+                        $('<article class="conversation__view__bubbles"><p class="chat__right__bubble">' + data[idx].content + '</p></article>').appendTo('.conversation__view__body');
+                    } else {
+                        $('<article class="conversation__view__bubbles"><p class="chat__left__bubble">' + data[idx].content + '</p></article>').appendTo('.conversation__view__body');
+                    }
+                    msgsShown++;
+                }
+                
+                setTimeout(getMessages, 250); 
+            },
+            complete: function() {
+            },
+            error: function() {
+                setTimeout(getMessages, 250); 
+            }
+        });
+                
+    }
 
 </script>
