@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
-from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse, Complaint
+from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse, Complaint, Message
 import stripe
 import datetime
 from datetime import datetime, date, time, timezone, timedelta
@@ -122,7 +122,6 @@ def update_student(request):
         if email == None:
             currentUser = request.user
             email = currentUser.email
-            myfile = request.FILES['myfile']
             updated_values = {
                 'firstName': firstName,
                 'lastName': lastName,
@@ -287,6 +286,20 @@ def studentsession(request, studentRequestHeader, tutorUsername):
 
     selectedStudent = Student.objects.get(username=studentUsername)
 
+    # get messages
+    sent = Message.objects.filter(senderEmail=request.user.email, recieverEmail=studentRequest.tutorEmail).order_by('created_at')
+    received = Message.objects.filter(recieverEmail=request.user.email, senderEmail=studentRequest.tutorEmail).order_by('created_at')
+
+    msgs = []
+    for item in sent:
+        msgs.append({'mine': 1, 'content': item.msg_content, 'time': item.created_at})
+
+    for item in received:
+        msgs.append({'mine': 0, 'content': item.msg_content, 'time': item.created_at})
+
+    sorted(msgs, key = lambda i: i['time'])
+
+
     #reset all the other tutor's statuses to be 0
     for tutor in studentRequest.tutor_set.all():
         if(tutor.username != tutorUsername):
@@ -294,7 +307,13 @@ def studentsession(request, studentRequestHeader, tutorUsername):
             tutor.save(update_fields=['status'])
 
     #Greg's studentsession code:
-    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest, 'student': selectedStudent, 'tutor': selectedTutor})
+    return render(request, "QuickTutor/studentsession.html", {
+            'StudentRequest': studentRequest, 
+            'student': selectedStudent, 
+            'tutor': selectedTutor,
+            'sent': sent,
+            'received': received,
+        })
 
 
 

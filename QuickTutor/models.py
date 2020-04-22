@@ -87,8 +87,8 @@ class Complaint(models.Model):
     complaineeUsername = models.CharField(max_length=10, default='')
     description = models.CharField(max_length=1000, default='')
 
-
-#class RequestCourse(models.Model):
- #   request = models.OneToOneField(StudentRequest, on_delete=models.CASCADE, related_name='request')
-  #  course = models.CharField(max_length=100, default='')
-
+class Message(models.Model):
+     senderEmail = models.CharField(max_length=100, default='')
+     recieverEmail = models.CharField(max_length=100, default='')
+     msg_content = models.CharField(max_length=1000, default='')
+     created_at = models.TimeField(auto_now_add=True)
