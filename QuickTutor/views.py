@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
-from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse, Complaint
+from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse, Complaint, Message
 import stripe
 import datetime
 from datetime import datetime, date, time, timezone, timedelta
@@ -48,7 +48,7 @@ def student(request):
         # First time students hit this branch
 
         # Block non-uva students
-        if email.split('@')[1] != "virginia.edu" and email.split('@')[0] != 'admin':
+        if email.split('@')[1] != "virginia.edu" and currentUser.username != 'admin':
             return render(request, "QuickTutor/error.html", {})
 
         # redirect to a form to fill out name, major, etc.
@@ -89,7 +89,7 @@ def tutor(request):
         # First time students hit this branch
 
         # Block non-uva students
-        if email.split('@')[1] != "virginia.edu" and email.split('@')[0] != 'admin':
+        if email.split('@')[1] != "virginia.edu" and currentUser.username != 'admin':
             return render(request, "QuickTutor/error.html", {})
 
         # redirect to a form to fill out name, major, etc.
@@ -122,7 +122,6 @@ def update_student(request):
         if email == None:
             currentUser = request.user
             email = currentUser.email
-            myfile = request.FILES['myfile']
             updated_values = {
                 'firstName': firstName,
                 'lastName': lastName,
@@ -294,9 +293,16 @@ def studentsession(request, studentRequestHeader, tutorUsername):
             tutor.save(update_fields=['status'])
 
     #Greg's studentsession code:
-    return render(request, "QuickTutor/studentsession.html", {'StudentRequest': studentRequest, 'student': selectedStudent, 'tutor': selectedTutor})
-
-
+    return render(request, "QuickTutor/studentsession.html", {
+            'StudentRequest': studentRequest, 
+            'student': selectedStudent, 
+            'tutor': selectedTutor,
+            'commName': selectedTutor.firstName,
+            'sender': selectedStudent.email,
+            'receiver': selectedTutor.email,
+            'personalmsgID': 'student',
+            'oppmsgID': 'tutor',
+        })
 
 
 @login_required
@@ -307,10 +313,40 @@ def tutorsession(request, studentRequestHeader, studentUsername):
     studentRequest = StudentRequest.objects.get(tutorUsername=selectedTutor.username)
     
     selectedStudent = Student.objects.get(username=studentRequest.studentUsername)
-
     studentRequest = StudentRequest.objects.get(header=studentRequestHeader)
-    return render(request, "QuickTutor/tutorsession.html", {'StudentRequest': studentRequest, 'student': selectedStudent, 'tutor': selectedTutor})
 
+    return render(request, "QuickTutor/tutorsession.html", {
+            'StudentRequest': studentRequest, 
+            'student': selectedStudent, 
+            'tutor': selectedTutor, 
+            'commName': selectedStudent.firstName,
+            'sender': selectedTutor.email,
+            'receiver': selectedStudent.email,
+            'personalmsgID': 'tutor',
+            'oppmsgID': 'student',
+        })
+
+@login_required
+def store_message(request, content, sender, receiver):
+    Message.objects.update_or_create(msg_content=content, senderEmail=sender, recieverEmail=receiver)
+    return JsonResponse([{}], safe=False)
+
+@login_required
+def get_message(request, sender, receiver):
+    # get messages
+    sent = Message.objects.filter(senderEmail=sender, recieverEmail=receiver).order_by('created_at')
+    received = Message.objects.filter(recieverEmail=sender, senderEmail=receiver).order_by('created_at')
+
+    msgs = []
+    for item in sent:
+        msgs.append({'mine': 1, 'content': item.msg_content, 'time': item.created_at})
+
+    for item in received:
+        msgs.append({'mine': 0, 'content': item.msg_content, 'time': item.created_at})
+
+    msgs = sorted(msgs, key = lambda i: i['time'])
+
+    return JsonResponse(msgs, safe=False)
 
 @login_required
 def startsession(request):
