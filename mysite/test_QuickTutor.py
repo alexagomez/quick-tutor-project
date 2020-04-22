@@ -2,7 +2,10 @@ from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth.models import AnonymousUser, User
 from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest, Complaint
 from QuickTutor.views import student, tutor, index, make_request, charge, tutorsession, studentsession, tutorpostsession, studentpostsession
-
+from django.test import TestCase, RequestFactory, override_settings
+from django.contrib.auth.models import AnonymousUser, User
+from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest
+from QuickTutor.views import student, tutor, index, make_request, charge
 
 # Written By: Soukarya
 # Test Case ID: T2_1.1, T2_2.3
@@ -46,14 +49,9 @@ class LandingPageTest(TestCase):
     def test_details(self):
         # Create an instance of a GET request.
         request = self.factory.get('')
-
-        # Recall that middleware are not supported. You can simulate a
-        # logged-in user by setting request.user manually.
         request.user = self.user
 
-        # Test my_view() as if it were deployed at /customer/details
         response = index(request)
-        # Use this syntax for class-based views.
         self.assertEqual(response.status_code, 200)
 
 #Written By: Alexa
@@ -143,14 +141,6 @@ class ComplaintTest(TestCase):
         self.assertTrue(Complaint.objects.filter(description = 'silent the entire time').exists())
         self.assertFalse(Complaint.objects.filter(description = 'never showed up').exists())
         self.assertTrue(Complaint.objects.filter(complaineeUsername = 'kjh9hjj').exists())
-
-from django.test import TestCase, RequestFactory, override_settings
-from django.contrib.auth.models import AnonymousUser, User
-from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest
-from QuickTutor.views import student, tutor, index, make_request, charge
-
-
-
 
 #Written By: Brandie
 #testing the many to one relationship with tutors and requests
