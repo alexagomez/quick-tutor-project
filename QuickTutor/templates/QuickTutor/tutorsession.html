@@ -92,6 +92,15 @@
 <div class="row text-center">
     <div class="col-md-3"></div>
     <div class="col-6">
+        <div id="elapsedTimeContainer" class="container">
+            <h1 style="font-size: 3rem"><span id=elapsedTime></span></h1>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+<div class="row text-center">
+    <div class="col-md-3"></div>
+    <div class="col-6">
         <button class="login_button" id="end_session" onclick="endSession('{{StudentRequest.header}}', '{{StudentRequest.studentUsername}}')" style="display: none; margin-top: 3vh;">End Session</button>
     </div>
     <div class="col-md-3"></div>
@@ -123,7 +132,6 @@
         $.ajax({
             url: "{% url 'QuickTutor:checksessionstudent' %}", 
             success: function(data) {
-                console.log(data);
                 if (data[0].sessionEnded == 1) {
                   endSession();
                 }
@@ -132,7 +140,6 @@
                     var date  = new Date(null);
                     date.setSeconds(data[0].elapsedTime);
                     var isoDate = date.toISOString().substr(11,8);
-                    console.log("sup");
                     $("#elapsedTime").html(isoDate);
                 }
             },
