@@ -5,8 +5,8 @@ from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest, Compl
 from QuickTutor.views import student, tutor, index, make_request, charge, tutorsession, studentsession, tutorpostsession, studentpostsession, checkstart, checkaccepted, checkrequestcount, checkacceptedtutorcount, checksessionstudent
 from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth.models import AnonymousUser, User
-from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest
-from QuickTutor.views import student, tutor, index, make_request, charge
+from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest, Message
+from QuickTutor.views import student, tutor, index, make_request, charge, store_message, get_message, edit_student, edit_tutor
 import json
 
 # Written By: Soukarya
@@ -440,3 +440,162 @@ class CheckSessionStudent(TestCase):
         request.student = self.student
         jsonResponse = json.loads(checksessionstudent(request).content)[0]
         self.assertEqual(jsonResponse['sessionEnded'], 1)
+
+# ---------- MESSAGES -----------
+# Written By: Soukarya
+class StoreMessageTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='tutor', email='tutor@virginia.edu', password='top_secret')
+        Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
+        Student.objects.update_or_create(email="student@virginia.edu", firstName="Bob", major="Computer Science", year="First")
+
+    def test_store_message(self):
+        request = self.factory.get('')
+        request.user = self.user
+        content = "This is a message!!"
+        sender = Tutor.objects.get(email='tutor@virginia.edu').email + "tutor"
+        receiver = Student.objects.get(email='student@virginia.edu').email + "student"
+
+        response = store_message(request, content=content, sender=sender, receiver=receiver)
+        self.assertEqual(response.status_code, 200)
+
+        # check if message stored is same
+        self.assertEqual(Message.objects.get(senderEmail=sender).msg_content, content)
+        
+
+# Written By: Soukarya
+class GetMessageMineTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='tutor', email='tutor@virginia.edu', password='top_secret')
+        sender = "tutor@virginia.edututor"
+        receiver = "student@virginia.edustudent"
+        content = "This is a message!!"
+        Message.objects.update_or_create(senderEmail=sender, recieverEmail=receiver, msg_content=content)
+
+    def test_store_message_mine(self):
+        request = self.factory.get('')
+        request.user = self.user
+        sender = "tutor@virginia.edututor"
+        receiver = "student@virginia.edustudent"
+        content = "This is a message!!"
+        
+        response = get_message(request, sender=sender, receiver=receiver)
+        jsnResponse = json.loads(response.content)[0]
+
+        self.assertEqual(jsnResponse['content'], content)
+        self.assertEqual(jsnResponse['mine'], 1)
+
+# Written By: Soukarya
+class GetMessageNotMineTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='tutor', email='tutor@virginia.edu', password='top_secret')
+        sender = "tutor@virginia.edututor"
+        receiver = "student@virginia.edustudent"
+        content = "This is a message!!"
+        Message.objects.update_or_create(senderEmail=sender, recieverEmail=receiver, msg_content=content)
+
+    def test_store_message__mine(self):
+        request = self.factory.get('')
+        request.user = self.user
+        sender = "tutor@virginia.edututor"
+        receiver = "student@virginia.edustudent"
+        content = "This is a message!!"
+        
+        response = get_message(request, sender=receiver, receiver=sender)
+        jsnResponse = json.loads(response.content)[0]
+
+        self.assertEqual(jsnResponse['content'], content)
+        self.assertEqual(jsnResponse['mine'], 0)
+
+# Written By: Soukarya
+class MessageOrdering(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='tutor', email='tutor@virginia.edu', password='top_secret')
+        sender = "tutor@virginia.edututor"
+        receiver = "student@virginia.edustudent"
+        Message.objects.update_or_create(senderEmail=sender, recieverEmail=receiver, msg_content="#1")
+        Message.objects.update_or_create(senderEmail=receiver, recieverEmail=sender, msg_content="#2")
+        Message.objects.update_or_create(senderEmail=sender, recieverEmail=receiver, msg_content="#3")
+        Message.objects.update_or_create(senderEmail=receiver, recieverEmail=sender, msg_content="#4")
+        Message.objects.update_or_create(senderEmail=sender, recieverEmail=receiver, msg_content="#5")
+        Message.objects.update_or_create(senderEmail=receiver, recieverEmail=sender, msg_content="#6")
+        Message.objects.update_or_create(senderEmail=sender, recieverEmail=receiver, msg_content="#7")
+
+    def test_store_message__mine(self):
+        request = self.factory.get('')
+        request.user = self.user
+        sender = "tutor@virginia.edututor"
+        receiver = "student@virginia.edustudent"
+        
+        response = get_message(request, sender=receiver, receiver=sender)
+        jsnResponse = json.loads(response.content)
+
+        self.assertEqual(jsnResponse[0]['content'], "#1")
+        self.assertEqual(jsnResponse[1]['content'], "#2")
+        self.assertEqual(jsnResponse[2]['content'], "#3")
+        self.assertEqual(jsnResponse[3]['content'], "#4")
+        self.assertEqual(jsnResponse[4]['content'], "#5")
+        self.assertEqual(jsnResponse[5]['content'], "#6")
+        self.assertEqual(jsnResponse[6]['content'], "#7")
+
+# Written By: Soukarya
+class MessageBothReceive(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='tutor', email='tutor@virginia.edu', password='top_secret')
+        Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
+        Student.objects.update_or_create(email="student@virginia.edu", firstName="Bob", major="Computer Science", year="First")
+
+    def test_store_message(self):
+        request = self.factory.get('')
+        request.user = self.user
+        content = "This is a message!!"
+        sender = Tutor.objects.get(email='tutor@virginia.edu').email + "tutor"
+        receiver = Student.objects.get(email='student@virginia.edu').email + "student"
+
+        response = store_message(request, content=content, sender=sender, receiver=receiver)
+        self.assertEqual(response.status_code, 200)
+
+        responseOne = json.loads(get_message(request, sender=receiver, receiver=sender).content)[0]
+        responseTwo = json.loads(get_message(request, sender=sender, receiver=receiver).content)[0]
+
+        self.assertNotEqual(responseOne['mine'], responseTwo['mine'])
+
+# Written By: Soukarya
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class EditStudentPageTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        Student.objects.update_or_create(email="student@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
+        self.user = User.objects.create_user(
+            username='student', email='student@virginia.edu', password='top_secret')
+
+    def test_details(self):
+        request = self.factory.get('')
+        request.user = self.user
+        response = edit_student(request)
+        self.assertEqual(response.status_code, 200)
+
+# Written By: Soukarya
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class EditTutorPageTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
+        self.user = User.objects.create_user(
+            username='tutor', email='tutor@virginia.edu', password='top_secret')
+
+    def test_details(self):
+        request = self.factory.get('')
+        request.user = self.user
+        response = edit_tutor(request)
+        self.assertEqual(response.status_code, 200)
