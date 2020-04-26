@@ -25,8 +25,6 @@ class TutorModelTest(TestCase):
 #Written By: Brandie
 #Test Case ID: T2_2.2, T2_1.2
 class StudentModelTest(TestCase):
-   # def setUp(self):
-        
     def test_student_model(self):
         obj1, created1 = Student.objects.update_or_create(email="abc123@virginia.edu", firstName="Alex", lastName="Smith", major="Art", year="First")
         obj2, created2 = Student.objects.update_or_create(email="abc345@virginia.edu", firstName="Alex", lastName="Smith", major="Art", year="First")
