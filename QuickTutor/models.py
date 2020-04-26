@@ -4,6 +4,7 @@ from django.db import models
 import random
 import os
 from datetime import datetime, date, time, timezone, timedelta
+from pytz import timezone
 
 def get_image_path(instance, filename):
     return os.path.join('photos', str(instance.username), filename)
@@ -38,7 +39,7 @@ class StudentRequest(models.Model):
     location = models.CharField(max_length=100, default='')
     meetingDetails = models.CharField(max_length=1000, default='')
     confusionMeter = models.IntegerField(default=0)  
-    requestTime = models.DateTimeField(auto_now=False, auto_now_add=False, default = datetime.now())
+    requestTime = models.DateTimeField(auto_now=False, auto_now_add=False, default = datetime.now(tz=timezone('US/Eastern')))
     
     # student ID
     studentEmail = models.CharField(max_length=100, default='')
