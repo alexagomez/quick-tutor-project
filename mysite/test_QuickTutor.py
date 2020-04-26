@@ -204,6 +204,7 @@ class OneTutorToNewRequest(TestCase):
         self.assertTrue(Tutor.objects.filter(firstName="Brandie").exists())
         self.assertEqual(tutor1.request, requestObj2)
 
+# ------------ AJAX Check Functions ------------------------
 #Written By: Greg
 class CheckStart(TestCase):
     def setUp(self):
@@ -244,6 +245,46 @@ class CheckStart(TestCase):
         request.student = self.student
         jsonResponse = json.loads(checkstart(request).content)[0]
         self.assertEqual(jsonResponse["status"], 0)
+
+class CheckStart_started(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 1
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="tutor@virginia.edu",
+            tutorUsername="tutor",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+    def test_checkstart(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkstart(request).content)[0]
+        self.assertEqual(jsonResponse["status"], 1)
 
 #Written By: Greg
 class CheckAccepted(TestCase):
@@ -295,6 +336,152 @@ class CheckAccepted(TestCase):
         self.assertEqual(jsonResponse['accepted'], 1)
 
 #Written By: Greg
+class CheckAccepted_spaceName(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail=" ",
+            tutorUsername=" ",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="user@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+    def test_checkaccepted(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkaccepted(request).content)[0]
+        self.assertEqual(jsonResponse['accepted'], 1)
+
+#Written By: Greg
+class CheckAccepted_notAccepted(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="",
+            tutorUsername="",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="user@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+    def test_checkaccepted(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkaccepted(request).content)[0]
+        self.assertEqual(jsonResponse['accepted'], 0)
+
+#Written By: Greg
+class CheckAccepted_defaultStudentRequestField(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="user@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+    def test_checkaccepted(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkaccepted(request).content)[0]
+        self.assertEqual(jsonResponse['accepted'], 0)
+
+#Written By: Greg
 class CheckRequestCount(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -324,8 +511,8 @@ class CheckRequestCount(TestCase):
             confusionMeter=confusionMeter, 
             studentEmail=studentEmail, 
             studentUsername=studentUsername,
-            tutorEmail="user@virginia.edu",
-            tutorUsername="user",
+            tutorEmail="",
+            tutorUsername="",
             sessionEnded=0,
             deleteStatus=0
         )
@@ -342,6 +529,192 @@ class CheckRequestCount(TestCase):
         request.student = self.student
         jsonResponse = json.loads(checkrequestcount(request).content)[0]
         self.assertEqual(jsonResponse['requestCount'], 0)
+
+#Written By: Greg
+class CheckRequestCount_twoApplicableRequests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "CS 3240"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="user@virginia.edu",
+            tutorUsername="user",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail="a"+studentEmail, 
+            studentUsername="a"+studentUsername,
+            tutorEmail="",
+            tutorUsername="",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="user@virginia.edu",
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+        TutorCourse.objects.get_or_create(tutor=self.tutor, course="CS 3240")
+
+    def test_checkrequestcount(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkrequestcount(request).content)[0]
+        self.assertEqual(jsonResponse['requestCount'], 2)
+
+#Written By: Greg
+class CheckRequestCount_twoNonApplicableRequests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "CS 3240"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="user@virginia.edu",
+            tutorUsername="user",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail="a"+studentEmail, 
+            studentUsername="a"+studentUsername,
+            tutorEmail="",
+            tutorUsername="",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="user@virginia.edu",
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+        TutorCourse.objects.get_or_create(tutor=self.tutor, course="CS 3241")
+
+    def test_checkrequestcount(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkrequestcount(request).content)[0]
+        self.assertEqual(jsonResponse['requestCount'], 0)
+
+#Written By: Greg
+class CheckRequestCount_MANYRequestsHalfHalf(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "CS 3240"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        for i in range(0,100):
+            req, obj = StudentRequest.objects.update_or_create(
+                courseName=courseName + "" if i%2==0 else str(i), 
+                header=header, 
+                description=description, 
+                location=location, 
+                status=status,
+                meetingDetails=meetingDetails, 
+                confusionMeter=confusionMeter, 
+                studentEmail=str(i)+studentEmail, 
+                studentUsername=str(i)+studentUsername,
+                tutorEmail="",
+                tutorUsername="",
+                sessionEnded=0,
+                deleteStatus=0
+            )
+
+
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="user@virginia.edu",
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+        TutorCourse.objects.get_or_create(tutor=self.tutor, course="CS 3240")
+
+    def test_checkrequestcount(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkrequestcount(request).content)[0]
+        self.assertEqual(jsonResponse['requestCount'], 50)
+
 
 #Written By: Greg
 class CheckAcceptedTutorCount(TestCase):
@@ -393,6 +766,114 @@ class CheckAcceptedTutorCount(TestCase):
         self.assertEqual(jsonResponse['acceptedTutorCount'], 1)
 
 #Written By: Greg
+class CheckAcceptedTutorCount_twoTutors(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="user@virginia.edu",
+            tutorUsername="user",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="user@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+        self.tutor2, obj = Tutor.objects.update_or_create(
+            email ="user2@virginia.edu"
+        )
+        self.tutor2.request = req
+        self.tutor2.save(update_fields=['request'])
+
+    def test_checkacceptedtutorcount(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkacceptedtutorcount(request).content)[0]
+        self.assertEqual(jsonResponse['acceptedTutorCount'], 2)
+
+#Written By: Greg
+class CheckAcceptedTutorCount_MANYTutors(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        self.tutors = []
+
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="user@virginia.edu",
+            tutorUsername="user",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        for i in range(0, 100):
+            tutor, obj = Tutor.objects.update_or_create(
+                    email=f"user{i}@virginia.edu"
+            )
+            self.tutors.append(tutor)
+            self.tutors[i].request = req
+            self.tutors[i].save(update_fields=['request'])
+
+
+    def test_checkacceptedtutorcount(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checkacceptedtutorcount(request).content)[0]
+        self.assertEqual(jsonResponse['acceptedTutorCount'], 100)
+
+#Written By: Greg
 class CheckSessionStudent(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -440,6 +921,104 @@ class CheckSessionStudent(TestCase):
         request.student = self.student
         jsonResponse = json.loads(checksessionstudent(request).content)[0]
         self.assertEqual(jsonResponse['sessionEnded'], 1)
+
+#Written By: Greg
+class CheckSessionStudent_notEnded(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="user@virginia.edu",
+            tutorUsername="user",
+            sessionEnded=0,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="user@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+    def test_checksessionstudent(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checksessionstudent(request).content)[0]
+        self.assertEqual(jsonResponse['sessionEnded'], 0)
+
+#Written By: Greg
+class CheckSessionStudent_invalidInt(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='user@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="user@virginia.edu",
+            tutorUsername="user",
+            sessionEnded=3,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="user@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+    def test_checksessionstudent(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        jsonResponse = json.loads(checksessionstudent(request).content)[0]
+        self.assertEqual(jsonResponse['sessionEnded'], 3)
 
 # ---------- MESSAGES -----------
 # Written By: Soukarya
