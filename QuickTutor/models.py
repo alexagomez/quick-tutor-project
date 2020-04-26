@@ -1,6 +1,7 @@
 import datetime
 import uuid 
 from django.db import models
+from django.utils import timezone
 import random
 import os
 from datetime import datetime, date, time, timezone, timedelta
@@ -39,7 +40,7 @@ class StudentRequest(models.Model):
     location = models.CharField(max_length=100, default='')
     meetingDetails = models.CharField(max_length=1000, default='')
     confusionMeter = models.IntegerField(default=0)  
-    requestTime = models.DateTimeField(auto_now=False, auto_now_add=False, default = datetime.now(tz=timezone('US/Eastern')))
+    requestTime = models.DateTimeField(auto_now=False, auto_now_add=False, default=timezone.now)
 
     
     # student ID
