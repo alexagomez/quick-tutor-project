@@ -398,7 +398,7 @@ class CheckAccepted_spaceName(TestCase):
         request.user = self.user
         request.student = self.student
         jsonResponse = json.loads(checkaccepted(request).content)[0]
-        self.assertEqual(jsonResponse['accepted'], 1)
+        self.assertEqual(jsonResponse['accepted'], 2)
 
 #Written By: Greg
 #Test Case ID: T19.1, T19.2
@@ -1050,6 +1050,7 @@ class CheckSessionStudent_invalidInt(TestCase):
         
 #Written By: Alexa
 #Test Case ID: T31.1, T31.2
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class StudentPostSessionPage(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -1104,6 +1105,7 @@ class StudentPostSessionPage(TestCase):
 
 #Written By: Alexa
 #Test Case ID: T32.1, T32.2
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class TutorPostSessionPage(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -1157,6 +1159,7 @@ class TutorPostSessionPage(TestCase):
 
 #Written By: Alexa
 #Test Case ID: T33.1, T33.2
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class StudentPostSession(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -1211,6 +1214,7 @@ class StudentPostSession(TestCase):
 
 #Written By: Alexa
 #Test Case ID: T34.1, T34.2
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class TutorPostSession(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -1268,6 +1272,7 @@ class TutorPostSession(TestCase):
 
 #Written By: Alexa
 #Test Case ID: T35.1, T35.2
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class TutorPostSession_oneSubmitted(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -1326,6 +1331,7 @@ class TutorPostSession_oneSubmitted(TestCase):
 
 #Written By: Alexa
 #Test Case ID: T36.1, T36.2
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class TutorPostSession_bothSubmitted(TestCase):
     def setUp(self):
         self.factory = RequestFactory()

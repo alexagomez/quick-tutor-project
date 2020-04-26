@@ -5,3 +5,4 @@ requests
 django-google-api
 stripe
 Pillow
+whitenoise
