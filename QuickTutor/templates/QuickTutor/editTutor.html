@@ -20,7 +20,7 @@
                 <div class="col-8" style="background-color: #7D80DA00; border-radius: 1rem;">
                     <h1 class="mt-1" style="padding-top: 5rem; font-size: 4rem; margin-bottom: 5vh;">Edit Profile</h1>
                     {% csrf_token %}
-                    <form action="{% url 'QuickTutor:update_tutor' %}" method="POST" enctype="multipart/form-data">
+                    <form id="RegForm" name="RegForm" onsubmit="return(validate());" action="{% url 'QuickTutor:update_tutor' %}" method="POST" enctype="multipart/form-data">
 
                         <div class="form-group">
                             <label for="exampleInputEmail1">First Name</label>
@@ -91,7 +91,7 @@
 
                                         //var name = document.RegForm.course1.value; 
                                         if (!set2.has(name)) {
-                                            window.alert("Course " + i + " not found! Please reenter.");
+                                            window.alert("Course " + i + " not found! Please reenter. For example: CS 3240");
                                             document.getElementById("RegForm").elements.namedItem(temp).focus();
                                             //document.RegForm.course1.focus();
                                             return (false);
