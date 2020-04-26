@@ -10,7 +10,7 @@ from QuickTutor.views import student, tutor, index, make_request, charge, store_
 import json
 
 # Written By: Soukarya
-# Test Case ID: T2_1.1, T2_2.3
+# Test Case ID: T1.1, T1.2
 class TutorModelTest(TestCase):
     def setUp(self):
         Tutor.objects.update_or_create(email="tu10r@virginia.edu", firstName="TutorOne", major="Art", year="First")
@@ -22,7 +22,7 @@ class TutorModelTest(TestCase):
         self.assertFalse(Tutor.objects.filter(email='dne@virginia.edu', firstName='NotReal').exists())
 
 #Written By: Brandie
-#Test Case ID: T2_2.2, T2_1.2
+#Test Case ID: T2.1, T2.2
 class StudentModelTest(TestCase):
    # def setUp(self):
         
@@ -39,7 +39,7 @@ class StudentModelTest(TestCase):
 
 
 #Written By: Brandie
-#Test Case Id: T2_1.1
+#Test Case ID: T3.1, T3.2
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class LandingPageTest(TestCase):
     def setUp(self):
@@ -57,7 +57,7 @@ class LandingPageTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 #Written By: Alexa
-#Test Case ID: T2_3.1
+#Test Case ID: T4.1, T4.2
 class TutorRequestTest(TestCase):
     def setUp(self):
         StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu",)
@@ -71,6 +71,7 @@ class TutorRequestTest(TestCase):
 
 
 #Written By: Soukarya
+#Test Case ID: T5.1, T5.2
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class StudentPageTest(TestCase):
     def setUp(self):
@@ -85,6 +86,7 @@ class StudentPageTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 #Written By: Soukarya
+#Test Case ID: T6.1, T6.2
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class TutorPageTest(TestCase):
     def setUp(self):
@@ -99,6 +101,7 @@ class TutorPageTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 #Written By: Soukarya
+#Test Case ID: T7.1, T7.2
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class MakeRequestPageTest(TestCase):
     def setUp(self):
@@ -113,6 +116,7 @@ class MakeRequestPageTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 #Written By: Soukarya
+#Test Case ID: T8.1, T8.2
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class ChargePageTest(TestCase):
     def setUp(self):
@@ -132,6 +136,7 @@ class ChargePageTest(TestCase):
             return False
 
 #Written By: Alexa
+#Test Case ID: T9.1, T9.2
 class ComplaintTest(TestCase):
     def setUp(self):
         Complaint.objects.update_or_create(complainantUsername = 'chb8ue', complaineeUsername = 'abd9dd', description= 'silent the entire time')
@@ -146,6 +151,7 @@ class ComplaintTest(TestCase):
 
 #Written By: Brandie
 #testing the many to one relationship with tutors and requests
+#Test Case ID: T10.1
 class ManyTutorsToOneRequest(TestCase):
     def test_request_model(self):
         requestObj, created1 = StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu",)
@@ -161,6 +167,7 @@ class ManyTutorsToOneRequest(TestCase):
 
 #Written By: Brandie
 #testing the many to one relationship with tutors and requests
+#Test Case ID: T11.1
 class OneTutorToOneRequest(TestCase):
     def test_request_model(self):
         requestObj, created1 = StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu",)
@@ -173,6 +180,7 @@ class OneTutorToOneRequest(TestCase):
 
 #Written By: Brandie
 #testing the many to one relationship with tutors and requests
+#Test Case ID: T12.1
 class OneTutorToDeletedRequest(TestCase):
     def test_request_model(self):
         requestObj, created1 = StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu",)
@@ -185,6 +193,7 @@ class OneTutorToDeletedRequest(TestCase):
 
 #Written By: Brandie
 #testing the many to one relationship with tutors and requests
+#Test Case ID: T13.1
 class TutorOriginallyNoRequest(TestCase):
     def test_request_model(self):
         tutor1, created1 = Tutor.objects.update_or_create(email="bay5fb@virginia.edu", firstName="Brandie", major="Computer Science", year="Fourth")
@@ -193,6 +202,7 @@ class TutorOriginallyNoRequest(TestCase):
 
 #Written By: Brandie
 #testing the many to one relationship with tutors and requests
+#Test Case ID: T14.1
 class OneTutorToNewRequest(TestCase):
     def test_request_model(self):
         requestObj1, created1 = StudentRequest.objects.update_or_create(header ="django practice", description ="making the first web app", courseName="CS3240", location ="Clem", confusionMeter=2, studentEmail="abc1de@virginia.edu")
@@ -205,6 +215,7 @@ class OneTutorToNewRequest(TestCase):
         self.assertEqual(tutor1.request, requestObj2)
 
 #Written By: Greg
+#Test Case ID: T15.1, T15.2
 class CheckStart(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -246,6 +257,7 @@ class CheckStart(TestCase):
         self.assertEqual(jsonResponse["status"], 0)
 
 #Written By: Greg
+#Test Case ID: T16.1, T16.2
 class CheckAccepted(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -295,6 +307,7 @@ class CheckAccepted(TestCase):
         self.assertEqual(jsonResponse['accepted'], 1)
 
 #Written By: Greg
+#Test Case ID: T17.1, T17.2
 class CheckRequestCount(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -344,6 +357,7 @@ class CheckRequestCount(TestCase):
         self.assertEqual(jsonResponse['requestCount'], 0)
 
 #Written By: Greg
+#Test Case ID: T18.1, T18.2
 class CheckAcceptedTutorCount(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -393,6 +407,7 @@ class CheckAcceptedTutorCount(TestCase):
         self.assertEqual(jsonResponse['acceptedTutorCount'], 1)
 
 #Written By: Greg
+#Test Case ID: T19.1, T19.2
 class CheckSessionStudent(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -440,6 +455,224 @@ class CheckSessionStudent(TestCase):
         request.student = self.student
         jsonResponse = json.loads(checksessionstudent(request).content)[0]
         self.assertEqual(jsonResponse['sessionEnded'], 1)
+
+#Written By: Alexa
+#Test Case ID: T21.1, T21.2
+class StudentPostSessionPage(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='student@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="tutor@virginia.edu",
+            tutorUsername="tutorUser",
+            sessionEnded=1,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="tutor@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+    def test_studentpostsession(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        studentRequestHeader = StudentRequest.objects.get(studentEmail = 'student@virginia.edu').header
+        tutorUsername = StudentRequest.objects.get(studentEmail = 'student@virginia.edu').tutorUsername
+        response = studentpostsession(request, studentRequestHeader = studentRequestHeader, tutorUsername= tutorUsername)
+        
+        self.assertEqual(response.status_code, 200)
+
+
+#Written By: Alexa
+#Test Case ID: T22.1, T22.2
+class TutorPostSessionPage(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='student@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="tutor@virginia.edu",
+            tutorUsername="tutorUser",
+            sessionEnded=1,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="tutor@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+    def test_tutorpostsession(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        studentRequestHeader = StudentRequest.objects.get(studentEmail = 'student@virginia.edu').header
+        studentUsername = StudentRequest.objects.get(studentEmail = 'student@virginia.edu').studentUsername
+        response = tutorpostsession(request, studentRequestHeader = studentRequestHeader, studentUsername= studentUsername)
+        
+        self.assertEqual(response.status_code, 200)
+
+#Written By: Alexa
+#Test Case ID: T23.1, T23.2
+class StudentPostSession(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='student@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="tutor@virginia.edu",
+            tutorUsername="tutorUser",
+            sessionEnded=1,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="tutor@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+    def test_studentpostsession(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        studentRequestHeader = StudentRequest.objects.get(studentEmail = 'student@virginia.edu').header
+        tutorUsername = StudentRequest.objects.get(studentEmail = 'student@virginia.edu').tutorUsername
+        response = studentpostsession(request, studentRequestHeader = studentRequestHeader, tutorUsername= tutorUsername)
+        
+        self.assertEqual(StudentRequest.objects.get(studentEmail = 'student@virginia.edu').sessionEnded, 1)
+
+
+#Written By: Alexa
+#Test Case ID: T24.1, T24.2
+class TutorPostSession(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='user', email='student@virginia.edu', password='top_secret')
+        self.student = Student.objects.update_or_create(email=self.user.email, username=self.user.username)
+        
+        courseName = "Course Name"
+        header = "Course Header"
+        description = "This is a course description"
+        location = "The location"
+        status = 0
+        meetingDetails = "Meeting details"
+        confusionMeter = 5
+        studentEmail = self.user.email
+        studentUsername = self.user.username
+
+        
+
+        req, obj = StudentRequest.objects.update_or_create(
+            courseName=courseName, 
+            header=header, 
+            description=description, 
+            location=location, 
+            status=status,
+            meetingDetails=meetingDetails, 
+            confusionMeter=confusionMeter, 
+            studentEmail=studentEmail, 
+            studentUsername=studentUsername,
+            tutorEmail="tutor@virginia.edu",
+            tutorUsername="tutorUser",
+            sessionEnded=1,
+            deleteStatus=0
+        )
+
+        self.tutor, obj = Tutor.objects.update_or_create(
+                    email="tutor@virginia.edu"
+        )
+        self.tutor.request = req
+        self.tutor.save(update_fields=['request'])
+
+    def test_tutorpostsession(self):
+        request = self.factory.get('')
+        request.user = self.user
+        request.student = self.student
+        studentRequestHeader = StudentRequest.objects.get(studentEmail = 'student@virginia.edu').header
+        studentUsername = StudentRequest.objects.get(studentEmail = 'student@virginia.edu').studentUsername
+        response = tutorpostsession(request, studentRequestHeader = studentRequestHeader, studentUsername= studentUsername)
+        
+        self.assertEqual(StudentRequest.objects.get(studentEmail = 'student@virginia.edu').sessionEnded, 1)
+        self.assertEqual(Tutor.objects.get(email = 'tutor@virginia.edu').status, 0)
+        self.assertEqual(Student.objects.get(email = 'student@virginia.edu').status, 0)
+        self.assertEqual(Student.objects.get(email = 'student@virginia.edu').accepted, 0)
+        
 
 # ---------- MESSAGES -----------
 # Written By: Soukarya
