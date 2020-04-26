@@ -260,7 +260,7 @@ def cancel(request, studentUsername):
         tutor.save(update_fields=['status'])
 
     if studentRequest.tutorEmail != "":
-        tutor = Student.objects.get(email=studentRequest.tutorEmail)
+        tutor = Tutor.objects.get(email=studentRequest.tutorEmail)
         tutor.status = 0
         tutor.save(update_fields=['status'])
 
