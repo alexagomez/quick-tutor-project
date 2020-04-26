@@ -44,7 +44,6 @@ class StudentRequest(models.Model):
     studentEmail = models.CharField(max_length=100, default='')
     studentUsername = models.CharField(max_length=100, default='')
 
-
     #note that these will be used differently, now to store only the tutor that the student chooses!
     tutorEmail = models.CharField(max_length=100, default='')
     tutorUsername = models.CharField(max_length=100, default='')
