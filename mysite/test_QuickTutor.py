@@ -1382,8 +1382,6 @@ class TutorPostSession_bothSubmitted(TestCase):
         self.assertEqual(Student.objects.get(email = 'student@virginia.edu').status, 0)
         self.assertEqual(Student.objects.get(email = 'student@virginia.edu').accepted, 0)
         
-        
-
 
 # ---------- MESSAGES -----------
 # Written By: Soukarya
@@ -1552,6 +1550,7 @@ class EditTutorPageTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 # Written By: Soukarya
+#Test Case ID: T44.1, T44.2
 class UploadTutorImageJPGTest(TestCase):
     def setUp(self):
         Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
@@ -1562,6 +1561,7 @@ class UploadTutorImageJPGTest(TestCase):
         self.assertTrue(created)
 
 # Written By: Soukarya
+#Test Case ID: T45.1, T45.2
 class UploadTutorImagePNGTest(TestCase):
     def setUp(self):
         Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
@@ -1572,6 +1572,7 @@ class UploadTutorImagePNGTest(TestCase):
         self.assertTrue(created)
 
 # Written By: Soukarya
+#Test Case ID: T46.1, T46.2
 class UploadStudentImageJPGTest(TestCase):
     def setUp(self):
         Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
@@ -1582,6 +1583,7 @@ class UploadStudentImageJPGTest(TestCase):
         self.assertTrue(created)
 
 # Written By: Soukarya
+#Test Case ID: T47.1, T47.2
 class UploadStudentImagePNGTest(TestCase):
     def setUp(self):
         Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
