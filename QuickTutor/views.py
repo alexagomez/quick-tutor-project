@@ -219,9 +219,8 @@ def make_request(request):
         meetingDetails = request.POST['meetingDetails']
         dateTimeObj = datetime.now()
 
-        obj, created = StudentRequest.objects.update_or_create(sessionStartTime=dateTimeObj, courseName=courseName, header=header, description=description, location=location, status=0,
+        obj, created = StudentRequest.objects.update_or_create(requestTime=dateTimeObj, courseName=courseName, header=header, description=description, location=location, status=0,
         meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
-        # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
         return HttpResponseRedirect(reverse('QuickTutor:student'))
 
@@ -427,8 +426,11 @@ def checkacceptedtutorcount(request):
 
 @login_required
 def checksessionstudent(request):
-    currentStudent = request.user
-    studentRequest = StudentRequest.objects.get(studentUsername=currentStudent.username)
+    currentUser = request.user
+    if (Student.objects.filter(username=currentUser.username).exists()):
+        studentRequest = StudentRequest.objects.get(studentUsername=currentUser.username)
+    else: 
+        studentRequest = StudentRequest.objects.get(tutorUsername=currentUser.username)
 
     sessionEnded = studentRequest.sessionEnded
 
