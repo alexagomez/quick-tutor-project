@@ -13,6 +13,7 @@ from QuickTutor.models import Student, Tutor, StudentRequest, TutorCourse, Compl
 import stripe
 import datetime
 from datetime import datetime, date, time, timezone, timedelta
+from pytz import timezone
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -217,9 +218,9 @@ def make_request(request):
         location = request.POST['location']
         confusion = request.POST['confusion']
         meetingDetails = request.POST['meetingDetails']
-        requestTime = datetime.now()
+        dateTimeObj = datetime.now(tz=timezone('US/Eastern'))
 
-        obj, created = StudentRequest.objects.update_or_create(sessionStartTime=requestTime, courseName=courseName, header=header, description=description, location=location, status=0,
+        obj, created = StudentRequest.objects.update_or_create(sessionStartTime=dateTimeObj, courseName=courseName, header=header, description=description, location=location, status=0,
         meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
         # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
@@ -383,8 +384,13 @@ def checkaccepted(request):
     currentTutor = Tutor.objects.get(email=email)
     studentRequest = currentTutor.request
     studentAccepted = 0
-    if (studentRequest.tutorEmail != ''):
+    if (studentRequest.tutorEmail == email):
         studentAccepted = 1
+    data = [{
+        'accepted': studentAccepted
+    }]
+    if(studentRequest.tutorEmail != '' and studentRequest.tutorEmail != email):
+        studentAccepted = 2
     data = [{
         'accepted': studentAccepted
     }]
