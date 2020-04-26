@@ -7,6 +7,7 @@ from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.auth.models import AnonymousUser, User
 from QuickTutor.models import Student, Tutor, TutorCourse, StudentRequest, Message
 from QuickTutor.views import student, tutor, index, make_request, charge, store_message, get_message, edit_student, edit_tutor
+import tempfile
 import json
 
 # Written By: Soukarya
@@ -1549,3 +1550,43 @@ class EditTutorPageTest(TestCase):
         request.user = self.user
         response = edit_tutor(request)
         self.assertEqual(response.status_code, 200)
+
+# Written By: Soukarya
+class UploadTutorImageJPGTest(TestCase):
+    def setUp(self):
+        Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
+
+    def test_details(self):
+        image = tempfile.NamedTemporaryFile(suffix=".jpg").name
+        obj, created = Tutor.objects.update_or_create(username="tutor", defaults={'profile_image':image})
+        self.assertTrue(created)
+
+# Written By: Soukarya
+class UploadTutorImagePNGTest(TestCase):
+    def setUp(self):
+        Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
+
+    def test_details(self):
+        image = tempfile.NamedTemporaryFile(suffix=".png").name
+        obj, created = Tutor.objects.update_or_create(username="tutor", defaults={'profile_image':image})
+        self.assertTrue(created)
+
+# Written By: Soukarya
+class UploadStudentImageJPGTest(TestCase):
+    def setUp(self):
+        Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
+
+    def test_details(self):
+        NOTimage = tempfile.NamedTemporaryFile(suffix=".jpg").name
+        obj, created = Tutor.objects.update_or_create(username="tutor", defaults={'profile_image':NOTimage})
+        self.assertTrue(created)
+
+# Written By: Soukarya
+class UploadStudentImagePNGTest(TestCase):
+    def setUp(self):
+        Tutor.objects.update_or_create(email="tutor@virginia.edu", firstName="Bob", major="Computer Science", year="Third")
+
+    def test_details(self):
+        NOTimage = tempfile.NamedTemporaryFile(suffix=".png").name
+        obj, created = Tutor.objects.update_or_create(username="tutor", defaults={'profile_image':NOTimage})
+        self.assertTrue(created)
