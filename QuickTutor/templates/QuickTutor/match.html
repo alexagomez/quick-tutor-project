@@ -51,6 +51,9 @@
                 if (data[0].accepted == 1) {
                     tutorSelected('{{currentUser.status}}', '{{studentRequestHeader}}', '{{studentUsername}}');
                 }
+                else if(data[0].accepted == 2){
+                    window.location.replace("/tutor")
+                }
                 else {
                     setTimeout(runCheck, 250);
                 }

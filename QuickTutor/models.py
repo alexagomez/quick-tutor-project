@@ -38,15 +38,15 @@ class StudentRequest(models.Model):
     location = models.CharField(max_length=100, default='')
     meetingDetails = models.CharField(max_length=1000, default='')
     confusionMeter = models.IntegerField(default=0)  
-    requestTime = models.TimeField(auto_now=False, auto_now_add=False, default = datetime.now())
+    requestTime = models.DateTimeField(auto_now=False, auto_now_add=False, default = datetime.now())
     
     # student ID
     studentEmail = models.CharField(max_length=100, default='')
-    studentUsername = models.CharField(max_length=10, default='')
+    studentUsername = models.CharField(max_length=100, default='')
 
     #note that these will be used differently, now to store only the tutor that the student chooses!
     tutorEmail = models.CharField(max_length=100, default='')
-    tutorUsername = models.CharField(max_length=10, default='')
+    tutorUsername = models.CharField(max_length=100, default='')
     
     # session status
     status = models.IntegerField(default=0, null=True)     # 0=not started        1=started  
@@ -82,8 +82,8 @@ class TutorCourse(models.Model):
     course = models.CharField(max_length=100, default='')
     
 class Complaint(models.Model):
-    complainantUsername = models.CharField(max_length=10, default='')
-    complaineeUsername = models.CharField(max_length=10, default='')
+    complainantUsername = models.CharField(max_length=100, default='')
+    complaineeUsername = models.CharField(max_length=100, default='')
     description = models.CharField(max_length=1000, default='')
 
 class Message(models.Model):
