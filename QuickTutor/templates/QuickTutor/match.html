@@ -49,7 +49,7 @@
             url: "{% url 'QuickTutor:checkaccepted' %}",
             success: function (data) {
                 if (data[0].deleted == 1) {
-                    window.location.replace("/tutor/")
+                    window.location.replace("/tutor")
                 }
                 else if (data[0].accepted == 1) {
                     tutorSelected('{{currentUser.status}}', '{{studentRequestHeader}}', '{{studentUsername}}');
