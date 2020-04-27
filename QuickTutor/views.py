@@ -219,9 +219,12 @@ def make_request(request):
         meetingDetails = request.POST['meetingDetails']
         requestTime = datetime.now()
 
+<<<<<<< HEAD
         obj, created = StudentRequest.objects.update_or_create(sessionStartTime=requestTime, courseName=courseName, header=header, description=description, location=location, status=0,
+=======
+        obj, created = StudentRequest.objects.update_or_create(requestTime=dateTimeObj, courseName=courseName, header=header, description=description, location=location, status=0,
+>>>>>>> 287af82d480180764e501cac78788cc2e5024b10
         meetingDetails=meetingDetails, confusionMeter=confusion, studentEmail=currentStudent.email, studentUsername=currentStudent.email.split('@')[0])
-        # RequestCourse.objects.get_or_create(request=obj,course=request.POST['subject'])
         
         return HttpResponseRedirect(reverse('QuickTutor:student'))
 
@@ -261,7 +264,7 @@ def cancel(request, studentUsername):
         tutor.save(update_fields=['status'])
 
     if studentRequest.tutorEmail != "":
-        tutor = Student.objects.get(email=studentRequest.tutorEmail)
+        tutor = Tutor.objects.get(email=studentRequest.tutorEmail)
         tutor.status = 0
         tutor.save(update_fields=['status'])
 
