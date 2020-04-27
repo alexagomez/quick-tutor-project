@@ -25,3 +25,5 @@ https://docs.djangoproject.com/en/3.0/
 https://getbootstrap.com/docs/4.1/getting-started/introduction/
 https://medium.com/@whizzoe/in-5-mins-set-up-google-login-to-sign-up-users-on-django-e71d5c38f5d5
 https://stackoverflow.com/questions/9173182/add-remove-input-field-dynamically-with-jquery
+https://www.the-art-of-web.com/javascript/validate/
+https://api.jquery.com/category/ajax/
