@@ -21,5 +21,5 @@ Happy tutoring! :D
 Sources:
 https://stripe.com/docs/api
 https://codepen.io/
-
+https://docs.djangoproject.com/en/3.0/
 
