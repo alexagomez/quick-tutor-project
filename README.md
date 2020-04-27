@@ -18,5 +18,8 @@ Questions, comments, concerns? Hit the "Contact Us" button to email our testing 
 
 Happy tutoring! :D
 
+Sources:
+https://stripe.com/docs/api
+https://codepen.io/
 
 
