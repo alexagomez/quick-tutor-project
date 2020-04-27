@@ -23,4 +23,4 @@ https://stripe.com/docs/api
 https://codepen.io/
 https://docs.djangoproject.com/en/3.0/
 https://getbootstrap.com/docs/4.1/getting-started/introduction/
-
+https://medium.com/@whizzoe/in-5-mins-set-up-google-login-to-sign-up-users-on-django-e71d5c38f5d5
