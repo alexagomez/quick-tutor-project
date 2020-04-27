@@ -382,15 +382,14 @@ def checkaccepted(request):
     currentTutor = Tutor.objects.get(email=email)
     studentRequest = currentTutor.request
     studentAccepted = 0
-    if (studentRequest.tutorEmail == email):
-        studentAccepted = 1
+    if (studentRequest != None):
+        if (studentRequest.tutorEmail == email):
+            studentAccepted = 1
+        if(studentRequest.tutorEmail != '' and studentRequest.tutorEmail != email):
+            studentAccepted = 2
     data = [{
-        'accepted': studentAccepted
-    }]
-    if(studentRequest.tutorEmail != '' and studentRequest.tutorEmail != email):
-        studentAccepted = 2
-    data = [{
-        'accepted': studentAccepted
+        'accepted': studentAccepted,
+        'deleted': 1 if (studentRequest == None) else 0
     }]
     return JsonResponse(data, safe=False)
 
@@ -432,6 +431,7 @@ def checksessionstudent(request):
     else: 
         studentRequest = StudentRequest.objects.get(tutorUsername=currentUser.username)
 
+    
     sessionEnded = studentRequest.sessionEnded
 
     startTime = studentRequest.sessionStartTime
