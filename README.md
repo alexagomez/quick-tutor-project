@@ -14,9 +14,9 @@ Either students or tutors can edit their profile information (year, major, pictu
 
 Students can cancel the request free of charge, before choosing from the list of tutors.
 
-Questions, comments, concerns? Hit the "Contact Us" button to email our testing manager, Soukarya. Want to know more about the developers of this application? Go to our About Us page.
+Questions, comments, concerns? Hit the "Contact Us" button to email our testing manager, Soukarya. Want to know more about Scrumpy Cat, the developers of this application? Go to our About Us page.
 
-Thanks for using and happy tutoring!
+Happy tutoring! :D
 
 
 
