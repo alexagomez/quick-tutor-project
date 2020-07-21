@@ -18,6 +18,8 @@ Questions, comments, concerns? Hit the "Contact Us" button to email our testing 
 
 Happy tutoring! :D
 
+Visit our site at https://project-scrumpy-cat.herokuapp.com
+
 Sources:
 https://stripe.com/docs/api
 https://codepen.io/
